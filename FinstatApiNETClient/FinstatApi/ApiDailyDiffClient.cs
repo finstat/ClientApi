@@ -1,0 +1,186 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Xml.Serialization;
+
+namespace FinstatApi
+{
+    public class ApiDailyDiffClient
+    {
+        private readonly string _url;
+        private readonly string _apiKey;
+        private readonly string _privateKey;
+        private readonly string _stationId;
+        private readonly string _stationName;
+        private readonly int _timeout;
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApiMonitoringClient" /> class.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <param name="apiKey">The API key.</param>
+        /// <param name="privateKey">The API private key.</param>
+        /// <param name="stationId">The station identifier.</param>
+        /// <param name="stationName">Name of the station.</param>
+        /// <param name="timeout">The timeout in miliseconds.</param>
+        public ApiDailyDiffClient(string url, string apiKey, string privateKey, string stationId, string stationName, int timeout)
+        {
+            _apiKey = apiKey;
+            _privateKey = privateKey;
+            _stationId = stationId;
+            _stationName = stationName;
+            _timeout = timeout;
+            _url = url.TrimEnd('/');
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApiMonitoringClient" /> class.
+        /// </summary>
+        /// <param name="apiKey">The API key.</param>
+        /// <param name="privateKey">The API private key.</param>
+        /// <param name="stationId">The station identifier.</param>
+        /// <param name="stationName">Name of the station.</param>
+        public ApiDailyDiffClient(string apiKey, string privateKey, string stationId, string stationName, int timeout)
+            : this("http://www.finstat.sk/api/", apiKey, privateKey, stationId, stationName, timeout)
+        {
+
+        }
+
+        /// <summary>
+        /// Requests the list of DailyDiff files.
+        /// </summary>
+        /// <returns>List of DailyDiff files.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Url {0} not found!
+        /// or Unknown exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public DailyDiffList RequestListOfDailyDiffs()
+        {
+            try
+            {
+                using (WebClient client = new WebClientWithTimeout(_timeout))
+                {
+                    System.Collections.Specialized.NameValueCollection reqparm =
+                        new System.Collections.Specialized.NameValueCollection();
+                    reqparm.Add("apiKey", _apiKey);
+                    reqparm.Add("Hash", ApiClient.ComputeVerificationHash(_apiKey,_privateKey, null));
+                    reqparm.Add("StationId", _stationId);
+                    reqparm.Add("StationName", _stationName);
+                    byte[] responsebytes = client.UploadValues(_url + "/GetListOfDiffs", "POST", reqparm);
+                    var response = Encoding.UTF8.GetString(responsebytes);
+                    XmlSerializer serializer = new XmlSerializer(typeof(DailyDiffList));
+                    using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                    {
+                        return (DailyDiffList)serializer.Deserialize(reader);
+                    }
+                }
+            }
+            catch (WebException e)
+            {
+                if (e.Response is HttpWebResponse)
+                {
+                    HttpWebResponse response = (HttpWebResponse)e.Response;
+                    switch (response.StatusCode)
+                    {
+                        case HttpStatusCode.Forbidden:
+                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.NotValidCustomerKey,
+                                "Not valid API key!", e);
+                        case HttpStatusCode.PaymentRequired:
+                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.LimitExceed,
+                                response.StatusDescription, e);
+                    }
+                }
+                else if (e.Status == WebExceptionStatus.ConnectFailure || e.Status == WebExceptionStatus.NameResolutionFailure)
+                {
+                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.UrlNotFound,
+                                string.Format("Url {0} not found!", _url), e);
+                }
+                else if (e.Status == WebExceptionStatus.Timeout)
+                {
+                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout,
+                                string.Format("Request to url {0} timeouts in {1} miliseconds!", _url, _timeout), e);
+                }
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.OtherCommunicationFail, "Unknown exception while communication with Finstat api!", e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
+            }
+        }
+
+        /// <summary>
+        /// Downloads .
+        /// </summary>
+        /// <returns>List of DailyDiff files.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Url {0} not found!
+        /// or Unknown exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public string DownloadDailyDiffFile(string fileName, string exportPath)
+        {
+            try
+            {
+                using (WebClient client = new WebClientWithTimeout(_timeout))
+                {
+                    System.Collections.Specialized.NameValueCollection reqparm =
+                        new System.Collections.Specialized.NameValueCollection();
+                    reqparm.Add("apiKey", _apiKey);
+                    reqparm.Add("fileName", fileName);
+                    reqparm.Add("Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, fileName));
+                    reqparm.Add("StationId", _stationId);
+                    reqparm.Add("StationName", _stationName);
+                    byte[] responsebytes = client.UploadValues(_url + "/GetFile", "POST", reqparm);
+                    if (responsebytes != null)
+                    {
+                        string fullExportPath = Path.Combine(exportPath, fileName);
+                        if (File.Exists(fullExportPath))
+                        {
+                            File.Delete(fullExportPath);
+                        }
+                        File.WriteAllBytes(fullExportPath, responsebytes);
+                        return fullExportPath;
+                    }
+                    return null;
+                }
+            }
+            catch (WebException e)
+            {
+                if (e.Response is HttpWebResponse)
+                {
+                    HttpWebResponse response = (HttpWebResponse)e.Response;
+                    switch (response.StatusCode)
+                    {
+                        case HttpStatusCode.Forbidden:
+                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.NotValidCustomerKey,
+                                "Not valid API key!", e);
+                        case HttpStatusCode.PaymentRequired:
+                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.LimitExceed,
+                                response.StatusDescription, e);
+                    }
+                }
+                else if (e.Status == WebExceptionStatus.ConnectFailure || e.Status == WebExceptionStatus.NameResolutionFailure)
+                {
+                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.UrlNotFound,
+                                string.Format("Url {0} not found!", _url), e);
+                }
+                else if (e.Status == WebExceptionStatus.Timeout)
+                {
+                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout,
+                                string.Format("Request to url {0} timeouts in {1} miliseconds!", _url, _timeout), e);
+                }
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.OtherCommunicationFail, "Unknown exception while communication with Finstat api!", e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
+            }
+        }
+    }
+}
