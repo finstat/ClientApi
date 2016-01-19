@@ -63,7 +63,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public DetailResult RequestDetail(string ico)
+        public BaseResultCZ RequestDetail(string ico)
         {
             try
             {
@@ -78,10 +78,10 @@ namespace FinstatApi
                     reqparm.Add("StationName", _stationName);
                     byte[] responsebytes = client.UploadValues(_url + "/detail", "POST", reqparm);
                     var response = Encoding.UTF8.GetString(responsebytes);
-                    XmlSerializer serializer = new XmlSerializer(typeof (DetailResult));
+                    XmlSerializer serializer = new XmlSerializer(typeof (BaseResultCZ));
                     using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
                     {
-                        return (DetailResult) serializer.Deserialize(reader);
+                        return (BaseResultCZ) serializer.Deserialize(reader);
                     }
                 }
             }
