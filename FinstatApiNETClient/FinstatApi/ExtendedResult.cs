@@ -56,6 +56,7 @@ namespace FinstatApi
         public bool SelfEmployed { get; set; }
         public Office[] Offices { get; set; }
         public Subject[] Subjects { get; set; }
+        public NameParts StructuredName { get; set; }
 
         public class Debt
         {
@@ -162,7 +163,7 @@ namespace FinstatApi
                 }
             }
 
-            if(Subjects != null)
+            if (Subjects != null)
             {
                 subjectsString = "\n Subjects:";
                 foreach (Subject s in Subjects)
@@ -170,12 +171,17 @@ namespace FinstatApi
                     subjectsString += string.Format("\n - {0}", s.ToString());
                 }
             }
+            string selfEmployedString = string.Empty;
+            if (SelfEmployed && (StructuredName != null))
+            {
+                selfEmployedString += string.Format("\n Name structured: \n {0}", StructuredName.ToString());
+            }
 
             return string.Format("Ico: {0}, Name: {1}{21} {23}, IcDph: {25}\n City: {2}, District: {3}, Region: {4}\n Created: {5}\n SkNace: {6}\n Phones: {7}\n Emails: {8}\n Warning: {9}, Payment order warning: {22} OrChange: {10}\n EmployeeText: {11}\n ActualYear: {12} with Credit Score {26}\n ProfitActual: {13}, ProfitPrev: {14}\n RevenueActual: {15}, RevenuePrev: {16}\n ForeignResources: {17}, GrossMargin: {18}, ROA: {19}\n Debts:{20}\n Payment orders:{24}\n Self Employed:{27}{28}", Ico, Name, City, District, Region, Created, SkNaceCode + "-" + SkNaceText, string.Join(", ", Phones), string.Join(", ", Emails), Warning, OrChange, EmployeeText, ActualYear, ProfitActual, ProfitPrev, RevenueActual, RevenuePrev, ForeignResources, GrossMargin, ROA, Debts == null ? "no debt" : Debt.AsString(Debts), SuspendedAsPerson ? "[pozastavená]" : null, PaymentOrderWarning, RegisterNumberText, PaymentOrders == null ? "no payment orders" : PaymentOrder.AsString(PaymentOrders),
                 IcDphAdditional != null ? IcDphAdditional.ToString() : null,
                 CreditScoreValue != null ? CreditScoreValue.Value.ToString("0.00") + " " + CreditScoreState : null,
                 SelfEmployed,
-                officesString + subjectsString
+                officesString + subjectsString +selfEmployedString
                 );
         }
 
@@ -192,6 +198,23 @@ namespace FinstatApi
                     ValidFrom,
                     (SuspendedFrom != null) ? string.Format(" - {0}", SuspendedFrom) : string.Empty,
                 });
+            }
+        }
+        public class NameParts
+        {
+            public string[] Prefix { get; set; }
+            public string[] Name { get; set; }
+            public string[] Suffix { get; set; }
+            public string[] After { get; set; }
+            public override string ToString()
+            {
+                return string.Format("Prefix: {0}\n Name: {1}\n Suffix: {2}\n After:{3}\n",
+                    new[] {
+                        Prefix != null ? string.Join(" ", Prefix):"",
+                        Name != null ? string.Join(" ", Name):"",
+                        Suffix != null ? string.Join(" ", Suffix):"",
+                        After != null ? string.Join(" ", After):""
+                    });
             }
         }
     }
