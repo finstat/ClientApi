@@ -38,7 +38,7 @@
     <Compile Include="ApiClient.cs" />
     <Compile Include="ApiAutocomplete.cs" />
     <Compile Include="ApiMonitoringClient.cs" />
-    <Compile Include="BaseResultCZ.cs" />
+    <Compile Include="DetailResult.cs" />
     <Compile Include="FinstatApiException.cs" />
     <Compile Include="Monitoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
