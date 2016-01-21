@@ -24,8 +24,8 @@ namespace FinstatApi
         public override string ToString()
         {
             return string.Format(
-                "Ico: {0}, Name: {1}{10} in {11}\n Register Number: {8}\nCity: {2}\n Created: {3}\n Warning: {4}\n Payment order warning: {9}\n OrChange: {5}\n Revenue: {6}\n Profit: {7}", 
-                Ico, Name, City, Created, Warning, OrChange, Revenue, Profit, RegisterNumberText, PaymentOrderWarning, SuspendedAsPerson ? "[pozastavená]" : null, Activity);
+                "Ico: {0}, Name: {1}{10} in {11}\n Register Number: {8}\n SK Nace: {12}\n City: {2}\n Created: {3}\n Warning: {4}\n Payment order warning: {9}\n OrChange: {5}\n Revenue: {6}\n Profit: {7}",
+                Ico, Name, City, Created, Warning, OrChange, Revenue, Profit, RegisterNumberText, PaymentOrderWarning, SuspendedAsPerson ? "[pozastavená]" : null, Activity, SkNaceCode + "  " + SkNaceText);
         }
     }
 }

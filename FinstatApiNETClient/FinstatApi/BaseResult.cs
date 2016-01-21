@@ -27,5 +27,10 @@ namespace FinstatApi
         public string PaymentOrderUrl { get; set; }
         public bool OrChange { get; set; }
         public string OrChangeUrl { get; set; }
+
+        public string SkNaceCode { get; set; }
+        public string SkNaceText { get; set; }
+        public string SkNaceDivision { get; set; }
+        public string SkNaceGroup { get; set; }
     }
 }

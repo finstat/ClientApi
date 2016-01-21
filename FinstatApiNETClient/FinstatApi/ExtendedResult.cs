@@ -15,11 +15,6 @@ namespace FinstatApi
 
         public string District { get; set; }
         public string Region { get; set; }
-
-        public string SkNaceCode { get; set; }
-        public string SkNaceText { get; set; }
-        public string SkNaceDivision { get; set; }
-        public string SkNaceGroup { get; set; }
         public string[] Phones { get; set; }
         public string[] Emails { get; set; }
 
