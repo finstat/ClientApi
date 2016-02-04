@@ -5,7 +5,6 @@ using System.Text;
 
 namespace FinstatApi
 {
-    
     [Serializable]
     public class FinstatApiException : Exception
     {
@@ -18,7 +17,11 @@ namespace FinstatApi
             Timeout,
             LimitExceed,
             TooShort,
-            Unknown
+            Unknown,
+            InvalidHash,
+            AccessDisabled,
+            LicenseExpired,
+            InsufficientAccess
         }
 
         public FailTypeEnum FailType { get; set; }

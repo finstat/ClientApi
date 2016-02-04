@@ -7,48 +7,18 @@ using System.Xml.Serialization;
 
 namespace FinstatApi
 {
-    public class ApiMonitoringClient
+    public class ApiMonitoringClient : AbstractApiClient
     {
-        private readonly string _url;
-        private readonly string _apiKey;
-        private readonly string _privateKey;
-        private readonly string _stationId;
-        private readonly string _stationName;
-        private readonly int _timeout;
 
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiMonitoringClient" /> class.
-        /// </summary>
-        /// <param name="url">The URL.</param>
-        /// <param name="apiKey">The API key.</param>
-        /// <param name="privateKey">The API private key.</param>
-        /// <param name="stationId">The station identifier.</param>
-        /// <param name="stationName">Name of the station.</param>
-        /// <param name="timeout">The timeout in miliseconds.</param>
         public ApiMonitoringClient(string url, string apiKey, string privateKey, string stationId, string stationName, int timeout)
+            : base(url, apiKey, privateKey, stationId, stationName, timeout)
         {
-            _apiKey = apiKey;
-            _privateKey = privateKey;
-            _stationId = stationId;
-            _stationName = stationName;
-            _timeout = timeout;
-            _url = url.TrimEnd('/');
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiMonitoringClient" /> class.
-        /// </summary>
-        /// <param name="apiKey">The API key.</param>
-        /// <param name="privateKey">The API private key.</param>
-        /// <param name="stationId">The station identifier.</param>
-        /// <param name="stationName">Name of the station.</param>
         public ApiMonitoringClient(string apiKey, string privateKey, string stationId, string stationName, int timeout)
-            : this("http://www.finstat.sk/api/", apiKey, privateKey, stationId, stationName, timeout)
+            : base(apiKey, privateKey, stationId, stationName, timeout)
         {
-
         }
-
         /// <summary>
         /// Adds specified ico to monitoring.
         /// </summary>
@@ -85,33 +55,8 @@ namespace FinstatApi
             }
             catch (WebException e)
             {
-                if (e.Response is HttpWebResponse)
-                {
-                    HttpWebResponse response = (HttpWebResponse)e.Response;
-                    switch (response.StatusCode)
-                    {
-                        case HttpStatusCode.Forbidden:
-                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.NotValidCustomerKey,
-                                "Not valid API key!", e);
-                        case HttpStatusCode.PaymentRequired:
-                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.LimitExceed,
-                                 response.StatusDescription, e);
-                        case HttpStatusCode.NotFound:
-                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.NotFound,
-                                string.Format("Specified ico {0} not found in database!", ico), e);
-                    }
-                }
-                else if (e.Status == WebExceptionStatus.ConnectFailure || e.Status == WebExceptionStatus.NameResolutionFailure)
-                {
-                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.UrlNotFound,
-                                string.Format("Url {0} not found!", _url), e);
-                }
-                else if (e.Status == WebExceptionStatus.Timeout)
-                {
-                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout,
-                                string.Format("Request to url {0} timeouts in {1} miliseconds!", _url, _timeout), e);
-                }
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.OtherCommunicationFail, "Unknown exception while communication with Finstat api!", e);
+
+                throw ParseErrorResponse(e, ico);
             }
             catch (Exception e)
             {
@@ -155,33 +100,7 @@ namespace FinstatApi
             }
             catch (WebException e)
             {
-                if (e.Response is HttpWebResponse)
-                {
-                    HttpWebResponse response = (HttpWebResponse)e.Response;
-                    switch (response.StatusCode)
-                    {
-                        case HttpStatusCode.Forbidden:
-                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.NotValidCustomerKey,
-                                "Not valid API key!", e);
-                        case HttpStatusCode.PaymentRequired:
-                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.LimitExceed,
-                                 response.StatusDescription, e);
-                        case HttpStatusCode.NotFound:
-                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.NotFound,
-                                string.Format("Specified ico {0} not found in database!", ico), e);
-                    }
-                }
-                else if (e.Status == WebExceptionStatus.ConnectFailure || e.Status == WebExceptionStatus.NameResolutionFailure)
-                {
-                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.UrlNotFound,
-                                string.Format("Url {0} not found!", _url), e);
-                }
-                else if (e.Status == WebExceptionStatus.Timeout)
-                {
-                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout,
-                                string.Format("Request to url {0} timeouts in {1} miliseconds!", _url, _timeout), e);
-                }
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.OtherCommunicationFail, "Unknown exception while communication with Finstat api!", e);
+                throw ParseErrorResponse(e, ico);
             }
             catch (Exception e)
             {
@@ -222,30 +141,7 @@ namespace FinstatApi
             }
             catch (WebException e)
             {
-                if (e.Response is HttpWebResponse)
-                {
-                    HttpWebResponse response = (HttpWebResponse)e.Response;
-                    switch (response.StatusCode)
-                    {
-                        case HttpStatusCode.Forbidden:
-                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.NotValidCustomerKey,
-                                "Not valid API key!", e);
-                        case HttpStatusCode.PaymentRequired:
-                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.LimitExceed,
-                                 response.StatusDescription, e);
-                    }
-                }
-                else if (e.Status == WebExceptionStatus.ConnectFailure || e.Status == WebExceptionStatus.NameResolutionFailure)
-                {
-                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.UrlNotFound,
-                                string.Format("Url {0} not found!", _url), e);
-                }
-                else if (e.Status == WebExceptionStatus.Timeout)
-                {
-                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout,
-                                string.Format("Request to url {0} timeouts in {1} miliseconds!", _url, _timeout), e);
-                }
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.OtherCommunicationFail, "Unknown exception while communication with Finstat api!", e);
+                throw ParseErrorResponse(e);
             }
             catch (Exception e)
             {
@@ -286,30 +182,56 @@ namespace FinstatApi
             }
             catch (WebException e)
             {
-                if (e.Response is HttpWebResponse)
+                throw ParseErrorResponse(e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
+            }
+        }
+
+        /// <summary>
+        /// Request the ZRSR scan for specific ico and sends notifivation mail after saccing.
+        /// </summary>
+        /// <param name="ico">The ico.</param>
+        /// <param name="email">The optional notification email,</param>
+        /// <returns>True if succeed otherwise false.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Specified ico {0} not found in database!
+        /// or Url {0} not found!
+        /// or Unknown exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public bool RequestZRSRScan(string ico, string email = null)
+        {
+            try
+            {
+                using (WebClient client = new WebClientWithTimeout(_timeout))
                 {
-                    HttpWebResponse response = (HttpWebResponse)e.Response;
-                    switch (response.StatusCode)
+                    System.Collections.Specialized.NameValueCollection reqparm =
+                        new System.Collections.Specialized.NameValueCollection();
+                    reqparm.Add("apiKey", _apiKey);
+                    reqparm.Add("Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "requestzrsr"));
+                    reqparm.Add("StationId", _stationId);
+                    reqparm.Add("ico", ico);
+                    if (!string.IsNullOrEmpty(email))
                     {
-                        case HttpStatusCode.Forbidden:
-                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.NotValidCustomerKey,
-                                "Not valid API key!", e);
-                        case HttpStatusCode.PaymentRequired:
-                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.LimitExceed,
-                                 response.StatusDescription, e);
+                        reqparm.Add("email", email);
+                    }
+                    reqparm.Add("StationName", _stationName);
+                    byte[] responsebytes = client.UploadValues(_url + "/RequestZRSRScan", "POST", reqparm);
+                    var response = Encoding.UTF8.GetString(responsebytes);
+                    XmlSerializer serializer = new XmlSerializer(typeof(bool));
+                    using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                    {
+                        return (bool)serializer.Deserialize(reader);
                     }
                 }
-                else if (e.Status == WebExceptionStatus.ConnectFailure || e.Status == WebExceptionStatus.NameResolutionFailure)
-                {
-                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.UrlNotFound,
-                                string.Format("Url {0} not found!", _url), e);
-                }
-                else if (e.Status == WebExceptionStatus.Timeout)
-                {
-                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout,
-                                string.Format("Request to url {0} timeouts in {1} miliseconds!", _url, _timeout), e);
-                }
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.OtherCommunicationFail, "Unknown exception while communication with Finstat api!", e);
+            }
+            catch (WebException e)
+            {
+                throw ParseErrorResponse(e, ico);
             }
             catch (Exception e)
             {

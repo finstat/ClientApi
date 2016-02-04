@@ -14,7 +14,9 @@ namespace ApiTester
             ErrorToValidate,
             NotValid,
             Basic,
-            LimitExceed
+            LimitExceed,
+            InsufficientLicense,
+            Disabled,
         }
 
         //private const string ApiUrlConst = "http://cz.localhost.fiddler:3376/api/";
@@ -51,6 +53,12 @@ namespace ApiTester
                     return;
                 case LicenceVersionEnum.Basic:
                     Console.WriteLine("Basic api key detected!!");
+                    break;
+                case LicenceVersionEnum.Disabled:
+                    Console.WriteLine("You api access is disabled !!");
+                    break;
+                case LicenceVersionEnum.InsufficientLicense:
+                    Console.WriteLine("Your api level is insufficient!!");
                     break;
                 case LicenceVersionEnum.LimitExceed:
                     Console.WriteLine("You exceed your api limit!!");
@@ -104,6 +112,14 @@ namespace ApiTester
             }
             catch (FinstatApiException apiException)
             {
+                if (apiException.FailType == FinstatApiException.FailTypeEnum.AccessDisabled)
+                {
+                    return LicenceVersionEnum.Disabled;
+                }
+                if (apiException.FailType == FinstatApiException.FailTypeEnum.InsufficientAccess)
+                {
+                    return LicenceVersionEnum.InsufficientLicense;
+                }
                 if (apiException.FailType == FinstatApiException.FailTypeEnum.LimitExceed)
                 {
                     return LicenceVersionEnum.LimitExceed;

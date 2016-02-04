@@ -18,7 +18,11 @@ namespace FinstatApi
             Timeout,
             LimitExceed,
             TooShort,
-            Unknown
+            Unknown,
+            LicenseExpired,
+            InsufficientAccess,
+            AccessDisabled,
+            InvalidHash
         }
 
         public FailTypeEnum FailType { get; set; }

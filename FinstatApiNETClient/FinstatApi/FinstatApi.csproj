@@ -35,6 +35,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractApiClient.cs" />
     <Compile Include="ApiClient.cs" />
     <Compile Include="ApiAutocomplete.cs" />
     <Compile Include="ApiDailyDiffClient.cs" />
