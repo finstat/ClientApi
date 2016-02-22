@@ -10,6 +10,9 @@ namespace FinstatApi
         public string ORSection { get; set; }
         public string ORInsertNo { get; set; }
         public Person[] Persons { get; set; }
+        public decimal? BasicCapital { get; set; }
+        public decimal? PaybackRange { get; set; }
+        public Court RegistrationCourt { get; set; }
 
         public class Person
         {
@@ -21,6 +24,11 @@ namespace FinstatApi
             public DateTime DetectedFrom { get; set; }
             public DateTime? DetectedTo { get; set; }
             public FunctionAssigment[] Functions { get; set; }
+            public decimal? DepositAmount { get; set; }
+            public decimal? PaybackRange { get; set; }
+            public string Country { get; set; }
+            public string Region { get; set; }
+            public string District { get; set; }
         }
 
         public class FunctionAssigment
@@ -30,6 +38,18 @@ namespace FinstatApi
             public DateTime? From { get; set; }
         }
 
+        public class Court
+        {
+            public string Name { get; set; }
+            public string Street { get; set; }
+            public string StreetNumber { get; set; }
+            public string ZipCode { get; set; }
+            public string City { get; set; }
+            public string Country { get; set; }
+            public string Region { get; set; }
+            public string District { get; set; }
+        }
+
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
@@ -37,6 +57,10 @@ namespace FinstatApi
             {
                 result.Append("\nSekcia: " + ORSection);
                 result.Append(" Vlozka: " + ORInsertNo);
+            }
+            if (RegistrationCourt != null)
+            {
+                result.Append("\nZapisany na: " + RegistrationCourt.Name);
             }
             if (!string.IsNullOrEmpty(LegalFormCode))
             {
@@ -51,10 +75,10 @@ namespace FinstatApi
                 result.AppendLine("\nOsoby:");
                 foreach (var person in Persons)
                 {
-                    result.Append(string.Format("  Cele meno: {0}; Mesto: {1}; Funkcie: ", person.FullName, person.City));
+                    result.Append(string.Format("  Cele meno: {0}; Mesto: {1}; Okres: {2}; Funkcie: ", person.FullName, person.City, person.District));
                     foreach (var function in person.Functions)
                     {
-                        result.Append(string.Format("{0} - {1}, ", function.Type, function.Description));    
+                        result.Append(string.Format("{0} - {1}, ", function.Type, function.Description));
                     }
                     result.AppendLine();
                 }
