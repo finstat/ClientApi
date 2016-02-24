@@ -13,8 +13,6 @@ namespace FinstatApi
         }
         public IcDphAdditonalData IcDphAdditional { get; set; }
 
-        public string District { get; set; }
-        public string Region { get; set; }
         public string[] Phones { get; set; }
         public string[] Emails { get; set; }
 
@@ -112,16 +110,9 @@ namespace FinstatApi
             }
         }
 
-        public class Office
+        public class Office : Address
         {
             public string[] Subjects { get; set; }
-            public string City { get; set; }
-            public string Street { get; set; }
-            public string ZipCode { get; set; }
-            public string StreetNumber { get; set; }
-            public string Country { get; set; }
-            public string District { get; set; }
-            public string Region { get; set; }
             public OfficeType Type { get; set; }
 
             public override string ToString()

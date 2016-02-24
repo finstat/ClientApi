@@ -4,14 +4,26 @@ using System.Web;
 
 namespace FinstatApi
 {
-    public class DetailResult
+    public class Address
     {
-        public string Ico { get; set; }
-        public string Name { get; set; }
         public string Street { get; set; }
         public string StreetNumber { get; set; }
         public string ZipCode { get; set; }
         public string City { get; set; }
+        public string Country { get; set; }
+        public string Region { get; set; }
+        public string District { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} {1}, {2} {3}, {4}, {5}, {6}", Street, StreetNumber, ZipCode, City, Country, District, Region);
+        }
+    }
+
+    public class DetailResult : Address
+    {
+        public string Ico { get; set; }
+        public string Name { get; set; }
         public string Activity { get; set; }
         public DateTime? Created { get; set; }
         public DateTime? Cancelled { get; set; }
@@ -24,8 +36,6 @@ namespace FinstatApi
         public string CzNaceDivision { get; set; }
         public string CzNaceGroup { get; set; }
 
-        public string Region { get; set; }
-        public string District { get; set; }
         public string LegalForm { get; set; }
         public string OwnershipType { get; set; }
         public string EmployeeCount { get; set; }

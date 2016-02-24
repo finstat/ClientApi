@@ -13,22 +13,20 @@ namespace FinstatApi
         public decimal? BasicCapital { get; set; }
         public decimal? PaybackRange { get; set; }
         public Court RegistrationCourt { get; set; }
+        public string[] WebPages { get; set; }
+        public HistoryAddress[] AddressHistory { get; set; }
+        public string StatutoryAction { get; set; }
+        public string ProcurationAction { get; set; }
 
-        public class Person
+
+        public class Person : Address
         {
             public string FullName { get; set; }
-            public string Street { get; set; }
-            public string StreetNumber { get; set; }
-            public string ZipCode { get; set; }
-            public string City { get; set; }
             public DateTime DetectedFrom { get; set; }
             public DateTime? DetectedTo { get; set; }
             public FunctionAssigment[] Functions { get; set; }
             public decimal? DepositAmount { get; set; }
             public decimal? PaybackRange { get; set; }
-            public string Country { get; set; }
-            public string Region { get; set; }
-            public string District { get; set; }
         }
 
         public class FunctionAssigment
@@ -38,16 +36,15 @@ namespace FinstatApi
             public DateTime? From { get; set; }
         }
 
-        public class Court
+        public class Court: Address
         {
             public string Name { get; set; }
-            public string Street { get; set; }
-            public string StreetNumber { get; set; }
-            public string ZipCode { get; set; }
-            public string City { get; set; }
-            public string Country { get; set; }
-            public string Region { get; set; }
-            public string District { get; set; }
+        }
+
+        public class HistoryAddress : Address
+        {
+            public DateTime ValidFrom { get; set; }
+            public DateTime? ValidTo { get; set; }
         }
 
         public override string ToString()
@@ -82,6 +79,22 @@ namespace FinstatApi
                     }
                     result.AppendLine();
                 }
+            }
+            if(!string.IsNullOrEmpty(StatutoryAction))
+            {
+                result.AppendLine("\nKonanie statutarov: " + StatutoryAction);
+            }
+            if (!string.IsNullOrEmpty(ProcurationAction))
+            {
+                result.AppendLine("\nKonanie prokury: " + ProcurationAction);
+            }
+            if (WebPages != null && WebPages.Length > 0)
+            {
+                result.AppendLine("\nWeb stranky: " + string.Join(", ", WebPages));
+            }
+            if (AddressHistory!= null && AddressHistory.Length > 0)
+            {
+                result.AppendLine("\nHistoricke adresy (pocet): " + AddressHistory.Length);
             }
             return base.ToString() + result.ToString();
         }
