@@ -17,9 +17,9 @@ namespace FinstatApi
         public HistoryAddress[] AddressHistory { get; set; }
         public string StatutoryAction { get; set; }
         public string ProcurationAction { get; set; }
-        public Tender LastTender { get; set; }
-        public Restructuring LastRestructuring { get; set; }
-        public Liquidation LastLiquidation { get; set; }
+        public BankruptResult Bankrupt { get; set; }
+        public RestructuringResult Restructuring { get; set; }
+        public LiquidationResult Liquidation { get; set; }
         public DateTime? ORCancelled { get; set; }
 
 
@@ -51,19 +51,19 @@ namespace FinstatApi
             public DateTime? ValidTo { get; set; }
         }
 
-        public class Liquidation
+        public class LiquidationResult
         {
             public DateTime? EnterDate { get; set; }
             public string EnterReason { get; set; }
             public DateTime? ExitDate { get; set; }
             public Person Officer { get; set; }
         }
-        public class Tender : Liquidation
+        public class BankruptResult : LiquidationResult
         {
             public string ExitReason { get; set; }
         }
 
-        public class Restructuring : Tender
+        public class RestructuringResult : BankruptResult
         {
         }
 
@@ -120,17 +120,17 @@ namespace FinstatApi
             {
                 result.AppendLine("\nHistoricke adresy (pocet): " + AddressHistory.Length);
             }
-            if (LastTender != null)
+            if (Bankrupt!= null)
             {
-                result.AppendLine(string.Format("\nPosledný konkurz: {0:dd.MM.yyyy} - {1:dd.MM.yyyy}", LastTender.EnterDate, LastTender.ExitDate));
+                result.AppendLine(string.Format("\nKonkurz: {0:dd.MM.yyyy} - {1:dd.MM.yyyy}", Bankrupt.EnterDate, Bankrupt.ExitDate));
             }
-            if (LastRestructuring != null)
+            if (Restructuring != null)
             {
-                result.AppendLine(string.Format("\nPosledná reštruktualizácia: {0:dd.MM.yyyy} - {1:dd.MM.yyyy}", LastRestructuring.EnterDate, LastRestructuring.ExitDate));
+                result.AppendLine(string.Format("\nReštruktualizácia: {0:dd.MM.yyyy} - {1:dd.MM.yyyy}", Restructuring.EnterDate, Restructuring.ExitDate));
             }
-            if (LastLiquidation != null)
+            if (Liquidation != null)
             {
-                result.AppendLine(string.Format("\nPosledná likvidácia: {0:dd.MM.yyyy} - {1:dd.MM.yyyy}", LastLiquidation.EnterDate, LastLiquidation.ExitDate));
+                result.AppendLine(string.Format("\nLikvidácia: {0:dd.MM.yyyy} - {1:dd.MM.yyyy}", Liquidation.EnterDate, Liquidation.ExitDate));
             }
             return base.ToString() + result.ToString();
         }
