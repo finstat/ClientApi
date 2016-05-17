@@ -22,7 +22,6 @@ namespace FinstatApi
         public LiquidationResult Liquidation { get; set; }
         public DateTime? ORCancelled { get; set; }
 
-
         public class Person : Address
         {
             public string FullName { get; set; }
@@ -132,7 +131,7 @@ namespace FinstatApi
             {
                 result.AppendLine(string.Format("\nLikvidácia: {0:dd.MM.yyyy} - {1:dd.MM.yyyy}", Liquidation.EnterDate, Liquidation.ExitDate));
             }
-            return base.ToString() + result.ToString();
+            return base.ToString() + result;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace FinstatApi
 {
@@ -50,6 +51,7 @@ namespace FinstatApi
         public Office[] Offices { get; set; }
         public Subject[] Subjects { get; set; }
         public NameParts StructuredName { get; set; }
+        public ContactSource[] ContactSources { get; set; }
 
         public class Debt
         {
@@ -138,36 +140,40 @@ namespace FinstatApi
 
         public override string ToString()
         {
-            string officesString = string.Empty;
-            string subjectsString = string.Empty;
+            StringBuilder dataString = new StringBuilder();
+            dataString.AppendLine("");
             if (Offices != null)
             {
-                officesString = "\n Offices:";
+                dataString.AppendLine(" Offices:");
                 foreach (Office o in Offices)
                 {
-                    officesString += string.Format("\n - {0}", o.ToString());
+                    dataString.AppendLine(string.Format(" - {0}", o));
                 }
             }
 
             if (Subjects != null)
             {
-                subjectsString = "\n Subjects:";
+                dataString.AppendLine("  Subjects:");
                 foreach (Subject s in Subjects)
                 {
-                    subjectsString += string.Format("\n - {0}", s.ToString());
+                    dataString.AppendLine(string.Format("- {0}", s));
                 }
             }
-            string selfEmployedString = string.Empty;
             if (SelfEmployed && (StructuredName != null))
             {
-                selfEmployedString += string.Format("\n Name structured: \n {0}", StructuredName.ToString());
+                dataString.AppendLine(String.Format("Name structured: \n {0}", StructuredName));
+            }
+
+            if (ContactSources != null)
+            {
+                dataString.AppendLine(string.Format("Contact Sources: {0}", ContactSources.Length));
             }
 
             return string.Format("Ico: {0}, Name: {1}{21} {23}, IcDph: {25}\n City: {2}, District: {3}, Region: {4}\n Created: {5}\n SkNace: {6}\n Phones: {7}\n Emails: {8}\n Warning: {9}, Payment order warning: {22} OrChange: {10}\n EmployeeText: {11}\n ActualYear: {12} with Credit Score {26}\n ProfitActual: {13}, ProfitPrev: {14}\n RevenueActual: {15}, RevenuePrev: {16}\n ForeignResources: {17}, GrossMargin: {18}, ROA: {19}\n Debts:{20}\n Payment orders:{24}\n Self Employed:{27}{28}", Ico, Name, City, District, Region, Created, SkNaceCode + "-" + SkNaceText, string.Join(", ", Phones), string.Join(", ", Emails), Warning, OrChange, EmployeeText, ActualYear, ProfitActual, ProfitPrev, RevenueActual, RevenuePrev, ForeignResources, GrossMargin, ROA, Debts == null ? "no debt" : Debt.AsString(Debts), SuspendedAsPerson ? "[pozastavená]" : null, PaymentOrderWarning, RegisterNumberText, PaymentOrders == null ? "no payment orders" : PaymentOrder.AsString(PaymentOrders),
-                IcDphAdditional != null ? IcDphAdditional.ToString() : null,
-                CreditScoreValue != null ? CreditScoreValue.Value.ToString("0.00") + " " + CreditScoreState : null,
-                SelfEmployed,
-                officesString + subjectsString +selfEmployedString
+                    IcDphAdditional != null ? IcDphAdditional.ToString() : null,
+                    CreditScoreValue != null ? CreditScoreValue.Value.ToString("0.00") + " " + CreditScoreState : null,
+                    SelfEmployed,
+                    dataString
                 );
         }
 
@@ -202,6 +208,12 @@ namespace FinstatApi
                         After != null ? string.Join(" ", After):""
                     });
             }
+        }
+
+        public class ContactSource
+        {
+            public string Contact { get; set; }
+            public string[] Sources { get; set; }
         }
     }
 }
