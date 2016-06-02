@@ -56,7 +56,7 @@ namespace FinstatApi
             }
             catch (WebException e)
             {
-                throw ParseErrorResponse(e);
+                throw ParseErrorResponse(e, ico);
             }
             catch (Exception e)
             {
@@ -99,7 +99,7 @@ namespace FinstatApi
             }
             catch (WebException e)
             {
-                throw ParseErrorResponse(e);
+                throw ParseErrorResponse(e, ico);
             }
             catch (Exception e)
             {
@@ -143,7 +143,7 @@ namespace FinstatApi
             }
             catch (WebException e)
             {
-                throw ParseErrorResponse(e);
+                throw ParseErrorResponse(e, ico);
             }
             catch (Exception e)
             {

@@ -65,7 +65,7 @@ namespace FinstatApi
         {
             if (e.Response is HttpWebResponse)
             {
-                ParseWebResponse(e);
+                ParseWebResponse(e, parameter);
             }
             else if (e.Status == WebExceptionStatus.ConnectFailure || e.Status == WebExceptionStatus.NameResolutionFailure)
             {
