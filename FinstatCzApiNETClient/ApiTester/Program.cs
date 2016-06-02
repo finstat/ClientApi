@@ -237,7 +237,7 @@ namespace ApiTester
         {
             try
             {
-                ApiClient apiClient = new ApiClient(ApiUrlConst, "not valid key", "api test", "api test", 60000);
+                ApiClient apiClient = new ApiClient(ApiUrlConst, "not valid key", "not valid private key", "api test", "api test", 60000);
                 apiClient.RequestDetail(TestIcoConst);
             }
             catch (FinstatApiException apiException)
@@ -258,7 +258,7 @@ namespace ApiTester
         {
             try
             {
-                ApiClient apiClient = new ApiClient("http://not.valid.sk/api", "not valid key", "api test", "api test",
+                ApiClient apiClient = new ApiClient("http://not.valid.sk/api", "not valid key", "not valid private key", "api test", "api test",
                     60000);
                 apiClient.RequestDetail(TestIcoConst);
             }
