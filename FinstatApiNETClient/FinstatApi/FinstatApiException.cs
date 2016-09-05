@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FinstatApi
 {
-    
+
     [Serializable]
     public class FinstatApiException : Exception
     {
