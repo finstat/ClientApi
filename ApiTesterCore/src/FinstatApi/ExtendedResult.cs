@@ -52,6 +52,12 @@ namespace FinstatApi
         public Subject[] Subjects { get; set; }
         public NameParts StructuredName { get; set; }
         public ContactSource[] ContactSources { get; set; }
+        public string KaRUrl { get; set; }
+        public string DebtUrl { get; set; }
+        public string DisposalUrl { get; set; }
+        public bool HasKaR { get; set; }
+        public bool HasDebt { get; set; }
+        public bool HasDisposal { get; set; }
 
         public class Debt
         {
@@ -169,11 +175,41 @@ namespace FinstatApi
                 dataString.AppendLine(string.Format("Contact Sources: {0}", ContactSources.Length));
             }
 
-            return string.Format("Ico: {0}, Name: {1}{21} {23}, IcDph: {25}\n City: {2}, District: {3}, Region: {4}\n Created: {5}\n SkNace: {6}\n Phones: {7}\n Emails: {8}\n Warning: {9}, Payment order warning: {22} OrChange: {10}\n EmployeeText: {11}\n ActualYear: {12} with Credit Score {26}\n ProfitActual: {13}, ProfitPrev: {14}\n RevenueActual: {15}, RevenuePrev: {16}\n ForeignResources: {17}, GrossMargin: {18}, ROA: {19}\n Debts:{20}\n Payment orders:{24}\n Self Employed:{27}{28}", Ico, Name, City, District, Region, Created, SkNaceCode + "-" + SkNaceText, string.Join(", ", Phones), string.Join(", ", Emails), Warning, OrChange, EmployeeText, ActualYear, ProfitActual, ProfitPrev, RevenueActual, RevenuePrev, ForeignResources, GrossMargin, ROA, Debts == null ? "no debt" : Debt.AsString(Debts), SuspendedAsPerson ? "[pozastavená]" : null, PaymentOrderWarning, RegisterNumberText, PaymentOrders == null ? "no payment orders" : PaymentOrder.AsString(PaymentOrders),
-                    IcDphAdditional != null ? IcDphAdditional.ToString() : null,
-                    CreditScoreValue != null ? CreditScoreValue.Value.ToString("0.00") + " " + CreditScoreState : null,
-                    SelfEmployed,
-                    dataString
+            return string.Format("Ico: {0}, Name: {1}{21} {23}, IcDph: {25}\n City: {2}, District: {3}, Region: {4}\n Created: {5}\n SkNace: {6}\n Phones: {7}\n Emails: {8}\n Warning: {9}, KaR Warning: {29}, Debt Warning: {30}, Disposal Warning: {31}, Payment order warning: {22} OrChange: {10}\n EmployeeText: {11}\n ActualYear: {12} with Credit Score {26}\n ProfitActual: {13}, ProfitPrev: {14}\n RevenueActual: {15}, RevenuePrev: {16}\n ForeignResources: {17}, GrossMargin: {18}, ROA: {19}\n Debts:{20}\n Payment orders:{24}\n Self Employed:{27}{28}",
+                    new object[] {
+                        Ico, //0
+                        Name, //1
+                        City, //2
+                        District, //3
+                        Region, //4
+                        Created,//5
+                        SkNaceCode + "-" + SkNaceText,//6
+                        string.Join(", ", Phones),//7
+                        string.Join(", ", Emails),//8
+                        Warning,//9
+                        OrChange,//10
+                        EmployeeText,//11
+                        ActualYear,//12
+                        ProfitActual,//13
+                        ProfitPrev,//14
+                        RevenueActual,//15
+                        RevenuePrev,//15
+                        ForeignResources,//17
+                        GrossMargin,//18
+                        ROA,//19
+                        Debts == null ? "no debt" : Debt.AsString(Debts),//20
+                        SuspendedAsPerson ? "[pozastavená]" : null,//21
+                        PaymentOrderWarning,//22
+                        RegisterNumberText,//23
+                        PaymentOrders == null ? "no payment orders" : PaymentOrder.AsString(PaymentOrders),//24
+                        IcDphAdditional != null ? IcDphAdditional.ToString() : null,//25
+                        CreditScoreValue != null ? CreditScoreValue.Value.ToString("0.00") + " " + CreditScoreState : null,//26
+                        SelfEmployed,//26
+                        dataString,//28
+                        HasKaR,//29
+                        HasDebt,//30
+                        HasDisposal//31
+                    }
                 );
         }
 
