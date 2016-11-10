@@ -46,8 +46,6 @@ namespace ApiMonitoringTester
 
             FailsWithNotValidCustomerKey();
             AddNotExistingCompany();
-            //RequestZRSRNew("12345670");
-            RequestZRSRExisting(TestIcoConst);
             AddToMonitoring(TestIcoConst);
             GetCurrentMonitorings(TestIcoConst);
             GetMonitoringReport();
@@ -194,44 +192,6 @@ namespace ApiMonitoringTester
                 else
                 {
                     Console.WriteLine("Ident " + ico + " removed to monitoring with state: " + task.Result);
-                }
-            }).Wait();
-        }
-
-        /// <summary>
-        /// Test ZRSR scan existujuci
-        /// </summary>
-        public static void RequestZRSRNew(string ico)
-        {
-            ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
-            apiClient.RequestZRSRScan(ico).ContinueWith(task =>
-            {
-                if (task.IsFaulted)
-                {
-                    Console.WriteLine("ZRSR request scan fails with exception: " + task.Exception.InnerException);
-                }
-                else
-                {
-                    Console.WriteLine("Ident " + ico + " requestet for ZRSR scan with result: " + task.Result);
-                }
-            }).Wait();
-        }
-
-        /// <summary>
-        /// Test ZRSR scan existujuci
-        /// </summary>
-        public static void RequestZRSRExisting(string ico)
-        {
-            ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
-            apiClient.RequestZRSRScan(ico).ContinueWith(task =>
-            {
-                if (task.IsFaulted)
-                {
-                    Console.WriteLine("ZRSR request scan fails with exception: " + task.Exception.InnerException);
-                }
-                else
-                {
-                    Console.WriteLine("Ident " + ico + " requestet for ZRSR scan with result: " + task.Result);
                 }
             }).Wait();
         }

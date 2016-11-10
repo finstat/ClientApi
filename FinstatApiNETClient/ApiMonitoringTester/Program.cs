@@ -31,8 +31,6 @@ namespace ApiMonitoringTester
 
             FailsWithNotValidCustomerKey();
             AddNotExistingCompany();
-            //RequestZRSRNew("12345670");
-            RequestZRSRExisting(TestIcoConst);
             AddToMonitoring(TestIcoConst);
             GetCurrentMonitorings(TestIcoConst);
             GetMonitoringReport();
@@ -160,40 +158,6 @@ namespace ApiMonitoringTester
             catch (FinstatApiException apiException)
             {
                 Console.WriteLine("Remove from monitoring fails with exception: " + apiException);
-            }
-        }
-
-        /// <summary>
-        /// Test ZRSR scan existujuci
-        /// </summary>
-        public static void RequestZRSRNew(string ico)
-        {
-            try
-            {
-                ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
-                bool result = apiClient.RequestZRSRScan(ico);
-                Console.WriteLine("Ident " + ico + " requestet for ZRSR scan with result: " + result);
-            }
-            catch (FinstatApiException apiException)
-            {
-                Console.WriteLine("ZRSR request scan fails with exception: " + apiException);
-            }
-        }
-
-        /// <summary>
-        /// Test ZRSR scan existujuci
-        /// </summary>
-        public static void RequestZRSRExisting(string ico)
-        {
-            try
-            {
-                ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
-                bool result = apiClient.RequestZRSRScan(ico);
-                Console.WriteLine("Ident " + ico + " requestet for ZRSR scan with result: " + result);
-            }
-            catch (FinstatApiException apiException)
-            {
-                Console.WriteLine("ZRSR request scan fails with exception: " + apiException);
             }
         }
     }
