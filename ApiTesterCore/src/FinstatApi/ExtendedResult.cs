@@ -23,9 +23,6 @@ namespace FinstatApi
         public string EmployeeCode { get; set; }
         public string EmployeeText { get; set; }
 
-        public string LegalFormCode { get; set; }
-        public string LegalFormText { get; set; }
-
         public string OwnershipTypeCode { get; set; }
         public string OwnershipTypeText { get; set; }
 
@@ -59,95 +56,29 @@ namespace FinstatApi
         public bool HasDebt { get; set; }
         public bool HasDisposal { get; set; }
 
-        public class Debt
-        {
-            public string Source { get; set; }
-            public double Value { get; set; }
-            public DateTime ValidFrom { get; set; }
-
-            public override string ToString()
-            {
-                return string.Format("Source: {0}, Value: {1}, ValidFrom: {2}", Source, Value, ValidFrom);
-            }
-
-            public static string AsString(Debt[] values)
-            {
-                var temp = new List<string>(values.Length);
-                foreach (var value in values)
-                {
-                    temp.Add(value.ToString());
-                }
-                return string.Join("\n ", temp.ToArray());
-            }
-
-        }
-
-        public class PaymentOrder
-        {
-            public DateTime PublishDate { get; set; }
-            public double? Value { get; set; }
-
-            public override string ToString()
-            {
-                return string.Format("PublishDate: {0}, Value: {1}", PublishDate, Value);
-            }
-
-            public static string AsString(PaymentOrder[] values)
-            {
-                var temp = new List<string>(values.Length);
-                foreach (var value in values)
-                {
-                    temp.Add(value.ToString());
-                }
-                return string.Join("\n ", temp.ToArray());
-            }
-        }
-
-        public class IcDphAdditonalData
-        {
-            public string IcDph { get; set; }
-            public string Paragraph { get; set; }
-            public DateTime? CancelListDetectedDate { get; set; }
-            public DateTime? RemoveListDetectedDate { get; set; }
-            public override string ToString()
-            {
-                return string.Format("IcDph {0} {1}{2}{3}", IcDph, Paragraph,
-                    CancelListDetectedDate != null ? "[zoznam s dovodom na zrušenie]" : null,
-                    RemoveListDetectedDate != null ? "[zoznam vymazaných]" : null
-                    );
-            }
-        }
-
-        public class Office : Address
-        {
-            public string[] Subjects { get; set; }
-            public OfficeType Type { get; set; }
-
-            public override string ToString()
-            {
-                return string.Format("{0} {1}, {2} {3}, {4}, {5}, {6}, {7} \n {8}", new object[] {
-                    Street,
-                    StreetNumber,
-                    City,
-                    ZipCode,
-                    District,
-                    Region,
-                    Country,
-                    Type.ToString(),
-                    (Subjects != null) ? string.Join(", ", Subjects) : ""
-                });
-            }
-        }
-
-        public enum OfficeType
-        {
-            Prevadzka
-        }
-
         public override string ToString()
         {
             StringBuilder dataString = new StringBuilder();
-            dataString.AppendLine("");
+            dataString.Append(base.ToString());
+            dataString.AppendLine(string.Format("Ownership: {0} {1}", OwnershipTypeText, OwnershipTypeCode));
+            dataString.AppendLine(string.Format("Phones: {0}", string.Join(", ", Phones)));
+            dataString.AppendLine(string.Format("Phones: {0}", string.Join(", ", Phones)));
+            dataString.AppendLine(string.Format("Emails: {0}", string.Join(", ", Emails)));
+            dataString.AppendLine(string.Format("Employee: {0} {1}", EmployeeText, EmployeeCode));
+            dataString.AppendLine(string.Format("ActualYear: {0}", ActualYear));
+            dataString.AppendLine(string.Format("ProfitActual: {0}", ProfitActual));
+            dataString.AppendLine(string.Format("ProfitPrev: {0}", ProfitPrev));
+            dataString.AppendLine(string.Format("RevenueActual: {0}", RevenueActual));
+            dataString.AppendLine(string.Format("RevenuePrev: {0}", RevenuePrev));
+            dataString.AppendLine(string.Format("ForeignResources: {0}", ForeignResources));
+            dataString.AppendLine(string.Format("GrossMargin: {0}", GrossMargin));
+            dataString.AppendLine(string.Format("ROA: {0}", ROA));
+            dataString.AppendLine(string.Format("Debts: {0}", Debts == null ? "no debt" : Debt.AsString(Debts)));
+            dataString.AppendLine(string.Format("PaymentOrders: {0}", PaymentOrders == null ? "no payment orders" : PaymentOrder.AsString(PaymentOrders)));
+            dataString.AppendLine(string.Format("IcDphAdditional: {0}", IcDphAdditional != null ? IcDphAdditional.ToString() : null));
+            dataString.AppendLine(string.Format("CreditScore: {0}", CreditScoreValue != null ? CreditScoreValue.Value.ToString("0.00") + " " + CreditScoreState : null));
+            dataString.AppendLine(string.Format("SelfEmployed): {0}", SelfEmployed));
+
             if (Offices != null)
             {
                 dataString.AppendLine(" Offices:");
@@ -175,42 +106,107 @@ namespace FinstatApi
                 dataString.AppendLine(string.Format("Contact Sources: {0}", ContactSources.Length));
             }
 
-            return string.Format("Ico: {0}, Name: {1}{21} {23}, IcDph: {25}\n City: {2}, District: {3}, Region: {4}\n Created: {5}\n SkNace: {6}\n Phones: {7}\n Emails: {8}\n Warning: {9}, KaR Warning: {29}, Debt Warning: {30}, Disposal Warning: {31}, Payment order warning: {22} OrChange: {10}\n EmployeeText: {11}\n ActualYear: {12} with Credit Score {26}\n ProfitActual: {13}, ProfitPrev: {14}\n RevenueActual: {15}, RevenuePrev: {16}\n ForeignResources: {17}, GrossMargin: {18}, ROA: {19}\n Debts:{20}\n Payment orders:{24}\n Self Employed:{27}{28}",
-                    new object[] {
-                        Ico, //0
-                        Name, //1
-                        City, //2
-                        District, //3
-                        Region, //4
-                        Created,//5
-                        SkNaceCode + "-" + SkNaceText,//6
-                        string.Join(", ", Phones),//7
-                        string.Join(", ", Emails),//8
-                        Warning,//9
-                        OrChange,//10
-                        EmployeeText,//11
-                        ActualYear,//12
-                        ProfitActual,//13
-                        ProfitPrev,//14
-                        RevenueActual,//15
-                        RevenuePrev,//15
-                        ForeignResources,//17
-                        GrossMargin,//18
-                        ROA,//19
-                        Debts == null ? "no debt" : Debt.AsString(Debts),//20
-                        SuspendedAsPerson ? "[pozastavená]" : null,//21
-                        PaymentOrderWarning,//22
-                        RegisterNumberText,//23
-                        PaymentOrders == null ? "no payment orders" : PaymentOrder.AsString(PaymentOrders),//24
-                        IcDphAdditional != null ? IcDphAdditional.ToString() : null,//25
-                        CreditScoreValue != null ? CreditScoreValue.Value.ToString("0.00") + " " + CreditScoreState : null,//26
-                        SelfEmployed,//26
-                        dataString,//28
-                        HasKaR,//29
-                        HasDebt,//30
-                        HasDisposal//31
+            dataString.AppendLine(string.Format("WarningKaR: {0}", WarningKaR));
+            dataString.AppendLine(string.Format("HasKaR: {0}", HasKaR + " " + KaRUrl));
+            dataString.AppendLine(string.Format("HasDebt: {0}", HasDebt + " " + DebtUrl));
+            dataString.AppendLine(string.Format("HasDisposal: {0}", HasDisposal + " " + DisposalUrl));
+            dataString.AppendLine(string.Format("WarningLiquidation: {0}", WarningLiquidation));
+
+            return dataString.ToString();
+        }
+
+        public class Debt
+        {
+            public string Source { get; set; }
+            public double Value { get; set; }
+            public DateTime ValidFrom { get; set; }
+
+            public override string ToString()
+            {
+                StringBuilder dataString = new StringBuilder();
+                dataString.AppendFormat("Source: {0}, ", Source);
+                dataString.AppendFormat("Value: {0}, ", Value);
+                dataString.AppendFormat("ValidFrom: {0}", ValidFrom);
+                return dataString.ToString();
+            }
+
+            public static string AsString(Debt[] values)
+            {
+                StringBuilder dataString = new StringBuilder();
+                if (values != null && values.Length > 0)
+                {
+                    foreach (var value in values)
+                    {
+                        dataString.AppendLine(value.ToString());
                     }
-                );
+                }
+                return dataString.ToString();
+            }
+
+        }
+
+        public class PaymentOrder
+        {
+            public DateTime PublishDate { get; set; }
+            public double? Value { get; set; }
+
+            public override string ToString()
+            {
+                StringBuilder dataString = new StringBuilder();
+                dataString.AppendFormat("PublishDate: {0}, ", PublishDate);
+                dataString.AppendFormat("Value: {0}", Value);
+                return dataString.ToString();
+            }
+
+            public static string AsString(PaymentOrder[] values)
+            {
+                StringBuilder dataString = new StringBuilder();
+                if (values != null && values.Length > 0)
+                {
+                    foreach (var value in values)
+                    {
+                        dataString.AppendLine(value.ToString());
+                    }
+                }
+                return dataString.ToString();
+            }
+        }
+
+        public class IcDphAdditonalData
+        {
+            public string IcDph { get; set; }
+            public string Paragraph { get; set; }
+            public DateTime? CancelListDetectedDate { get; set; }
+            public DateTime? RemoveListDetectedDate { get; set; }
+            public override string ToString()
+            {
+                StringBuilder dataString = new StringBuilder();
+                dataString.AppendFormat("IcDph: {0} ", IcDph);
+                dataString.AppendFormat("{0}", Paragraph);
+                dataString.AppendFormat("{0}", CancelListDetectedDate != null ? "[zoznam s dovodom na zrušenie]" : null);
+                dataString.AppendFormat("{0}", RemoveListDetectedDate != null ? "[zoznam vymazaných]" : null);
+                return dataString.ToString();
+            }
+        }
+
+        public class Office : Address
+        {
+            public string[] Subjects { get; set; }
+            public OfficeType Type { get; set; }
+
+            public override string ToString()
+            {
+                StringBuilder dataString = new StringBuilder();
+                dataString.Append(base.ToString());
+                dataString.AppendLine(string.Format("Type {0}", Type));
+                dataString.AppendLine(string.Format("Subjects: {0}", (Subjects != null) ? string.Join(", ", Subjects) : ""));
+                return dataString.ToString();
+            }
+        }
+
+        public enum OfficeType
+        {
+            Prevadzka
         }
 
         public class Subject
@@ -221,11 +217,11 @@ namespace FinstatApi
 
             public override string ToString()
             {
-                return string.Format("{0} - {1} {2}", new object[] {
-                    Title,
-                    ValidFrom,
-                    (SuspendedFrom != null) ? string.Format(" - {0}", SuspendedFrom) : string.Empty,
-                });
+                StringBuilder dataString = new StringBuilder();
+                dataString.AppendFormat("Title: {0}, ", Title);
+                dataString.AppendFormat("ValidFrom: {0} , ", ValidFrom);
+                dataString.AppendFormat("SuspendedFrom: {0}", SuspendedFrom);
+                return dataString.ToString();
             }
         }
         public class NameParts
@@ -234,15 +230,15 @@ namespace FinstatApi
             public string[] Name { get; set; }
             public string[] Suffix { get; set; }
             public string[] After { get; set; }
+
             public override string ToString()
             {
-                return string.Format("Prefix: {0}\n Name: {1}\n Suffix: {2}\n After:{3}\n",
-                    new[] {
-                        Prefix != null ? string.Join(" ", Prefix):"",
-                        Name != null ? string.Join(" ", Name):"",
-                        Suffix != null ? string.Join(" ", Suffix):"",
-                        After != null ? string.Join(" ", After):""
-                    });
+                StringBuilder dataString = new StringBuilder();
+                dataString.AppendLine(string.Format("Prefix: {0}, ", Prefix != null ? string.Join(" ", Prefix) : null));
+                dataString.AppendLine(string.Format("Name: {0}, ", Name != null ? string.Join(" ", Name) : null));
+                dataString.AppendLine(string.Format("Suffix: {0}, ", Suffix != null ? string.Join(" ", Suffix) : null));
+                dataString.AppendLine(string.Format(" After: {0}, ", After != null ? string.Join(" ", After) : null));
+                return dataString.ToString();
             }
         }
 
@@ -250,6 +246,14 @@ namespace FinstatApi
         {
             public string Contact { get; set; }
             public string[] Sources { get; set; }
+
+            public override string ToString()
+            {
+                StringBuilder dataString = new StringBuilder();
+                dataString.AppendFormat("Contact: {0}, ", Contact);
+                dataString.AppendFormat("Sources: {0} , ", Sources != null ? string.Join(", ", Sources) : null);
+                return dataString.ToString();
+            }
         }
     }
 }
