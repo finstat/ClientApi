@@ -182,8 +182,8 @@ namespace FinstatApi
                 StringBuilder dataString = new StringBuilder();
                 dataString.AppendFormat("IcDph: {0} ", IcDph);
                 dataString.AppendFormat("{0}", Paragraph);
-                dataString.AppendFormat("{0}", CancelListDetectedDate != null ? "[zoznam s dovodom na zru�enie]" : null);
-                dataString.AppendFormat("{0}", RemoveListDetectedDate != null ? "[zoznam vymazan�ch]" : null);
+                dataString.AppendFormat("{0}", CancelListDetectedDate != null ? "[zoznam s dovodom na zrušenie]" : null);
+                dataString.AppendFormat("{0}", RemoveListDetectedDate != null ? "[zoznam vymazaných]" : null);
                 return dataString.ToString();
             }
         }
