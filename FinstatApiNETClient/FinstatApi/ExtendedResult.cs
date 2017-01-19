@@ -62,7 +62,6 @@ namespace FinstatApi
             dataString.Append(base.ToString());
             dataString.AppendLine(string.Format("Ownership: {0} {1}", OwnershipTypeText, OwnershipTypeCode));
             dataString.AppendLine(string.Format("Phones: {0}", string.Join(", ", Phones)));
-            dataString.AppendLine(string.Format("Phones: {0}", string.Join(", ", Phones)));
             dataString.AppendLine(string.Format("Emails: {0}", string.Join(", ", Emails)));
             dataString.AppendLine(string.Format("Employee: {0} {1}", EmployeeText, EmployeeCode));
             dataString.AppendLine(string.Format("ActualYear: {0}", ActualYear));
@@ -183,8 +182,8 @@ namespace FinstatApi
                 StringBuilder dataString = new StringBuilder();
                 dataString.AppendFormat("IcDph: {0} ", IcDph);
                 dataString.AppendFormat("{0}", Paragraph);
-                dataString.AppendFormat("{0}", CancelListDetectedDate != null ? "[zoznam s dovodom na zrušenie]" : null);
-                dataString.AppendFormat("{0}", RemoveListDetectedDate != null ? "[zoznam vymazaných]" : null);
+                dataString.AppendFormat("{0}", CancelListDetectedDate != null ? "[zoznam s dovodom na zruï¿½enie]" : null);
+                dataString.AppendFormat("{0}", RemoveListDetectedDate != null ? "[zoznam vymazanï¿½ch]" : null);
                 return dataString.ToString();
             }
         }
