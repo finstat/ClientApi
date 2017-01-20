@@ -141,6 +141,7 @@ namespace FinstatApi
         {
             public DateTime? StartDate { get; set; }
             public string ExitReason { get; set; }
+            public string Status { get; set; }
 
             public override string ToString()
             {
@@ -148,6 +149,7 @@ namespace FinstatApi
                 dataString.Append(base.ToString());
                 dataString.Append(string.Format("StartDate: {0}", StartDate));
                 dataString.Append(string.Format("ExitReason: {0}", ExitReason));
+                dataString.Append(string.Format("Status: {0}", Status));
                 return dataString.ToString();
             }
         }
