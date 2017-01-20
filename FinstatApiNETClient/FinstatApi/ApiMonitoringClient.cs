@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -31,7 +32,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public bool Add(string ico)
+        public bool Add(string ico, bool json = false)
         {
             try
             {
@@ -44,12 +45,20 @@ namespace FinstatApi
                     reqparm.Add("Hash", ComputeVerificationHash(_apiKey,_privateKey, ico));
                     reqparm.Add("StationId", _stationId);
                     reqparm.Add("StationName", _stationName);
-                    byte[] responsebytes = client.UploadValues(_url + "/AddToMonitoring", "POST", reqparm);
+                    byte[] responsebytes = client.UploadValues(_url + "/AddToMonitoring" + (json ? ".json" : null), "POST", reqparm);
                     var response = Encoding.UTF8.GetString(responsebytes);
-                    XmlSerializer serializer = new XmlSerializer(typeof (bool));
-                    using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                     {
-                        return (bool) serializer.Deserialize(reader);
+                        if (json)
+                        {
+                            JsonSerializer serializer = new JsonSerializer();
+                            return (bool)serializer.Deserialize(reader, typeof(bool));
+                        }
+                        else
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(bool));
+                            return (bool)serializer.Deserialize(reader);
+                        }
                     }
                 }
             }
@@ -75,7 +84,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public bool Remove(string ico)
+        public bool Remove(string ico, bool json = false)
         {
             try
             {
@@ -88,12 +97,20 @@ namespace FinstatApi
                     reqparm.Add("Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, ico));
                     reqparm.Add("StationId", _stationId);
                     reqparm.Add("StationName", _stationName);
-                    byte[] responsebytes = client.UploadValues(_url + "/RemoveFromMonitoring", "POST", reqparm);
+                    byte[] responsebytes = client.UploadValues(_url + "/RemoveFromMonitoring" + (json ? ".json" : null), "POST", reqparm);
                     var response = Encoding.UTF8.GetString(responsebytes);
-                    XmlSerializer serializer = new XmlSerializer(typeof (bool));
-                    using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                     {
-                        return (bool) serializer.Deserialize(reader);
+                        if (json)
+                        {
+                            JsonSerializer serializer = new JsonSerializer();
+                            return (bool)serializer.Deserialize(reader, typeof(bool));
+                        }
+                        else
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(bool));
+                            return (bool)serializer.Deserialize(reader);
+                        }
                     }
                 }
             }
@@ -117,7 +134,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public string[] GetMonitorings()
+        public string[] GetMonitorings(bool json = false)
         {
             try
             {
@@ -129,12 +146,20 @@ namespace FinstatApi
                     reqparm.Add("Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "list"));
                     reqparm.Add("StationId", _stationId);
                     reqparm.Add("StationName", _stationName);
-                    byte[] responsebytes = client.UploadValues(_url + "/MonitoringList", "POST", reqparm);
+                    byte[] responsebytes = client.UploadValues(_url + "/MonitoringList" + (json ? ".json" : null), "POST", reqparm);
                     var response = Encoding.UTF8.GetString(responsebytes);
-                    XmlSerializer serializer = new XmlSerializer(typeof (string[]));
-                    using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                     {
-                        return (string[]) serializer.Deserialize(reader);
+                        if (json)
+                        {
+                            JsonSerializer serializer = new JsonSerializer();
+                            return (string[])serializer.Deserialize(reader, typeof(string[]));
+                        }
+                        else
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(string[]));
+                            return (string[])serializer.Deserialize(reader);
+                        }
                     }
                 }
             }
@@ -159,7 +184,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public Monitoring[] GetReport()
+        public Monitoring[] GetReport(bool json = false)
         {
             try
             {
@@ -171,12 +196,20 @@ namespace FinstatApi
                     reqparm.Add("Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "report"));
                     reqparm.Add("StationId", _stationId);
                     reqparm.Add("StationName", _stationName);
-                    byte[] responsebytes = client.UploadValues(_url + "/MonitoringReport", "POST", reqparm);
+                    byte[] responsebytes = client.UploadValues(_url + "/MonitoringReport" + (json ? ".json" : null), "POST", reqparm);
                     var response = Encoding.UTF8.GetString(responsebytes);
-                    XmlSerializer serializer = new XmlSerializer(typeof (Monitoring[]));
-                    using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                     {
-                        return (Monitoring[]) serializer.Deserialize(reader);
+                        if (json)
+                        {
+                            JsonSerializer serializer = new JsonSerializer();
+                            return (Monitoring[])serializer.Deserialize(reader, typeof(Monitoring[]));
+                        }
+                        else
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(Monitoring[]));
+                            return (Monitoring[])serializer.Deserialize(reader);
+                        }
                     }
                 }
             }

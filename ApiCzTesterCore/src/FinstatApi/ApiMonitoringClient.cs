@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -33,7 +34,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public async Task<bool> Add(string ico)
+        public async Task<bool> Add(string ico, bool json = false)
         {
             HttpResponseMessage result = null;
             try
@@ -48,15 +49,23 @@ namespace FinstatApi
                          new KeyValuePair<string, string>("StationName", _stationName),
                     });
 
-                    result = await client.PostAsync(_url + "/AddToMonitoring", content);
+                    result = await client.PostAsync(_url + "/AddToMonitoring" + (json ? ".json" : null), content);
                     result.EnsureSuccessStatusCode();
                     if (result.IsSuccessStatusCode)
                     {
                         var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        XmlSerializer serializer = new XmlSerializer(typeof(bool));
-                        using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                         {
-                            return (bool)serializer.Deserialize(reader);
+                            if (json)
+                            {
+                                JsonSerializer serializer = new JsonSerializer();
+                                return (bool)serializer.Deserialize(reader, typeof(bool));
+                            }
+                            else
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(bool));
+                                return (bool)serializer.Deserialize(reader);
+                            }
                         }
                     }
                     return false;
@@ -88,7 +97,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public async Task<bool> Remove(string ico)
+        public async Task<bool> Remove(string ico, bool json = false)
         {
             HttpResponseMessage result = null;
             try
@@ -103,15 +112,23 @@ namespace FinstatApi
                          new KeyValuePair<string, string>("StationName", _stationName),
                     });
 
-                    result = await client.PostAsync(_url + "/RemoveFromMonitoring", content);
+                    result = await client.PostAsync(_url + "/RemoveFromMonitoring" + (json ? ".json" : null), content);
                     result.EnsureSuccessStatusCode();
                     if (result.IsSuccessStatusCode)
                     {
                         var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        XmlSerializer serializer = new XmlSerializer(typeof(bool));
-                        using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                         {
-                            return (bool)serializer.Deserialize(reader);
+                            if (json)
+                            {
+                                JsonSerializer serializer = new JsonSerializer();
+                                return (bool)serializer.Deserialize(reader, typeof(bool));
+                            }
+                            else
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(bool));
+                                return (bool)serializer.Deserialize(reader);
+                            }
                         }
                     }
                     return false;
@@ -141,7 +158,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public async Task<string[]> GetMonitorings()
+        public async Task<string[]> GetMonitorings(bool json = false)
         {
             HttpResponseMessage result = null;
             try
@@ -155,15 +172,23 @@ namespace FinstatApi
                          new KeyValuePair<string, string>("StationName", _stationName),
                     });
 
-                    result = await client.PostAsync(_url + "/MonitoringList", content);
+                    result = await client.PostAsync(_url + "/MonitoringList" + (json ? ".json" : null), content);
                     result.EnsureSuccessStatusCode();
                     if (result.IsSuccessStatusCode)
                     {
                         var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        XmlSerializer serializer = new XmlSerializer(typeof(string[]));
-                        using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                         {
-                            return (string[])serializer.Deserialize(reader);
+                            if (json)
+                            {
+                                JsonSerializer serializer = new JsonSerializer();
+                                return (string[])serializer.Deserialize(reader, typeof(string[]));
+                            }
+                            else
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(string[]));
+                                return (string[])serializer.Deserialize(reader);
+                            }
                         }
                     }
                     return null;
@@ -193,7 +218,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public async Task<Monitoring[]> GetReport()
+        public async Task<Monitoring[]> GetReport(bool json = false)
         {
             HttpResponseMessage result = null;
             try
@@ -207,15 +232,23 @@ namespace FinstatApi
                          new KeyValuePair<string, string>("StationName", _stationName),
                     });
 
-                    result = await client.PostAsync(_url + "/MonitoringReport", content);
+                    result = await client.PostAsync(_url + "/MonitoringReport" + (json ? ".json" : null), content);
                     result.EnsureSuccessStatusCode();
                     if (result.IsSuccessStatusCode)
                     {
                         var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        XmlSerializer serializer = new XmlSerializer(typeof(Monitoring[]));
-                        using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                         {
-                            return (Monitoring[])serializer.Deserialize(reader);
+                            if (json)
+                            {
+                                JsonSerializer serializer = new JsonSerializer();
+                                return (Monitoring[])serializer.Deserialize(reader, typeof(Monitoring[]));
+                            }
+                            else
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(Monitoring[]));
+                                return (Monitoring[])serializer.Deserialize(reader);
+                            }
                         }
                     }
                     return null;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -31,7 +32,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public async Task<DailyDiffList> RequestListOfDailyDiffs()
+        public async Task<DailyDiffList> RequestListOfDailyDiffs(bool json = false)
         {
             HttpResponseMessage result = null;
             try
@@ -45,15 +46,23 @@ namespace FinstatApi
                          new KeyValuePair<string, string>("StationName", _stationName),
                     });
 
-                    result = await client.PostAsync(_url + "/GetListOfDiffs", content);
+                    result = await client.PostAsync(_url + "/GetListOfDiffs" + (json ? ".json" : null), content);
                     result.EnsureSuccessStatusCode();
                     if (result.IsSuccessStatusCode)
                     {
                         var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        XmlSerializer serializer = new XmlSerializer(typeof(DailyDiffList));
-                        using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                         {
-                            return (DailyDiffList)serializer.Deserialize(reader);
+                            if (json)
+                            {
+                                JsonSerializer serializer = new JsonSerializer();
+                                return (DailyDiffList)serializer.Deserialize(reader, typeof(DailyDiffList));
+                            }
+                            else
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(DailyDiffList));
+                                return (DailyDiffList)serializer.Deserialize(reader);
+                            }
                         }
                     }
                     return null;

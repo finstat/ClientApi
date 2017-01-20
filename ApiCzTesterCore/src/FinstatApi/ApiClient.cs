@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -35,7 +36,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public async Task<DetailResult> RequestDetail(string ico)
+        public async Task<DetailResult> RequestDetail(string ico, bool json = false)
         {
             HttpResponseMessage result = null;
             try
@@ -49,15 +50,23 @@ namespace FinstatApi
                          new KeyValuePair<string, string>("StationId", _stationId),
                          new KeyValuePair<string, string>("StationName", _stationName),
                     });
-                    result = await client.PostAsync(_url + "/detail", content);
+                    result = await client.PostAsync(_url + "/detail" + (json ? ".json" : null), content);
                     result.EnsureSuccessStatusCode();
                     if (result.IsSuccessStatusCode)
                     {
                         var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        XmlSerializer serializer = new XmlSerializer(typeof(DetailResult));
-                        using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                         {
-                            return (DetailResult)serializer.Deserialize(reader);
+                            if (json)
+                            {
+                                JsonSerializer serializer = new JsonSerializer();
+                                return (DetailResult)serializer.Deserialize(reader, typeof(DetailResult));
+                            }
+                            else
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(DetailResult));
+                                return (DetailResult)serializer.Deserialize(reader);
+                            }
                         }
                     }
                     return null;
@@ -89,7 +98,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public async Task<ApiAutocomplete> RequestAutocomplete(string query)
+        public async Task<ApiAutocomplete> RequestAutocomplete(string query, bool json = false)
         {
             HttpResponseMessage result = null;
             try
@@ -104,15 +113,23 @@ namespace FinstatApi
                          new KeyValuePair<string, string>("StationName", _stationName),
                     });
 
-                    result = await client.PostAsync(_url + "autocomplete", content);
+                    result = await client.PostAsync(_url + "autocomplete" + (json ? ".json" : null), content);
                     result.EnsureSuccessStatusCode();
                     if (result.IsSuccessStatusCode)
                     {
                         var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        XmlSerializer serializer = new XmlSerializer(typeof(ApiAutocomplete));
-                        using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                         {
-                            return (ApiAutocomplete)serializer.Deserialize(reader);
+                            if (json)
+                            {
+                                JsonSerializer serializer = new JsonSerializer();
+                                return (ApiAutocomplete)serializer.Deserialize(reader, typeof(ApiAutocomplete));
+                            }
+                            else
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(ApiAutocomplete));
+                                return (ApiAutocomplete)serializer.Deserialize(reader);
+                            }
                         }
                     }
                     return null;

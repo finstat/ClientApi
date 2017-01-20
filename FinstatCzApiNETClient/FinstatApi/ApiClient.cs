@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -33,7 +34,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public DetailResult RequestDetail(string ico)
+        public DetailResult RequestDetail(string ico, bool json = false)
         {
             try
             {
@@ -46,12 +47,20 @@ namespace FinstatApi
                     reqparm.Add("Hash", ComputeVerificationHash(_apiKey, _privateKey, ico));
                     reqparm.Add("StationId", _stationId);
                     reqparm.Add("StationName", _stationName);
-                    byte[] responsebytes = client.UploadValues(_url + "/detail", "POST", reqparm);
+                    byte[] responsebytes = client.UploadValues(_url + "/detail" + (json ? ".json" : null), "POST", reqparm);
                     var response = Encoding.UTF8.GetString(responsebytes);
-                    XmlSerializer serializer = new XmlSerializer(typeof (DetailResult));
-                    using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                     {
-                        return (DetailResult) serializer.Deserialize(reader);
+                        if (json)
+                        {
+                            JsonSerializer serializer = new JsonSerializer();
+                            return (DetailResult)serializer.Deserialize(reader, typeof(DetailResult));
+                        }
+                        else
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(DetailResult));
+                            return (DetailResult)serializer.Deserialize(reader);
+                        }
                     }
                 }
             }
@@ -77,7 +86,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public ApiAutocomplete RequestAutocomplete(string query)
+        public ApiAutocomplete RequestAutocomplete(string query, bool json = false)
         {
             try
             {
@@ -90,12 +99,20 @@ namespace FinstatApi
                     reqparm.Add("Hash", ComputeVerificationHash(_apiKey, _privateKey, query));
                     reqparm.Add("StationId", _stationId);
                     reqparm.Add("StationName", _stationName);
-                    byte[] responsebytes = client.UploadValues(_url + "/autocomplete", "POST", reqparm);
+                    byte[] responsebytes = client.UploadValues(_url + "/autocomplete" + (json ? ".json" : null), "POST", reqparm);
                     var response = Encoding.UTF8.GetString(responsebytes);
-                    XmlSerializer serializer = new XmlSerializer(typeof (ApiAutocomplete));
-                    using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                     {
-                        return (ApiAutocomplete)serializer.Deserialize(reader);
+                        if (json)
+                        {
+                            JsonSerializer serializer = new JsonSerializer();
+                            return (ApiAutocomplete)serializer.Deserialize(reader, typeof(ApiAutocomplete));
+                        }
+                        else
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(ApiAutocomplete));
+                            return (ApiAutocomplete)serializer.Deserialize(reader);
+                        }
                     }
                 }
             }

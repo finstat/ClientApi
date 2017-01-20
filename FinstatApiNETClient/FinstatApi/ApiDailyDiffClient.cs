@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -29,7 +30,7 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public DailyDiffList RequestListOfDailyDiffs()
+        public DailyDiffList RequestListOfDailyDiffs(bool json = false)
         {
             try
             {
@@ -41,12 +42,20 @@ namespace FinstatApi
                     reqparm.Add("Hash", ComputeVerificationHash(_apiKey,_privateKey, null));
                     reqparm.Add("StationId", _stationId);
                     reqparm.Add("StationName", _stationName);
-                    byte[] responsebytes = client.UploadValues(_url + "/GetListOfDiffs", "POST", reqparm);
+                    byte[] responsebytes = client.UploadValues(_url + "/GetListOfDiffs" + (json ? ".json" : null), "POST", reqparm);
                     var response = Encoding.UTF8.GetString(responsebytes);
-                    XmlSerializer serializer = new XmlSerializer(typeof(DailyDiffList));
-                    using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(response)))
+                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                     {
-                        return (DailyDiffList)serializer.Deserialize(reader);
+                        if (json)
+                        {
+                            JsonSerializer serializer = new JsonSerializer();
+                            return (DailyDiffList)serializer.Deserialize(reader, typeof(DailyDiffList));
+                        }
+                        else
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(DailyDiffList));
+                            return (DailyDiffList)serializer.Deserialize(reader);
+                        }
                     }
                 }
             }
