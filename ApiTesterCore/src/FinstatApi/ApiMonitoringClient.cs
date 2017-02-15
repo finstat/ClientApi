@@ -87,6 +87,69 @@ namespace FinstatApi
         }
 
         /// <summary>
+        /// Adds specified date to monitoring.
+        /// </summary>
+        /// <param name="date">The date.</param>
+        /// <returns>True if succeed otherwise false.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Invalid Date format
+        /// or Url {0} not found!
+        /// or Unknown exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public async Task<bool> AddDate(string date, bool json = false)
+        {
+            HttpResponseMessage result = null;
+            try
+            {
+                using (HttpClient client = CreateClient(_timeout))
+                {
+                    var content = new FormUrlEncodedContent(new[] {
+                         new KeyValuePair<string, string>("date", date),
+                         new KeyValuePair<string, string>("apiKey", _apiKey),
+                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, date)),
+                         new KeyValuePair<string, string>("StationId", _stationId),
+                         new KeyValuePair<string, string>("StationName", _stationName),
+                    });
+
+                    result = await client.PostAsync(_url + "/AddDateToMonitoring" + (json ? ".json" : null), content);
+                    result.EnsureSuccessStatusCode();
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
+                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
+                        {
+                            if (json)
+                            {
+                                JsonSerializer serializer = new JsonSerializer();
+                                return (bool)serializer.Deserialize(reader, typeof(bool));
+                            }
+                            else
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(bool));
+                                return (bool)serializer.Deserialize(reader);
+                            }
+                        }
+                    }
+                    return false;
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null, date);
+            }
+            catch (TaskCanceledException e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
+            }
+        }
+
+        /// <summary>
         /// Removes specified ico from monitoring.
         /// </summary>
         /// <param name="ico">The ico.</param>
@@ -150,6 +213,68 @@ namespace FinstatApi
         }
 
         /// <summary>
+        /// Removes specified date from monitoring.
+        /// </summary>
+        /// <param name="date">The date.</param>
+        /// <returns>True if succeed otherwise false.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Invalid Date format
+        /// or Url {0} not found!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public async Task<bool> RemoveDate(string date, bool json = false)
+        {
+            HttpResponseMessage result = null;
+            try
+            {
+                using (HttpClient client = CreateClient(_timeout))
+                {
+                    var content = new FormUrlEncodedContent(new[] {
+                         new KeyValuePair<string, string>("date", date),
+                         new KeyValuePair<string, string>("apiKey", _apiKey),
+                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, date)),
+                         new KeyValuePair<string, string>("StationId", _stationId),
+                         new KeyValuePair<string, string>("StationName", _stationName),
+                    });
+
+                    result = await client.PostAsync(_url + "/RemoveDateFromMonitoring" + (json ? ".json" : null), content);
+                    result.EnsureSuccessStatusCode();
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
+                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
+                        {
+                            if (json)
+                            {
+                                JsonSerializer serializer = new JsonSerializer();
+                                return (bool)serializer.Deserialize(reader, typeof(bool));
+                            }
+                            else
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(bool));
+                                return (bool)serializer.Deserialize(reader);
+                            }
+                        }
+                    }
+                    return false;
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null, date);
+            }
+            catch (TaskCanceledException e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
+            }
+        }
+
+        /// <summary>
         /// Retrieves list of current monitorings.
         /// </summary>
         /// <returns>List of monitored ICO's.</returns>
@@ -174,6 +299,66 @@ namespace FinstatApi
                     });
 
                     result = await client.PostAsync(_url + "/MonitoringList" + (json ? ".json" : null), content);
+                    result.EnsureSuccessStatusCode();
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
+                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
+                        {
+                            if (json)
+                            {
+                                JsonSerializer serializer = new JsonSerializer();
+                                return (string[])serializer.Deserialize(reader, typeof(string[]));
+                            }
+                            else
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(string[]));
+                                return (string[])serializer.Deserialize(reader);
+                            }
+                        }
+                    }
+                    return null;
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
+            }
+            catch (TaskCanceledException e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves list of current monitoring dates.
+        /// </summary>
+        /// <returns>List of monitored dates.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Url {0} not found!
+        /// or Unknown exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public async Task<string[]> GetDateMonitorings(bool json = false)
+        {
+            HttpResponseMessage result = null;
+            try
+            {
+                using (HttpClient client = CreateClient(_timeout))
+                {
+                    var content = new FormUrlEncodedContent(new[] {
+                         new KeyValuePair<string, string>("apiKey", _apiKey),
+                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, "datelist")),
+                         new KeyValuePair<string, string>("StationId", _stationId),
+                         new KeyValuePair<string, string>("StationName", _stationName),
+                    });
+
+                    result = await client.PostAsync(_url + "/MonitoringDateList" + (json ? ".json" : null), content);
                     result.EnsureSuccessStatusCode();
                     if (result.IsSuccessStatusCode)
                     {
@@ -250,6 +435,65 @@ namespace FinstatApi
                             {
                                 XmlSerializer serializer = new XmlSerializer(typeof(Monitoring[]));
                                 return (Monitoring[])serializer.Deserialize(reader);
+                            }
+                        }
+                    }
+                    return null;
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
+            }
+            catch (TaskCanceledException e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
+            }
+        }
+
+        // <summary>
+        /// Retrieves report of date events in current monitorings.
+        /// </summary>
+        /// <returns>List of monitoring events.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Url {0} not found!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public async Task<MonitoringDate[]> GetDateReport(bool json = false)
+        {
+            HttpResponseMessage result = null;
+            try
+            {
+                using (HttpClient client = CreateClient(_timeout))
+                {
+                    var content = new FormUrlEncodedContent(new[] {
+                         new KeyValuePair<string, string>("apiKey", _apiKey),
+                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, "datereport")),
+                         new KeyValuePair<string, string>("StationId", _stationId),
+                         new KeyValuePair<string, string>("StationName", _stationName),
+                    });
+
+                    result = await client.PostAsync(_url + "/MonitoringDateReport" + (json ? ".json" : null), content);
+                    result.EnsureSuccessStatusCode();
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
+                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
+                        {
+                            if (json)
+                            {
+                                JsonSerializer serializer = new JsonSerializer();
+                                return (MonitoringDate[])serializer.Deserialize(reader, typeof(MonitoringDate[]));
+                            }
+                            else
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(MonitoringDate[]));
+                                return (MonitoringDate[])serializer.Deserialize(reader);
                             }
                         }
                     }

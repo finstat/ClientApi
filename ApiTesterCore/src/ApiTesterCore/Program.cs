@@ -388,7 +388,7 @@ namespace ApiTesterCore
                 if (task.IsFaulted && task.Exception != null && task.Exception.InnerException != null && (task.Exception.InnerException is FinstatApiException))
                 {
                     FinstatApiException ex = (FinstatApiException)task.Exception.InnerException;
-                    if (ex.FailType == FinstatApiException.FailTypeEnum.NotFound)
+                    if (ex.FailType == FinstatApiException.FailTypeEnum.UrlNotFound)
                     {
                         Console.WriteLine("Url not found: Test OK!");
                     }

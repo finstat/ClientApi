@@ -12,6 +12,7 @@ namespace ApiMonitoringTester
         //private const string ApiUrlConst = "http://localhost:3376/api/";
         private const string ApiUrlConst = "http://www.finstat.sk/api/";
         private const string TestIcoConst = "35763469";
+        private const string TestDateConst = "1.1.1997";
         private static string _apiKey = null;
         private static string _privateKey = null;
         static void Main(string[] args)
@@ -33,8 +34,12 @@ namespace ApiMonitoringTester
             AddNotExistingCompany();
             AddToMonitoring(TestIcoConst);
             GetCurrentMonitorings(TestIcoConst);
+            AddDateToMonitoring(TestDateConst);
+            GetCurrentMonitoringDatess(TestDateConst);
             GetMonitoringReport();
+            GetMonitoringDateReport();
             RemoveFromMonitoring(TestIcoConst);
+            RemoveDateFromMonitoring(TestDateConst);
             Console.Write("Press any key to end...");
             Console.ReadKey();
         }
@@ -99,6 +104,23 @@ namespace ApiMonitoringTester
         }
 
         /// <summary>
+        /// Test pre pridanie do monitoringu datum
+        /// </summary>
+        public static void AddDateToMonitoring(string date)
+        {
+            try
+            {
+                ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
+                bool result = apiClient.AddDate(date);
+                Console.WriteLine("Date " + date + " added to monitoring with state: " + result);
+            }
+            catch (FinstatApiException apiException)
+            {
+                Console.WriteLine("Add to monitoring fails with exception: " + apiException);
+            }
+        }
+
+        /// <summary>
         /// Test pre stiahnutie zoznamu firiem v monitoring (s testom na existenciu ico)
         /// </summary>
         public static void GetCurrentMonitorings(string ico)
@@ -115,6 +137,31 @@ namespace ApiMonitoringTester
                 else
                 {
                     Console.WriteLine("Ico " + ico +" NOT found in current monitoring");
+                }
+            }
+            catch (FinstatApiException apiException)
+            {
+                Console.WriteLine("Get current monitorings fails with exception: " + apiException);
+            }
+        }
+
+        /// <summary>
+        /// Test pre stiahnutie zoznamu datumov v monitoringu (s testom na existenci datum)
+        /// </summary>
+        public static void GetCurrentMonitoringDatess(string date)
+        {
+            try
+            {
+                ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
+                string[] result = apiClient.GetDateMonitorings();
+                Console.WriteLine("There are " + result.Length + " items in monitoring");
+                if (Array.IndexOf(result, date) >= 0)
+                {
+                    Console.WriteLine("Date " + date + " found in current monitoring");
+                }
+                else
+                {
+                    Console.WriteLine("Date " + date + " NOT found in current monitoring");
                 }
             }
             catch (FinstatApiException apiException)
@@ -145,6 +192,27 @@ namespace ApiMonitoringTester
         }
 
         /// <summary>
+        /// Test pre stiahnutie zoznamu udalosti pre aktualne datumy v monitoringu
+        /// </summary>
+        public static void GetMonitoringDateReport()
+        {
+            try
+            {
+                ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
+                MonitoringDate[] result = apiClient.GetDateReport();
+                Console.WriteLine("There are " + result.Length + " events in monitoring for last 30 days.");
+                for (int i = 0, count = result.Length >= 10 ? 10 : result.Length; i < count; i++)
+                {
+                    Console.WriteLine(i + ": " + result[i]);
+                }
+            }
+            catch (FinstatApiException apiException)
+            {
+                Console.WriteLine("Get current monitorings fails with exception: " + apiException);
+            }
+        }
+
+        /// <summary>
         /// Test pre odobratie z monitoringu
         /// </summary>
         public static void RemoveFromMonitoring(string ico)
@@ -154,6 +222,23 @@ namespace ApiMonitoringTester
                 ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
                 bool result = apiClient.Remove(ico);
                 Console.WriteLine("Ident " + ico + " removed to monitoring with state: " + result);
+            }
+            catch (FinstatApiException apiException)
+            {
+                Console.WriteLine("Remove from monitoring fails with exception: " + apiException);
+            }
+        }
+
+        /// <summary>
+        /// Test pre odobratie datumu z monitoringu
+        /// </summary>
+        public static void RemoveDateFromMonitoring(string date)
+        {
+            try
+            {
+                ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
+                bool result = apiClient.RemoveDate(date);
+                Console.WriteLine("Date " + date + " removed to monitoring with state: " + result);
             }
             catch (FinstatApiException apiException)
             {
