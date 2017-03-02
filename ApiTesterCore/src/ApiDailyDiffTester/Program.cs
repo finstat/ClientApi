@@ -15,7 +15,7 @@ namespace ApiDailyDiffTester
     {
         //private const string ApiUrlConst = "http://ipv4.fiddler:3376/api/";
         //private const string ApiUrlConst = "http://localhost:3376/api/";
-        private const string ApiUrlConst = "http://www.finstat.sk/api/";
+        private const string ApiUrlConst = "https://www.finstat.sk/api/";
         private static string _apiKey = null;
         private static string _privateKey = null;
         public static void Main(string[] args)

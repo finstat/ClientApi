@@ -10,7 +10,7 @@ namespace ApiMonitoringTester
     {
         //private const string ApiUrlConst = "http://ipv4.fiddler:3376/api/";
         //private const string ApiUrlConst = "http://localhost:3376/api/";
-        private const string ApiUrlConst = "http://www.finstat.sk/api/";
+        private const string ApiUrlConst = "https://www.finstat.sk/api/";
         private const string TestIcoConst = "35763469";
         private const string TestDateConst = "1.1.1997";
         private static string _apiKey = null;

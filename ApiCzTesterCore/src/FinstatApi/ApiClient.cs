@@ -12,7 +12,7 @@ using System.Xml.Serialization;
 
 namespace FinstatApi
 {
-    public class ApiClient :AbstractApiClient
+    public class ApiClient : AbstractApiClient
     {
         public ApiClient(string url, string apiKey, string privateKey, string stationId, string stationName, int timeout)
             : base(url, apiKey, privateKey, stationId, stationName, timeout)

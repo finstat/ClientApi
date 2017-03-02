@@ -23,8 +23,8 @@ namespace ApiTester
 
         //private const string ApiUrlConst = "http://localhost.fiddler:3376/api/";
         //private const string ApiUrlConst = "http://localhost:3376/api/";
-        //private const string ApiUrlConst = "http://cz.finstat.sk/api/";
-        private const string ApiUrlConst = "http://www.finstat.sk/api/";
+        //private const string ApiUrlConst = "https://cz.finstat.sk/api/";
+        private const string ApiUrlConst = "https://www.finstat.sk/api/";
         private const string TestIcoConst = "35757442";
         private static string _apiKey = null;
         private static string _privateKey = null;
