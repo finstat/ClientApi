@@ -29,11 +29,13 @@ namespace ApiDistraintTester
         private const string TestIcoConst = "35757442";
         private static string _apiKey = null;
         private static string _privateKey = null;
+        private static bool _allow_payed_methods = false;
 
         private static void Main(string[] args)
         {
             _apiKey = ConfigurationManager.AppSettings["api_key"];
             _privateKey = ConfigurationManager.AppSettings["private_key"];
+            _allow_payed_methods = bool.Parse(ConfigurationManager.AppSettings["allow_payed_methods"]);
             if (string.IsNullOrEmpty(_apiKey) || _apiKey == "add_api_key")
             {
                 Console.Write("api_key missing in .config file, please enter manually: ");
@@ -80,16 +82,15 @@ namespace ApiDistraintTester
             FailsWithNotValidCustomerKey();
             TimeoutRequest();
             NotExistingCompany();
-            /*
+            
             var searchResult = Search(null, "Kocianová", null, "Bratislava", null, null);
             if (searchResult != null && searchResult.Distraints.Length > 0)
             {
                 Detail(searchResult.Distraints.FirstOrDefault().DetailToken, searchResult.Distraints.Select(x => x.DetailId).Take(3).ToArray());
             }
-            */
-            //var historyResult = Results(null, "Kocianová2", null, "Bratislava", null, null);
-            //var historyResult = Results("xxx");
-            //var detailResult = StoredDetail("ex-user-erik@myself.sk-131336264713268476-EB7D559B-F75C-4297-8F16-F9EC3077C6D3-173");
+            var historyResult = Results(null, "Kocianová2", null, "Bratislava", null, null);
+            var historyResultByToken = Results("EB7D559B-F75C-4297-8F16-F9EC3077C6D3");
+            var detailResult = StoredDetail("ex-user-erik@myself.sk-131336264713268476-EB7D559B-F75C-4297-8F16-F9EC3077C6D3-173");
 
             string ident = string.Empty;
             do
@@ -100,7 +101,7 @@ namespace ApiDistraintTester
                 var idents = ident.Trim(' ').Split(',').Select(x => string.IsNullOrEmpty(x) ? null : x).ToArray();
                 if (idents.Length == 6)
                 {
-                    Search(idents[0], idents[1], idents[2], idents[3], idents[4], idents[5]);
+                    Results(idents[0], idents[1], idents[2], idents[3], idents[4], idents[5]);
                 }
                 else
                 {
@@ -164,6 +165,11 @@ namespace ApiDistraintTester
         /// </summary>
         public static DistraintResult Search(string ico, string surname, string dateOfBirth, string city, string companyName, string fileReference)
         {
+            if (!_allow_payed_methods)
+            {
+                Console.WriteLine("Payed methods are not allowed for testing");
+                return null;
+            }
             try
             {
                 ApiClient apiClient = new ApiClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
@@ -183,6 +189,11 @@ namespace ApiDistraintTester
         /// </summary>
         public static DistraintDetailResults Detail(string token, int[] ids)
         {
+            if (!_allow_payed_methods)
+            {
+                Console.WriteLine("Payed methods are not allowed for testing");
+                return null;
+            }
             try
             {
                 ApiClient apiClient = new ApiClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
