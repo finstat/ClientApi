@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTester", "ApiTester\ApiTester.csproj", "{E9C3DD2C-32B6-48A0-BE84-02F931AA2F6E}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiMonitoringTester", "ApiMonitoringTester\ApiMonitoringTester.csproj", "{782E8B76-6158-42BA-BDF3-E75719501CDF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiDailyDiffTester", "ApiDailyDiffTester\ApiDailyDiffTester.csproj", "{DD8E54E7-5F68-4FE8-8029-5EB53BF61895}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiDistraintTester", "ApiDistraintTester\ApiDistraintTester.csproj", "{F866F61E-DB3C-417B-A8C9-199DBBA770CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{DD8E54E7-5F68-4FE8-8029-5EB53BF61895}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD8E54E7-5F68-4FE8-8029-5EB53BF61895}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD8E54E7-5F68-4FE8-8029-5EB53BF61895}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F866F61E-DB3C-417B-A8C9-199DBBA770CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F866F61E-DB3C-417B-A8C9-199DBBA770CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F866F61E-DB3C-417B-A8C9-199DBBA770CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F866F61E-DB3C-417B-A8C9-199DBBA770CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

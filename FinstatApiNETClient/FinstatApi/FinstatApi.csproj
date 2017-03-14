@@ -47,6 +47,7 @@
     <Compile Include="DailyDiff.cs" />
     <Compile Include="DailyDiffList.cs" />
     <Compile Include="DetailResult.cs" />
+    <Compile Include="DistraintResult.cs" />
     <Compile Include="ExtendedResult.cs" />
     <Compile Include="FinstatApiException.cs" />
     <Compile Include="Monitoring.cs" />
