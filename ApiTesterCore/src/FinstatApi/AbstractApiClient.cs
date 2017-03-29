@@ -28,6 +28,17 @@ namespace FinstatApi
         /// <param name="timeout">The timeout in miliseconds.</param>
         public AbstractApiClient(string url, string apiKey, string privateKey, string stationId, string stationName, int timeout)
         {
+            if (!string.IsNullOrEmpty(url))
+            {
+                if (url.StartsWith("http://"))
+                {
+                    url = url.Replace("http://", "https://");
+                }
+                if (!url.StartsWith("https://"))
+                {
+                    url = "https://" + url;
+                }
+            }
             _apiKey = apiKey;
             _privateKey = privateKey;
             _stationId = stationId;

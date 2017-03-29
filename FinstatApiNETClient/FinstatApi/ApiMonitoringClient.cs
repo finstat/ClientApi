@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 
 namespace FinstatApi
 {
-    public class ApiMonitoringClient :AbstractApiClient
+    public class ApiMonitoringClient : AbstractApiClient
     {
         public ApiMonitoringClient(string url, string apiKey, string privateKey, string stationId, string stationName, int timeout)
             : base(url, apiKey, privateKey, stationId, stationName, timeout)

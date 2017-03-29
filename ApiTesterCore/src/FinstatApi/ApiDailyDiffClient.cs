@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 
 namespace FinstatApi
 {
-    public class ApiDailyDiffClient :AbstractApiClient
+    public class ApiDailyDiffClient : AbstractApiClient
     {
         public ApiDailyDiffClient(string url, string apiKey, string privateKey, string stationId, string stationName, int timeout)
             : base(url, apiKey, privateKey, stationId, stationName, timeout)
