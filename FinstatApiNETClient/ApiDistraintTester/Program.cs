@@ -24,8 +24,8 @@ namespace ApiDistraintTester
 
         //private const string ApiUrlConst = "http://localhost.fiddler:3376/api/";
         private const string ApiUrlConst = "http://localhost:3376/api/";
-        //private const string ApiUrlConst = "http://cz.finstat.sk/api/";
-        //private const string ApiUrlConst = "http://www.finstat.sk/api/";
+        //private const string ApiUrlConst = "https://cz.finstat.sk/api/";
+        //private const string ApiUrlConst = "https://www.finstat.sk/api/";
         private const string TestIcoConst = "35757442";
         private static string _apiKey = null;
         private static string _privateKey = null;
@@ -82,7 +82,7 @@ namespace ApiDistraintTester
             FailsWithNotValidCustomerKey();
             TimeoutRequest();
             NotExistingCompany();
-            
+
             var searchResult = Search(null, "Kocianová", null, "Bratislava", null, null);
             if (searchResult != null && searchResult.Distraints.Length > 0)
             {
@@ -108,7 +108,7 @@ namespace ApiDistraintTester
                     Console.WriteLine();
                     Console.Write("Some parameters (ICO, SURNAME, DATE_OF_BIRTH, CITY, COMPANY_NAME,FILE_REFERENCE) are missing!");
                 }
-                
+
             } while (!string.IsNullOrEmpty(ident));
         }
 
