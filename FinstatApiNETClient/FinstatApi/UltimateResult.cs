@@ -8,7 +8,6 @@ namespace FinstatApi
         public string ORSection { get; set; }
         public string ORInsertNo { get; set; }
         public Person[] Persons { get; set; }
-        public decimal? BasicCapital { get; set; }
         public decimal? PaybackRange { get; set; }
         public Court RegistrationCourt { get; set; }
         public string[] WebPages { get; set; }
@@ -56,7 +55,7 @@ namespace FinstatApi
                 return dataString.ToString();
             }
 
-           
+
         }
 
         public class FunctionAssigment
@@ -89,7 +88,7 @@ namespace FinstatApi
 
         public class HistoryAddress : Address
         {
-          
+
             public DateTime ValidFrom { get; set; }
             public DateTime? ValidTo { get; set; }
             public override string ToString()
@@ -104,17 +103,17 @@ namespace FinstatApi
 
         public enum Source
         {
-            /// <summary> 
-            ///  Register úpadcov 
-            /// </summary> 
+            /// <summary>
+            ///  Register úpadcov
+            /// </summary>
             BankruptcyRegister,
-            /// <summary> 
-            ///  Obchodný vestník 
-            /// </summary> 
+            /// <summary>
+            ///  Obchodný vestník
+            /// </summary>
             CommercialBulletin,
-            /// <summary> 
-            ///  Obchodný register SR 
-            /// </summary> 
+            /// <summary>
+            ///  Obchodný register SR
+            /// </summary>
             CompaniesRegister,
         }
 
@@ -163,7 +162,7 @@ namespace FinstatApi
             StringBuilder result = new StringBuilder();
             result.AppendLine(base.ToString());
             if (!string.IsNullOrEmpty(ORSection))
-            { 
+            {
                 //sekicam vlozka
                 result.AppendLine(string.Format("ORSection: {0} ORInsertNo: {1}",  ORSection, ORInsertNo));
             }

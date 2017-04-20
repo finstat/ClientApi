@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace FinstatApi
@@ -12,7 +13,6 @@ namespace FinstatApi
             Yellow,
             Green
         }
-        public IcDphAdditonalData IcDphAdditional { get; set; }
 
         public string[] Phones { get; set; }
         public string[] Emails { get; set; }
@@ -31,10 +31,8 @@ namespace FinstatApi
         public double? CreditScoreValue { get; set; }
         public CreditScoreStateEnum? CreditScoreState { get; set; }
 
-        public double? ProfitActual { get; set; }
+        public decimal? BasicCapital { get; set; }
         public double? ProfitPrev { get; set; }
-
-        public double? RevenueActual { get; set; }
         public double? RevenuePrev { get; set; }
 
         public double? ForeignResources { get; set; }
@@ -56,6 +54,10 @@ namespace FinstatApi
         public bool HasDebt { get; set; }
         public bool HasDisposal { get; set; }
 
+        public JudgementCount[] JudgementCounts { get; set; }
+        public DateTime? JudgementLastPublishedDate { get; set; }
+        public Ratio[] Ratios { get; set; }
+
         public override string ToString()
         {
             StringBuilder dataString = new StringBuilder();
@@ -65,18 +67,15 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("Emails: {0}", string.Join(", ", Emails)));
             dataString.AppendLine(string.Format("Employee: {0} {1}", EmployeeText, EmployeeCode));
             dataString.AppendLine(string.Format("ActualYear: {0}", ActualYear));
-            dataString.AppendLine(string.Format("ProfitActual: {0}", ProfitActual));
             dataString.AppendLine(string.Format("ProfitPrev: {0}", ProfitPrev));
-            dataString.AppendLine(string.Format("RevenueActual: {0}", RevenueActual));
             dataString.AppendLine(string.Format("RevenuePrev: {0}", RevenuePrev));
             dataString.AppendLine(string.Format("ForeignResources: {0}", ForeignResources));
             dataString.AppendLine(string.Format("GrossMargin: {0}", GrossMargin));
             dataString.AppendLine(string.Format("ROA: {0}", ROA));
             dataString.AppendLine(string.Format("Debts: {0}", Debts == null ? "no debt" : Debt.AsString(Debts)));
             dataString.AppendLine(string.Format("PaymentOrders: {0}", PaymentOrders == null ? "no payment orders" : PaymentOrder.AsString(PaymentOrders)));
-            dataString.AppendLine(string.Format("IcDphAdditional: {0}", IcDphAdditional != null ? IcDphAdditional.ToString() : null));
             dataString.AppendLine(string.Format("CreditScore: {0}", CreditScoreValue != null ? CreditScoreValue.Value.ToString("0.00") + " " + CreditScoreState : null));
-            dataString.AppendLine(string.Format("SelfEmployed): {0}", SelfEmployed));
+            dataString.AppendLine(string.Format("SelfEmployed: {0}", SelfEmployed));
 
             if (Offices != null)
             {
@@ -111,7 +110,44 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("HasDisposal: {0}", HasDisposal + " " + DisposalUrl));
             dataString.AppendLine(string.Format("WarningLiquidation: {0}", WarningLiquidation));
 
+            dataString.AppendLine(string.Format("JudgementCounts: [{0}]", (JudgementCounts != null) ? string.Join(",", JudgementCounts.Select(x => x.ToString())) : null));
+            dataString.AppendLine(string.Format("JudgementLastPublishedDate: {0}", JudgementLastPublishedDate));
+            dataString.AppendLine(string.Format("Ratios: [{0}]", (Ratios != null) ? string.Join(",", Ratios.Select(x => x.ToString())) : null));
+
             return dataString.ToString();
+        }
+
+        public class JudgementCount
+        {
+            public string Name { get; set; }
+            public int? Value { get; set; }
+
+            public override string ToString()
+            {
+                return string.Format("{0}:{1}", Name, Value);
+            }
+        }
+
+        public class Ratio
+        {
+            public string Name { get; set; }
+            public Item[] Values { get; set; }
+
+            public override string ToString()
+            {
+                return string.Format("{0}: [{1}]", Name, (Values != null) ? string.Join(",", Values.Select(x => x.ToString())) : null);
+            }
+
+            public class Item
+            {
+                public int Year { get; set; }
+                public double? Value { get; set; }
+
+                public override string ToString()
+                {
+                    return string.Format("{0}:{1}", Year, Value);
+                }
+            }
         }
 
         public class Debt
@@ -167,23 +203,6 @@ namespace FinstatApi
                         dataString.AppendLine(value.ToString());
                     }
                 }
-                return dataString.ToString();
-            }
-        }
-
-        public class IcDphAdditonalData
-        {
-            public string IcDph { get; set; }
-            public string Paragraph { get; set; }
-            public DateTime? CancelListDetectedDate { get; set; }
-            public DateTime? RemoveListDetectedDate { get; set; }
-            public override string ToString()
-            {
-                StringBuilder dataString = new StringBuilder();
-                dataString.AppendFormat("IcDph: {0} ", IcDph);
-                dataString.AppendFormat("{0}", Paragraph);
-                dataString.AppendFormat("{0}", CancelListDetectedDate != null ? "[zoznam s dovodom na zrušenie]" : null);
-                dataString.AppendFormat("{0}", RemoveListDetectedDate != null ? "[zoznam vymazaných]" : null);
                 return dataString.ToString();
             }
         }
