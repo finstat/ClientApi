@@ -37,11 +37,13 @@ namespace FinstatApi
                 using (WebClient client = new WebClientWithTimeout(_timeout))
                 {
                     System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection();
-                    reqparm.Add("apiKey", _apiKey);
-                    reqparm.Add("Hash", ComputeVerificationHash(_apiKey,_privateKey, null));
-                    reqparm.Add("StationId", _stationId);
-                    reqparm.Add("StationName", _stationName);
+                        new System.Collections.Specialized.NameValueCollection
+                        {
+                            { "apiKey", _apiKey },
+                            { "Hash", ComputeVerificationHash(_apiKey, _privateKey, null) },
+                            { "StationId", _stationId },
+                            { "StationName", _stationName }
+                        };
                     byte[] responsebytes = client.UploadValues(_url + "/GetListOfDiffs" + (json ? ".json" : null), "POST", reqparm);
                     var response = Encoding.UTF8.GetString(responsebytes);
                     using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
@@ -86,12 +88,14 @@ namespace FinstatApi
                 using (WebClient client = new WebClientWithTimeout(_timeout))
                 {
                     System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection();
-                    reqparm.Add("apiKey", _apiKey);
-                    reqparm.Add("fileName", fileName);
-                    reqparm.Add("Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, fileName));
-                    reqparm.Add("StationId", _stationId);
-                    reqparm.Add("StationName", _stationName);
+                        new System.Collections.Specialized.NameValueCollection
+                        {
+                            { "apiKey", _apiKey },
+                            { "fileName", fileName },
+                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, fileName) },
+                            { "StationId", _stationId },
+                            { "StationName", _stationName }
+                        };
                     byte[] responsebytes = client.UploadValues(_url + "/GetFile", "POST", reqparm);
                     if (responsebytes != null)
                     {
@@ -108,9 +112,8 @@ namespace FinstatApi
             }
             catch (WebException e)
             {
-                if (e.Response is HttpWebResponse)
+                if (e.Response is HttpWebResponse response)
                 {
-                    HttpWebResponse response = (HttpWebResponse)e.Response;
                     switch (response.StatusCode)
                     {
                         case HttpStatusCode.Forbidden:

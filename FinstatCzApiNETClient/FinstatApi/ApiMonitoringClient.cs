@@ -39,12 +39,14 @@ namespace FinstatApi
                 using (WebClient client = new WebClientWithTimeout(_timeout))
                 {
                     System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection();
-                    reqparm.Add("ico", ico);
-                    reqparm.Add("apiKey", _apiKey);
-                    reqparm.Add("Hash", ApiClient.ComputeVerificationHash(_apiKey,_privateKey, ico));
-                    reqparm.Add("StationId", _stationId);
-                    reqparm.Add("StationName", _stationName);
+                        new System.Collections.Specialized.NameValueCollection
+                        {
+                            { "ico", ico },
+                            { "apiKey", _apiKey },
+                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, ico) },
+                            { "StationId", _stationId },
+                            { "StationName", _stationName }
+                        };
                     byte[] responsebytes = client.UploadValues(_url + "/AddToMonitoring" + (json ? ".json" : null), "POST", reqparm);
                     var response = Encoding.UTF8.GetString(responsebytes);
                     using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
@@ -92,12 +94,14 @@ namespace FinstatApi
                 using (WebClient client = new WebClientWithTimeout(_timeout))
                 {
                     System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection();
-                    reqparm.Add("ico", ico);
-                    reqparm.Add("apiKey", _apiKey);
-                    reqparm.Add("Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, ico));
-                    reqparm.Add("StationId", _stationId);
-                    reqparm.Add("StationName", _stationName);
+                        new System.Collections.Specialized.NameValueCollection
+                        {
+                            { "ico", ico },
+                            { "apiKey", _apiKey },
+                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, ico) },
+                            { "StationId", _stationId },
+                            { "StationName", _stationName }
+                        };
                     byte[] responsebytes = client.UploadValues(_url + "/RemoveFromMonitoring" + (json ? ".json" : null), "POST", reqparm);
                     var response = Encoding.UTF8.GetString(responsebytes);
                     using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
@@ -142,11 +146,13 @@ namespace FinstatApi
                 using (WebClient client = new WebClientWithTimeout(_timeout))
                 {
                     System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection();
-                    reqparm.Add("apiKey", _apiKey);
-                    reqparm.Add("Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "list"));
-                    reqparm.Add("StationId", _stationId);
-                    reqparm.Add("StationName", _stationName);
+                        new System.Collections.Specialized.NameValueCollection
+                        {
+                            { "apiKey", _apiKey },
+                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "list") },
+                            { "StationId", _stationId },
+                            { "StationName", _stationName }
+                        };
                     byte[] responsebytes = client.UploadValues(_url + "/MonitoringList" + (json ? ".json" : null), "POST", reqparm);
                     var response = Encoding.UTF8.GetString(responsebytes);
                     using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
@@ -191,11 +197,13 @@ namespace FinstatApi
                 using (WebClient client = new WebClientWithTimeout(_timeout))
                 {
                     System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection();
-                    reqparm.Add("apiKey", _apiKey);
-                    reqparm.Add("Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "report"));
-                    reqparm.Add("StationId", _stationId);
-                    reqparm.Add("StationName", _stationName);
+                        new System.Collections.Specialized.NameValueCollection
+                        {
+                            { "apiKey", _apiKey },
+                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "report") },
+                            { "StationId", _stationId },
+                            { "StationName", _stationName }
+                        };
                     byte[] responsebytes = client.UploadValues(_url + "/MonitoringReport" + (json ? ".json" : null), "POST", reqparm);
                     var response = Encoding.UTF8.GetString(responsebytes);
                     using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
