@@ -27,7 +27,7 @@ namespace FinstatApi
         /// <param name="timeout">The timeout in miliseconds.</param>
         public AbstractApiClient(string url, string apiKey, string privateKey, string stationId, string stationName, int timeout)
         {
-            if (!string.IsNullOrEmpty(url))
+            if (!string.IsNullOrEmpty(url) && !url.Contains("localhost"))
             {
                 if (url.StartsWith("http://"))
                 {
