@@ -87,7 +87,7 @@ namespace ApiTester
                 Console.WriteLine();
                 Console.Write("Enter ICO or NAME or just ENTER to exit:");
                 ident = Console.ReadLine();
-                if (Regex.IsMatch(ident, "^[\\d ]*$"))
+                if (Regex.IsMatch(ident, "^[\\d ]+$"))
                 {
                     ident = ident.Replace(" ", string.Empty);
                     LoadCompanyDetails(ident, apiKeyValidation);
