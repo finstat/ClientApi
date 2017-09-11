@@ -54,6 +54,8 @@ namespace FinstatApi
         public string SkNaceGroup { get; set; }
         public string LegalFormCode { get; set; }
         public string LegalFormText { get; set; }
+        public string RpvsInsert { get; set; }
+        public string RpvsUrl { get; set; }
 
         public string SalesCategory { get; set; }
         public IcDphAdditonalData IcDphAdditional { get; set; }
@@ -72,6 +74,7 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("DIC: {0}", Dic));
             dataString.AppendLine(string.Format("IC DPH: {0}", IcDPH));
             dataString.AppendLine(string.Format("IcDphAdditional: {0}", IcDphAdditional?.ToString()));
+            dataString.AppendLine(string.Format("RpvsInsert: {0} {1}", RpvsInsert, RpvsUrl));
             dataString.AppendLine(string.Format("SalesCategory: {0}", SalesCategory));
             dataString.AppendLine(string.Format("Register Number: {0}", RegisterNumberText));
             dataString.AppendLine(string.Format("SK Nace: {0}", SkNaceCode + "  " + SkNaceText + " " + SkNaceDivision + " " + SkNaceGroup));
