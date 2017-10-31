@@ -513,5 +513,125 @@ namespace FinstatApi
                 throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
             }
         }
+
+        /// <summary>
+        /// Retrieves last 10 days of Proccesing events
+        /// </summary>
+        /// <returns>List of processing events.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Url {0} not found!
+        /// or Unknown exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public async Task<ProceedingResult[]> GetProceedings(bool json = false)
+        {
+            HttpResponseMessage result = null;
+            try
+            {
+                using (HttpClient client = CreateClient(_timeout))
+                {
+                    var content = new FormUrlEncodedContent(new[] {
+                         new KeyValuePair<string, string>("apiKey", _apiKey),
+                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, "proceedings")),
+                         new KeyValuePair<string, string>("StationId", _stationId),
+                         new KeyValuePair<string, string>("StationName", _stationName),
+                    });
+
+                    result = await client.PostAsync(_url + "/MonitoringProceedings" + (json ? ".json" : null), content);
+                    result.EnsureSuccessStatusCode();
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
+                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
+                        {
+                            if (json)
+                            {
+                                JsonSerializer serializer = new JsonSerializer();
+                                return (ProceedingResult[])serializer.Deserialize(reader, typeof(ProceedingResult[]));
+                            }
+                            else
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(ProceedingResult[]));
+                                return (ProceedingResult[])serializer.Deserialize(reader);
+                            }
+                        }
+                    }
+                    return null;
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
+            }
+            catch (TaskCanceledException e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves last 10 days of Proccesing events for dates
+        /// </summary>
+        /// <returns>List of processing events.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Url {0} not found!
+        /// or Unknown exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public async Task<ProceedingResult[]> GetDateProceedings(bool json = false)
+        {
+            HttpResponseMessage result = null;
+            try
+            {
+                using (HttpClient client = CreateClient(_timeout))
+                {
+                    var content = new FormUrlEncodedContent(new[] {
+                         new KeyValuePair<string, string>("apiKey", _apiKey),
+                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, "dateproceedings")),
+                         new KeyValuePair<string, string>("StationId", _stationId),
+                         new KeyValuePair<string, string>("StationName", _stationName),
+                    });
+
+                    result = await client.PostAsync(_url + "/MonitoringDateProceedings" + (json ? ".json" : null), content);
+                    result.EnsureSuccessStatusCode();
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
+                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
+                        {
+                            if (json)
+                            {
+                                JsonSerializer serializer = new JsonSerializer();
+                                return (ProceedingResult[])serializer.Deserialize(reader, typeof(ProceedingResult[]));
+                            }
+                            else
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(ProceedingResult[]));
+                                return (ProceedingResult[])serializer.Deserialize(reader);
+                            }
+                        }
+                    }
+                    return null;
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
+            }
+            catch (TaskCanceledException e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
+            }
+        }
     }
 }

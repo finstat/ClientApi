@@ -27,9 +27,21 @@ namespace FinstatApi
         }
     }
 
-    public class BaseResult : Address
+    public class FullAddress : Address
     {
         public string Name { get; set; }
+
+        public override string ToString()
+        {
+            StringBuilder dataString = new StringBuilder();
+            dataString.AppendLine(string.Format("Name: {0}", Name));
+            dataString.AppendLine(base.ToString());
+            return dataString.ToString();
+        }
+    }
+
+    public class BaseResult : FullAddress
+    {
         public string Ico { get; set; }
         public string RegisterNumberText { get; set; }
         public string Dic { get; set; }

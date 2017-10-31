@@ -213,6 +213,48 @@ namespace ApiMonitoringTester
         }
 
         /// <summary>
+        /// Test pre stiahnutie zoznamu konani
+        /// </summary>
+        public static void GetMonitoringProceedings()
+        {
+            try
+            {
+                ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
+                ProceedingResult[] result = apiClient.GetProceedings();
+                Console.WriteLine("There are " + result.Length + " Proceedings for last 10 days.");
+                for (int i = 0, count = result.Length >= 10 ? 10 : result.Length; i < count; i++)
+                {
+                    Console.WriteLine(i + ": " + result[i]);
+                }
+            }
+            catch (FinstatApiException apiException)
+            {
+                Console.WriteLine("Get current proceedings fails with exception: " + apiException);
+            }
+        }
+
+        /// <summary>
+        /// Test pre stiahnutie zoznamu konani s datumami
+        /// </summary>
+        public static void GetMonitoringDateProceedings()
+        {
+            try
+            {
+                ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
+                ProceedingResult[] result = apiClient.GetDateProceedings();
+                Console.WriteLine("There are " + result.Length + " date proceedings for last 10 days.");
+                for (int i = 0, count = result.Length >= 10 ? 10 : result.Length; i < count; i++)
+                {
+                    Console.WriteLine(i + ": " + result[i]);
+                }
+            }
+            catch (FinstatApiException apiException)
+            {
+                Console.WriteLine("Get current date proceedings fails with exception: " + apiException);
+            }
+        }
+
+        /// <summary>
         /// Test pre odobratie z monitoringu
         /// </summary>
         public static void RemoveFromMonitoring(string ico)

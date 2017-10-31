@@ -440,5 +440,107 @@ namespace FinstatApi
                 throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
             }
         }
+
+        /// <summary>
+        /// Retrieves last 10 days of Proccesing events
+        /// </summary>
+        /// <returns>List of processing events.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Url {0} not found!
+        /// or Unknown exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public ProceedingResult[] GetProceedings(bool json = false)
+        {
+            try
+            {
+                using (WebClient client = new WebClientWithTimeout(_timeout))
+                {
+                    System.Collections.Specialized.NameValueCollection reqparm =
+                        new System.Collections.Specialized.NameValueCollection
+                        {
+                            { "apiKey", _apiKey },
+                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "proceedings") },
+                            { "StationId", _stationId },
+                            { "StationName", _stationName }
+                        };
+                    byte[] responsebytes = client.UploadValues(_url + "/MonitoringProceedings" + (json ? ".json" : null), "POST", reqparm);
+                    var response = Encoding.UTF8.GetString(responsebytes);
+                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
+                    {
+                        if (json)
+                        {
+                            JsonSerializer serializer = new JsonSerializer();
+                            return (ProceedingResult[])serializer.Deserialize(reader, typeof(ProceedingResult[]));
+                        }
+                        else
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(ProceedingResult[]));
+                            return (ProceedingResult[])serializer.Deserialize(reader);
+                        }
+                    }
+                }
+            }
+            catch (WebException e)
+            {
+                throw ParseErrorResponse(e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves last 10 days of Proccesing events for dates
+        /// </summary>
+        /// <returns>List of processing events.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Url {0} not found!
+        /// or Unknown exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public ProceedingResult[] GetDateProceedings(bool json = false)
+        {
+            try
+            {
+                using (WebClient client = new WebClientWithTimeout(_timeout))
+                {
+                    System.Collections.Specialized.NameValueCollection reqparm =
+                        new System.Collections.Specialized.NameValueCollection
+                        {
+                            { "apiKey", _apiKey },
+                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "dateproceedings") },
+                            { "StationId", _stationId },
+                            { "StationName", _stationName }
+                        };
+                    byte[] responsebytes = client.UploadValues(_url + "/MonitoringDateProceedings" + (json ? ".json" : null), "POST", reqparm);
+                    var response = Encoding.UTF8.GetString(responsebytes);
+                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
+                    {
+                        if (json)
+                        {
+                            JsonSerializer serializer = new JsonSerializer();
+                            return (ProceedingResult[])serializer.Deserialize(reader, typeof(ProceedingResult[]));
+                        }
+                        else
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(ProceedingResult[]));
+                            return (ProceedingResult[])serializer.Deserialize(reader);
+                        }
+                    }
+                }
+            }
+            catch (WebException e)
+            {
+                throw ParseErrorResponse(e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
+            }
+        }
     }
 }

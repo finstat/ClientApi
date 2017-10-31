@@ -252,6 +252,52 @@ namespace ApiMonitoringTester
         }
 
         /// <summary>
+        /// Test pre stiahnutie zoznamu udalosti pre aktualne firmy v monitoring
+        /// </summary>
+        public static void GetMonitoringProceedings()
+        {
+            ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
+            apiClient.GetProceedings().ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Console.WriteLine("Get current proceedings fails with exception: " + task.Exception.InnerException);
+                }
+                else
+                {
+                    Console.WriteLine("There are " + task.Result.Length + " Proceedings for last 10 days.");
+                    for (int i = 0, count = task.Result.Length >= 10 ? 10 : task.Result.Length; i < count; i++)
+                    {
+                        Console.WriteLine(i + ": " + task.Result[i]);
+                    }
+                }
+            }).Wait();
+        }
+
+        /// <summary>
+        /// Test pre stiahnutie zoznamu konani
+        /// </summary>
+        public static void GetMonitoringDateProceedings()
+        {
+            ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
+            apiClient.GetDateProceedings().ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Console.WriteLine("Get current date proceedings fails with exception: " + task.Exception.InnerException);
+                }
+                else
+                {
+                    Console.WriteLine("There are " + task.Result.Length + " date proceedings for last 10 days.");
+                    for (int i = 0, count = task.Result.Length >= 10 ? 10 : task.Result.Length; i < count; i++)
+                    {
+                        Console.WriteLine(i + ": " + task.Result[i]);
+                    }
+                }
+            }).Wait();
+        }
+
+        /// <summary>
         /// Test pre odobratie z monitoringu
         /// </summary>
         public static void RemoveFromMonitoring(string ico)
