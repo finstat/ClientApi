@@ -46,6 +46,7 @@ namespace ApiMonitoringTester
             }
 
             FailsWithNotValidCustomerKey();
+            //GetMonitoringDateProceedings();
             AddNotExistingCompany();
             AddToMonitoring(TestIcoConst);
             AddDateToMonitoring(TestDateConst);
