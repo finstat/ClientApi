@@ -29,9 +29,11 @@ namespace FinstatApi
         public string Status { get; set; }
         public string Character { get; set; }
         public string EndReason { get; set; }
+        public string EndStatus { get; set; }
         public string Url { get; set; }
         public string Type { get; set; }
         public DateTime PublishDate { get; set; }
+        public DateTime? Deadline { get; set; }
 
         public override string ToString()
         {
@@ -41,11 +43,13 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("AdministratorsAddress Count: {0}", AdministratorsAddress != null ? AdministratorsAddress.Length : 0));
             dataString.AppendLine(string.Format("CourtsAddress: {0}", CourtsAddress));
             dataString.AppendLine(string.Format("EndReason: {0}", EndReason));
+            dataString.AppendLine(string.Format("EndStatus: {0}", EndStatus));
             dataString.AppendLine(string.Format("Status: {0}", Status));
             dataString.AppendLine(string.Format("Character: {0}", Character));
             dataString.AppendLine(string.Format("Url: {0}", Url));
             dataString.AppendLine(string.Format("Type: {0}", Type));
             dataString.AppendLine(string.Format("PublishDate: {0}", PublishDate));
+            dataString.AppendLine(string.Format("Deadline: {0}", Deadline));
             return dataString.ToString();
         }
     }
