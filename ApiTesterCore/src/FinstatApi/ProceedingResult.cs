@@ -19,6 +19,19 @@ namespace FinstatApi
         }
     }
 
+    public class IssuedPerson
+    {
+        public string Name { get; set; }
+        public string Function { get; set; }
+
+        public override string ToString()
+        {
+            StringBuilder dataString = new StringBuilder();
+            dataString.AppendLine(string.Format("Name: {0} - {1}", Name, Function));
+            return dataString.ToString();
+        }
+    }
+
     public class ProceedingResult
     {
         public PersonAddress[] DebtorsAddress { get; set; }
@@ -34,6 +47,9 @@ namespace FinstatApi
         public string Type { get; set; }
         public DateTime PublishDate { get; set; }
         public DateTime? Deadline { get; set; }
+        public string[] FileIdentifierNumber { get; set; }
+        public IssuedPerson IssuedBy { get; set; }
+        public string PostedBy { get; set; }
 
         public override string ToString()
         {
@@ -42,6 +58,7 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("ProposersAddress: {0}", ProposersAddress != null ? ProposersAddress.Length : 0));
             dataString.AppendLine(string.Format("AdministratorsAddress Count: {0}", AdministratorsAddress != null ? AdministratorsAddress.Length : 0));
             dataString.AppendLine(string.Format("CourtsAddress: {0}", CourtsAddress));
+            dataString.AppendLine(string.Format("ReferenceFileNumber: {0}", ReferenceFileNumber));
             dataString.AppendLine(string.Format("EndReason: {0}", EndReason));
             dataString.AppendLine(string.Format("EndStatus: {0}", EndStatus));
             dataString.AppendLine(string.Format("Status: {0}", Status));
@@ -50,6 +67,9 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("Type: {0}", Type));
             dataString.AppendLine(string.Format("PublishDate: {0}", PublishDate));
             dataString.AppendLine(string.Format("Deadline: {0}", Deadline));
+            dataString.AppendLine(string.Format("FileIdentifierNumber: {0}", (FileIdentifierNumber != null) ? string.Join(", ", FileIdentifierNumber): null));
+            dataString.AppendLine(string.Format("IssuedBy: {0}", IssuedBy));
+            dataString.AppendLine(string.Format("PostedBy: {0}", PostedBy));
             return dataString.ToString();
         }
     }
