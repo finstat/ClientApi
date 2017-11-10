@@ -32,6 +32,19 @@ namespace FinstatApi
         }
     }
 
+    public class Deadline
+    {
+        public string Type { get; set; }
+        public DateTime Date { get; set; }
+
+        public override string ToString()
+        {
+            StringBuilder dataString = new StringBuilder();
+            dataString.AppendLine(string.Format("DeadLine: {0} - {1}", Date, Type));
+            return dataString.ToString();
+        }
+    }
+
     public class ProceedingResult
     {
         public PersonAddress[] DebtorsAddress { get; set; }
@@ -46,7 +59,7 @@ namespace FinstatApi
         public string Url { get; set; }
         public string Type { get; set; }
         public DateTime PublishDate { get; set; }
-        public DateTime? Deadline { get; set; }
+        public Deadline[] DatesOfProceeding { get; set; }
         public string[] FileIdentifierNumber { get; set; }
         public IssuedPerson IssuedBy { get; set; }
         public string PostedBy { get; set; }
@@ -66,8 +79,8 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("Url: {0}", Url));
             dataString.AppendLine(string.Format("Type: {0}", Type));
             dataString.AppendLine(string.Format("PublishDate: {0}", PublishDate));
-            dataString.AppendLine(string.Format("Deadline: {0}", Deadline));
-            dataString.AppendLine(string.Format("FileIdentifierNumber: {0}", (FileIdentifierNumber != null) ? string.Join(", ", FileIdentifierNumber): null));
+            dataString.AppendLine(string.Format("DatesOfProceeding: {0}", (DatesOfProceeding != null && DatesOfProceeding.Length > 0) ? DatesOfProceeding.Length : 0));
+            dataString.AppendLine(string.Format("FileIdentifierNumber: {0}", (FileIdentifierNumber != null) ? string.Join(", ", FileIdentifierNumber) : null));
             dataString.AppendLine(string.Format("IssuedBy: {0}", IssuedBy));
             dataString.AppendLine(string.Format("PostedBy: {0}", PostedBy));
             return dataString.ToString();
