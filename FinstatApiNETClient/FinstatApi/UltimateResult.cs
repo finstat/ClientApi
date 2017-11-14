@@ -20,6 +20,7 @@ namespace FinstatApi
         public RestructuringResult Restructuring { get; set; }
         public LiquidationResult Liquidation { get; set; }
         public DateTime? ORCancelled { get; set; }
+        public ProceedingResult OtherProceeding { get; set; }
 
         public class Person : Address
         {
@@ -189,7 +190,8 @@ namespace FinstatApi
                 return dataString.ToString();
             }
         }
-        public class BankruptResult : LiquidationResult
+
+        public class ProceedingResult : LiquidationResult
         {
             public DateTime? StartDate { get; set; }
             public string ExitReason { get; set; }
@@ -206,22 +208,12 @@ namespace FinstatApi
             }
         }
 
-        public class RestructuringResult : BankruptResult
-        {
+        public class RestructuringResult : ProceedingResult 
+        { 
         }
-
-        public class Deadline
+ 
+        public class BankruptResult : ProceedingResult
         {
-            public string Type { get; set; }
-            public DateTime Date { get; set; }
-
-            public override string ToString()
-            {
-                StringBuilder dataString = new StringBuilder();
-                dataString.Append(string.Format("Type: {0}", Type));
-                dataString.Append(string.Format("Date: {0}", Date));
-                return dataString.ToString();
-            }
         }
 
         public override string ToString()
