@@ -30,11 +30,13 @@ namespace FinstatApi
             public FunctionAssigment[] Functions { get; set; }
             public decimal? DepositAmount { get; set; }
             public decimal? PaybackRange { get; set; }
+            public NameParts StructuredName { get; set; }
 
             public override string ToString()
             {
                 StringBuilder dataString = new StringBuilder();
                 dataString.AppendLine(string.Format("FullName: {0}", FullName));
+                dataString.AppendLine(string.Format("StructuredName: {0}", StructuredName));
                 dataString.AppendLine(base.ToString());
                 dataString.AppendLine(string.Format("DetectedFrom: {0}", DetectedFrom));
                 dataString.AppendLine(string.Format("DetectedTo: {0}", DetectedTo));
@@ -208,10 +210,10 @@ namespace FinstatApi
             }
         }
 
-        public class RestructuringResult : ProceedingResult 
-        { 
+        public class RestructuringResult : ProceedingResult
+        {
         }
- 
+
         public class BankruptResult : ProceedingResult
         {
         }
@@ -223,7 +225,7 @@ namespace FinstatApi
             if (EmployeesNumber.HasValue)
             {
                 result.AppendLine(string.Format("EmployeesNumber: {0}", EmployeesNumber.Value));
-            }  
+            }
             if (!string.IsNullOrEmpty(ORSection))
             {
                 //sekicam vlozka
