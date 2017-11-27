@@ -22,14 +22,12 @@ namespace FinstatApi
         public DateTime? ORCancelled { get; set; }
         public ProceedingResult OtherProceeding { get; set; }
 
-        public class Person : Address
+        public class AbstractPerson : Address
         {
             public string FullName { get; set; }
             public DateTime? DetectedFrom { get; set; }
             public DateTime? DetectedTo { get; set; }
             public FunctionAssigment[] Functions { get; set; }
-            public decimal? DepositAmount { get; set; }
-            public decimal? PaybackRange { get; set; }
             public NameParts StructuredName { get; set; }
 
             public override string ToString()
@@ -51,49 +49,40 @@ namespace FinstatApi
                             f.Append(", ");
                         }
                         f.Append(item);
-                        i++ ;
+                        i++;
                     }
                 }
                 dataString.AppendLine(string.Format("Functions (0): {1}", i, f));
+                return dataString.ToString();
+            }
+        }
+
+        public class Person : AbstractPerson
+        {
+            public decimal? DepositAmount { get; set; }
+            public decimal? PaybackRange { get; set; }
+
+            public override string ToString()
+            {
+                StringBuilder dataString = new StringBuilder();
+                dataString.AppendLine(base.ToString());
                 dataString.AppendLine(string.Format("DepositAmount: {0}", DepositAmount));
                 dataString.AppendLine(string.Format("PaybackRange: {0}", PaybackRange));
                 return dataString.ToString();
             }
         }
 
-        public class RpvsPerson : Address
+        public class RpvsPerson : AbstractPerson
         {
-            public string FullName { get; set; }
             public DateTime? BirthDate { get; set; }
             public string Ico { get; set; }
-            public DateTime? DetectedFrom { get; set; }
-            public DateTime? DetectedTo { get; set; }
-            public FunctionAssigment[] Functions { get; set; }
 
             public override string ToString()
             {
                 StringBuilder dataString = new StringBuilder();
-                dataString.AppendLine(string.Format("FullName: {0}", FullName));
-                dataString.AppendLine(base.ToString());
                 dataString.AppendLine(string.Format("BirthDate: {0}", BirthDate));
                 dataString.AppendLine(string.Format("Ico: {0}", Ico));
-                dataString.AppendLine(string.Format("DetectedFrom: {0}", DetectedFrom));
-                dataString.AppendLine(string.Format("DetectedTo: {0}", DetectedTo));
-                var f = new StringBuilder();
-                int i = 0;
-                if (Functions != null && Functions.Length > 0)
-                {
-                    foreach (var item in Functions)
-                    {
-                        if (i > 0)
-                        {
-                            f.Append(", ");
-                        }
-                        f.Append(item);
-                        i++;
-                    }
-                }
-                dataString.AppendLine(string.Format("Functions (0): {1}", i, f));
+                dataString.AppendLine(base.ToString());
                 return dataString.ToString();
             }
         }
