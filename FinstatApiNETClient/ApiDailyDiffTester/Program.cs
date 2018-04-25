@@ -77,6 +77,29 @@ namespace ApiDailyDiffTester
         }
 
         /// <summary>
+        /// Test pre stiahnutie zoznamu diff suborov zavierok z daily diff
+        /// </summary>
+        public static DailyDiffList GetListOfStatementDiffs()
+        {
+            try
+            {
+                ApiDailyStatementDiffClient apiClient = new ApiDailyStatementDiffClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 200000);
+                DailyDiffList result = apiClient.RequestListOfDailyStatementDiffs();
+                Console.WriteLine("There are " + result.Files.Length + " files in daily diff export.");
+                for (int i = 0, count = result.Files.Length >= 10 ? 10 : result.Files.Length; i < count; i++)
+                {
+                    Console.WriteLine(i + ": " + result.Files[i]);
+                }
+                return result;
+            }
+            catch (FinstatApiException apiException)
+            {
+                Console.WriteLine("Get current list of diff files fails with exception: " + apiException);
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Test pre stiahnutie daily diff zip suboru
         /// </summary>
         private static string DownloadDiffFile(string fileName)
@@ -98,6 +121,51 @@ namespace ApiDailyDiffTester
             }
         }
 
+        /// <summary>
+        /// Test pre stiahnutie daily diff zip suboru
+        /// </summary>
+        private static string DownloadStatementDiffFile(string fileName)
+        {
+            try
+            {
+                ApiDailyStatementDiffClient apiClient = new ApiDailyStatementDiffClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 200000);
+                string pathToDownloadedFile = apiClient.DownloadDailyStatementDiffFile(fileName, Directory.GetCurrentDirectory());
+                if (!string.IsNullOrEmpty(pathToDownloadedFile))
+                {
+                    Console.WriteLine("File was succesfully downloaded to {0} with size {1}.", pathToDownloadedFile, new FileInfo(pathToDownloadedFile).Length);
+                }
+                return pathToDownloadedFile;
+            }
+            catch (FinstatApiException apiException)
+            {
+                Console.WriteLine("Download file fails with exception: " + apiException);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Test pre stiahnutie zoznamu diff suborov zavierok z daily diff
+        /// </summary>
+        public static KeyValue[] GetLegendOfStatementDiffs()
+        {
+            try
+            {
+                ApiDailyStatementDiffClient apiClient = new ApiDailyStatementDiffClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 200000);
+                KeyValue[] result = apiClient.RequestStatementLegend();
+                Console.WriteLine("There are " + result.Length + " items in statement legend.");
+                for (int i = 0, count = result.Length; i < count; i++)
+                {
+                    Console.WriteLine(result[i]);
+                }
+                return result;
+            }
+            catch (FinstatApiException apiException)
+            {
+                Console.WriteLine("Get current list of diff files fails with exception: " + apiException);
+                return null;
+            }
+        }
+
         private static ExtendedResult[] ExtractAndDeserialize(string fileName)
         {
             try
@@ -109,6 +177,26 @@ namespace ApiDailyDiffTester
                     ZipEntry firstItem = enumerator.Current;
                     XmlSerializer serializer = new XmlSerializer(typeof(ExtendedResult[]));
                     return (ExtendedResult[])serializer.Deserialize(firstItem.OpenReader());
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("Unable to decompress and deserialize with exception: " + exception);
+                return null;
+            }
+        }
+
+        private static StatementResult[] ExtractAndDeserializeStatement(string fileName)
+        {
+            try
+            {
+                using (ZipFile zip = new ZipFile(fileName))
+                {
+                    var enumerator = zip.Entries.GetEnumerator();
+                    enumerator.MoveNext();
+                    ZipEntry firstItem = enumerator.Current;
+                    XmlSerializer serializer = new XmlSerializer(typeof(StatementResult[]));
+                    return (StatementResult[])serializer.Deserialize(firstItem.OpenReader());
                 }
             }
             catch (Exception exception)

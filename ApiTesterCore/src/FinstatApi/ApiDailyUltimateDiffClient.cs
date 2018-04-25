@@ -10,29 +10,29 @@ using System.Xml.Serialization;
 
 namespace FinstatApi
 {
-    public class ApiDailyDiffClient : AbstractApiClient
+    public class ApiDailyUltimateDiffClient : AbstractApiClient
     {
-        public ApiDailyDiffClient(string url, string apiKey, string privateKey, string stationId, string stationName, int timeout)
+        public ApiDailyUltimateDiffClient(string url, string apiKey, string privateKey, string stationId, string stationName, int timeout)
             : base(url, apiKey, privateKey, stationId, stationName, timeout)
         {
         }
 
-        public ApiDailyDiffClient(string apiKey, string privateKey, string stationId, string stationName, int timeout)
+        public ApiDailyUltimateDiffClient(string apiKey, string privateKey, string stationId, string stationName, int timeout)
             : base(apiKey, privateKey, stationId, stationName, timeout)
         {
         }
 
         /// <summary>
-        /// Requests the list of DailyDiff files.
+        /// Requests the list of Ultimate DailyDiff files.
         /// </summary>
-        /// <returns>List of DailyDiff files.</returns>
+        /// <returns>List of Ultimate DailyDiff files.</returns>
         /// <exception cref="FinstatApi.FinstatApiException">
         /// Not valid API key!
         /// or Url {0} not found!
         /// or Timeout exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public async Task<DailyDiffList> RequestListOfDailyDiffs(bool json = false)
+        public async Task<DailyDiffList> RequestListOfDailyUltimateDiffs(bool json = false)
         {
             HttpResponseMessage result = null;
             try
@@ -46,7 +46,7 @@ namespace FinstatApi
                          new KeyValuePair<string, string>("StationName", _stationName),
                     });
 
-                    result = await client.PostAsync(_url + "/GetListOfDiffs" + (json ? ".json" : null), content);
+                    result = await client.PostAsync(_url + "/GetListOfUltimateDiffs" + (json ? ".json" : null), content);
                     result.EnsureSuccessStatusCode();
                     if (result.IsSuccessStatusCode)
                     {
@@ -85,14 +85,14 @@ namespace FinstatApi
         /// <summary>
         /// Downloads .
         /// </summary>
-        /// <returns>List of DailyDiff files.</returns>
+        /// <returns>List of Ultimate DailyDiff files.</returns>
         /// <exception cref="FinstatApi.FinstatApiException">
         /// Not valid API key!
         /// or Url {0} not found!
         /// or Timeout exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public async Task<string> DownloadDailyDiffFile(string fileName, string exportPath)
+        public async Task<string> DownloadDailyUltimateDiffFile(string fileName, string exportPath)
         {
             HttpResponseMessage result = null;
             try
@@ -106,7 +106,7 @@ namespace FinstatApi
                          new KeyValuePair<string, string>("StationId", _stationId),
                          new KeyValuePair<string, string>("StationName", _stationName),
                     });
-                    result = await client.PostAsync(_url + "/GetFile", content);
+                    result = await client.PostAsync(_url + "/GetUltimateFile", content);
                     result.EnsureSuccessStatusCode();
                     if (result.IsSuccessStatusCode)
                     {

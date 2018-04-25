@@ -32,6 +32,7 @@ namespace ApiMonitoringTester
 
             FailsWithNotValidCustomerKey();
             //GetMonitoringDateProceedings();
+            //GetMonitoringProceedings();
             AddNotExistingCompany();
             AddToMonitoring(TestIcoConst);
             GetCurrentMonitorings(TestIcoConst);
@@ -220,7 +221,7 @@ namespace ApiMonitoringTester
         {
             try
             {
-                ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 60000);
+                ApiMonitoringClient apiClient = new ApiMonitoringClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 420000);
                 ProceedingResult[] result = apiClient.GetProceedings();
                 Console.WriteLine("There are " + result.Length + " Proceedings for last 10 days.");
                 for (int i = 0, count = result.Length >= 10 ? 10 : result.Length; i < count; i++)

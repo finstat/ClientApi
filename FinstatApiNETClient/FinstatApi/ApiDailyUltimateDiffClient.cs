@@ -8,29 +8,29 @@ using System.Xml.Serialization;
 
 namespace FinstatApi
 {
-    public class ApiDailyDiffClient : AbstractApiClient
+    public class ApiDailyUltimateDiffClient : AbstractApiClient
     {
-        public ApiDailyDiffClient(string url, string apiKey, string privateKey, string stationId, string stationName, int timeout)
+        public ApiDailyUltimateDiffClient(string url, string apiKey, string privateKey, string stationId, string stationName, int timeout)
             : base(url, apiKey, privateKey, stationId, stationName, timeout)
         {
         }
 
-        public ApiDailyDiffClient(string apiKey, string privateKey, string stationId, string stationName, int timeout)
+        public ApiDailyUltimateDiffClient(string apiKey, string privateKey, string stationId, string stationName, int timeout)
             : base(apiKey, privateKey, stationId, stationName, timeout)
         {
         }
 
         /// <summary>
-        /// Requests the list of DailyDiff files.
+        /// Requests the list of Ultimate DailyDiff files.
         /// </summary>
-        /// <returns>List of DailyDiff files.</returns>
+        /// <returns>List of Ultimate DailyDiff files.</returns>
         /// <exception cref="FinstatApi.FinstatApiException">
         /// Not valid API key!
         /// or Url {0} not found!
         /// or Timeout exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public DailyDiffList RequestListOfDailyDiffs(bool json = false)
+        public DailyDiffList RequestListOfDailyUltimateDiffs(bool json = false)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace FinstatApi
                             { "StationId", _stationId },
                             { "StationName", _stationName }
                         };
-                    byte[] responsebytes = client.UploadValues(_url + "/GetListOfDiffs" + (json ? ".json" : null), "POST", reqparm);
+                    byte[] responsebytes = client.UploadValues(_url + "/GetListOfUltimateDiffs" + (json ? ".json" : null), "POST", reqparm);
                     var response = Encoding.UTF8.GetString(responsebytes);
                     using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                     {
@@ -74,14 +74,14 @@ namespace FinstatApi
         /// <summary>
         /// Downloads .
         /// </summary>
-        /// <returns>List of DailyDiff files.</returns>
+        /// <returns>List of Ultimate DailyDiff files.</returns>
         /// <exception cref="FinstatApi.FinstatApiException">
         /// Not valid API key!
         /// or Url {0} not found!
         /// or Timeout exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public string DownloadDailyDiffFile(string fileName, string exportPath)
+        public string DownloadDailyUltimateDiffFile(string fileName, string exportPath)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace FinstatApi
                             { "StationId", _stationId },
                             { "StationName", _stationName }
                         };
-                    byte[] responsebytes = client.UploadValues(_url + "/GetFile", "POST", reqparm);
+                    byte[] responsebytes = client.UploadValues(_url + "/GetUltimateFile", "POST", reqparm);
                     if (responsebytes != null)
                     {
                         string fullExportPath = Path.Combine(exportPath, fileName);
