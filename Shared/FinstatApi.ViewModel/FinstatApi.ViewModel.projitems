@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>3100699c-4da1-409f-bb3e-15227efa070f</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>FinstatApi</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Detail\BaseResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Detail\DetailResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Detail\ExtendedResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Detail\UltimateResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diff\BaseResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diff\DailyDiff.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diff\DailyDiffList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diff\ExtendedResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diff\StatementResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Distraint\DistraintResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KeyValue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Monitoring\ProceedingResult.cs" />
+  </ItemGroup>
+</Project>

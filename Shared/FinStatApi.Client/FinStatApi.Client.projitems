@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>01a52a45-b92b-42ec-bbd5-5a28ffac7f9c</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>FinstatApi</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AbstractClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FinstatApiException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Address.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ApiAutocomplete.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Monitoring.cs" />
+  </ItemGroup>
+</Project>

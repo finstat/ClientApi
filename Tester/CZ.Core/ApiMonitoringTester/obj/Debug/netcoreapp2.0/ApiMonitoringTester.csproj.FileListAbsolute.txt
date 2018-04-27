@@ -1,0 +1,14 @@
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\CZ.Core\ApiMonitoringTester\bin\Debug\netcoreapp2.0\ApiMonitoringTester.deps.json
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\CZ.Core\ApiMonitoringTester\bin\Debug\netcoreapp2.0\ApiMonitoringTester.runtimeconfig.json
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\CZ.Core\ApiMonitoringTester\bin\Debug\netcoreapp2.0\ApiMonitoringTester.runtimeconfig.dev.json
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\CZ.Core\ApiMonitoringTester\bin\Debug\netcoreapp2.0\ApiMonitoringTester.dll
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\CZ.Core\ApiMonitoringTester\bin\Debug\netcoreapp2.0\ApiMonitoringTester.pdb
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\CZ.Core\ApiMonitoringTester\bin\Debug\netcoreapp2.0\FinstatApi.dll
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\CZ.Core\ApiMonitoringTester\bin\Debug\netcoreapp2.0\FinstatApi.pdb
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\CZ.Core\ApiMonitoringTester\obj\Debug\netcoreapp2.0\ApiMonitoringTester.csprojResolveAssemblyReference.cache
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\CZ.Core\ApiMonitoringTester\obj\Debug\netcoreapp2.0\ApiMonitoringTester.csproj.CoreCompileInputs.cache
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\CZ.Core\ApiMonitoringTester\obj\Debug\netcoreapp2.0\ApiMonitoringTester.AssemblyInfoInputs.cache
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\CZ.Core\ApiMonitoringTester\obj\Debug\netcoreapp2.0\ApiMonitoringTester.AssemblyInfo.cs
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\CZ.Core\ApiMonitoringTester\obj\Debug\netcoreapp2.0\ApiMonitoringTester.csproj.CopyComplete
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\CZ.Core\ApiMonitoringTester\obj\Debug\netcoreapp2.0\ApiMonitoringTester.dll
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\CZ.Core\ApiMonitoringTester\obj\Debug\netcoreapp2.0\ApiMonitoringTester.pdb

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>FinstatApi</AssemblyName>
+    <RootNamespace>FinstatApi</RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="..\Shared\FinStatApiCZ.ViewModel\FinStatApiCZ.ViewModel.projitems" Label="Shared" />
+
+  <Import Project="..\Shared\FinStatApi.Client.Core\FinStatApi.Client.Core.projitems" Label="Shared" />
+
+  <Import Project="..\Shared\FinStatApi.Client\FinStatApi.Client.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+</Project>

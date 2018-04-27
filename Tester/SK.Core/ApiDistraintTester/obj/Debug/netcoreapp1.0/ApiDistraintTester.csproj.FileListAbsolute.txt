@@ -1,0 +1,12 @@
+C:\Users\birko\source\repos\Misc\finstat-other\API\C#\ApiTesterCore\src\ApiDistraintTester\bin\Debug\netcoreapp1.0\ApiDistraintTester.deps.json
+C:\Users\birko\source\repos\Misc\finstat-other\API\C#\ApiTesterCore\src\ApiDistraintTester\bin\Debug\netcoreapp1.0\ApiDistraintTester.runtimeconfig.json
+C:\Users\birko\source\repos\Misc\finstat-other\API\C#\ApiTesterCore\src\ApiDistraintTester\bin\Debug\netcoreapp1.0\ApiDistraintTester.runtimeconfig.dev.json
+C:\Users\birko\source\repos\Misc\finstat-other\API\C#\ApiTesterCore\src\ApiDistraintTester\bin\Debug\netcoreapp1.0\ApiDistraintTester.dll
+C:\Users\birko\source\repos\Misc\finstat-other\API\C#\ApiTesterCore\src\ApiDistraintTester\bin\Debug\netcoreapp1.0\ApiDistraintTester.pdb
+C:\Users\birko\source\repos\Misc\finstat-other\API\C#\ApiTesterCore\src\ApiDistraintTester\bin\Debug\netcoreapp1.0\FinstatApi.dll
+C:\Users\birko\source\repos\Misc\finstat-other\API\C#\ApiTesterCore\src\ApiDistraintTester\bin\Debug\netcoreapp1.0\FinstatApi.pdb
+C:\Users\birko\source\repos\Misc\finstat-other\API\C#\ApiTesterCore\src\ApiDistraintTester\obj\Debug\netcoreapp1.0\ApiDistraintTester.csprojResolveAssemblyReference.cache
+C:\Users\birko\source\repos\Misc\finstat-other\API\C#\ApiTesterCore\src\ApiDistraintTester\obj\Debug\netcoreapp1.0\ApiDistraintTester.csproj.CoreCompileInputs.cache
+C:\Users\birko\source\repos\Misc\finstat-other\API\C#\ApiTesterCore\src\ApiDistraintTester\obj\Debug\netcoreapp1.0\ApiDistraintTester.AssemblyInfo.cs
+C:\Users\birko\source\repos\Misc\finstat-other\API\C#\ApiTesterCore\src\ApiDistraintTester\obj\Debug\netcoreapp1.0\ApiDistraintTester.dll
+C:\Users\birko\source\repos\Misc\finstat-other\API\C#\ApiTesterCore\src\ApiDistraintTester\obj\Debug\netcoreapp1.0\ApiDistraintTester.pdb

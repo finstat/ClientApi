@@ -1,0 +1,9 @@
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApiCz\bin\Debug\FinstatApi.dll
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApiCz\bin\Debug\FinstatApi.pdb
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApiCz\bin\Debug\Newtonsoft.Json.dll
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApiCz\bin\Debug\Newtonsoft.Json.xml
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApiCz\obj\Debug\FinStatApiCz.csproj.CoreCompileInputs.cache
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApiCz\obj\Debug\FinStatApiCz.csproj.CopyComplete
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApiCz\obj\Debug\FinstatApi.dll
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApiCz\obj\Debug\FinstatApi.pdb
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApiCz\obj\Debug\FinStatApiCZ.csprojResolveAssemblyReference.cache

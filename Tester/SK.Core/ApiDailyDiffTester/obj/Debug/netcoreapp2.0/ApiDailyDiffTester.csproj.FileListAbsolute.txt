@@ -1,0 +1,14 @@
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\SK.Core\ApiDailyDiffTester\bin\Debug\netcoreapp2.0\ApiDailyDiffTester.deps.json
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\SK.Core\ApiDailyDiffTester\bin\Debug\netcoreapp2.0\ApiDailyDiffTester.runtimeconfig.json
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\SK.Core\ApiDailyDiffTester\bin\Debug\netcoreapp2.0\ApiDailyDiffTester.runtimeconfig.dev.json
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\SK.Core\ApiDailyDiffTester\bin\Debug\netcoreapp2.0\ApiDailyDiffTester.dll
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\SK.Core\ApiDailyDiffTester\bin\Debug\netcoreapp2.0\ApiDailyDiffTester.pdb
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\SK.Core\ApiDailyDiffTester\bin\Debug\netcoreapp2.0\FinstatApi.dll
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\SK.Core\ApiDailyDiffTester\bin\Debug\netcoreapp2.0\FinstatApi.pdb
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\SK.Core\ApiDailyDiffTester\obj\Debug\netcoreapp2.0\ApiDailyDiffTester.csproj.CoreCompileInputs.cache
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\SK.Core\ApiDailyDiffTester\obj\Debug\netcoreapp2.0\ApiDailyDiffTester.AssemblyInfoInputs.cache
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\SK.Core\ApiDailyDiffTester\obj\Debug\netcoreapp2.0\ApiDailyDiffTester.AssemblyInfo.cs
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\SK.Core\ApiDailyDiffTester\obj\Debug\netcoreapp2.0\ApiDailyDiffTester.csproj.CopyComplete
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\SK.Core\ApiDailyDiffTester\obj\Debug\netcoreapp2.0\ApiDailyDiffTester.dll
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\SK.Core\ApiDailyDiffTester\obj\Debug\netcoreapp2.0\ApiDailyDiffTester.pdb
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\Tester\SK.Core\ApiDailyDiffTester\obj\Debug\netcoreapp2.0\ApiDailyDiffTester.csprojResolveAssemblyReference.cache

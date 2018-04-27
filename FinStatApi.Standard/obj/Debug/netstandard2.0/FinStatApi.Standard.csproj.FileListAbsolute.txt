@@ -1,0 +1,9 @@
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApi.Standard\bin\Debug\netstandard2.0\FinstatApi.deps.json
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApi.Standard\bin\Debug\netstandard2.0\FinstatApi.dll
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApi.Standard\bin\Debug\netstandard2.0\FinstatApi.pdb
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApi.Standard\obj\Debug\netstandard2.0\FinStatApi.Standard.csproj.CoreCompileInputs.cache
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApi.Standard\obj\Debug\netstandard2.0\FinStatApi.Standard.AssemblyInfoInputs.cache
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApi.Standard\obj\Debug\netstandard2.0\FinStatApi.Standard.AssemblyInfo.cs
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApi.Standard\obj\Debug\netstandard2.0\FinstatApi.dll
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApi.Standard\obj\Debug\netstandard2.0\FinstatApi.pdb
+C:\Users\birko\source\repos\.NET\ClientApi.CSharp\FinStatApi.Standard\obj\Debug\netstandard2.0\FinStatApi.Standard.csprojResolveAssemblyReference.cache
