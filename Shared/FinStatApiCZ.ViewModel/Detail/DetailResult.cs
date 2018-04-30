@@ -4,16 +4,8 @@ using System.Web;
 
 namespace FinstatApi
 {
-    public class DetailResult : FullAddress
+    public class DetailResult : AbstractBaseResult
     {
-        public string Ico { get; set; }
-        public string Activity { get; set; }
-        public DateTime? Created { get; set; }
-        public DateTime? Cancelled { get; set; }
-        public string Url { get; set; }
-        public bool Warning { get; set; }
-        public string WarningUrl { get; set; }
-
         public string CzNaceCode { get; set; }
         public string CzNaceText { get; set; }
         public string CzNaceDivision { get; set; }

@@ -4,20 +4,12 @@ using System.Text;
 
 namespace FinstatApi
 {
-    public class BaseResult : FullAddress
+    public class BaseResult : AbstractBaseResult
     {
-        public string Ico { get; set; }
         public string RegisterNumberText { get; set; }
         public string Dic { get; set; }
-        public string IcDPH { get; set; }
-        public string Activity { get; set; }
-        public DateTime? Created { get; set; }
-        public DateTime? Cancelled { get; set; }
         public bool SuspendedAsPerson { get; set; }
-        public string Url { get; set; }
 
-        public bool Warning { get; set; }
-        public string WarningUrl { get; set; }
         public bool PaymentOrderWarning { get; set; }
         public string PaymentOrderUrl { get; set; }
         public bool OrChange { get; set; }

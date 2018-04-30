@@ -13,6 +13,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)FinstatApiException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Address.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ApiAutocomplete.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Monitoring.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Detail\AbstractBaseResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Monitoring\Monitoring.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)ViewModel\Monitoring\" />
   </ItemGroup>
 </Project>
