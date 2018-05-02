@@ -9,10 +9,11 @@
     <Import_RootNamespace>FinstatApi</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)AbstractClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommonAbstractClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FinstatApiException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Address.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ApiAutocomplete.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Deadline.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Detail\AbstractBaseResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Monitoring\Monitoring.cs" />
   </ItemGroup>
