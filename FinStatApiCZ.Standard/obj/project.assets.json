@@ -223,7 +223,7 @@
     "version": "1.0.0",
     "restore": {
       "projectUniqueName": "C:\\Users\\birko\\source\\repos\\.NET\\ClientApi.CSharp\\FinStatApiCZ.Standard\\FinStatApiCZ.Standard.csproj",
-      "projectName": "FinstatApi",
+      "projectName": "FinstatApiCz",
       "projectPath": "C:\\Users\\birko\\source\\repos\\.NET\\ClientApi.CSharp\\FinStatApiCZ.Standard\\FinStatApiCZ.Standard.csproj",
       "packagesPath": "C:\\Users\\birko\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\birko\\source\\repos\\.NET\\ClientApi.CSharp\\FinStatApiCZ.Standard\\obj\\",
