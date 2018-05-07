@@ -64,7 +64,12 @@ namespace DesktopFinstatApiTester.Windows
                 if (ex is FinstatApi.FinstatApiException)
                 {
                     var fex = (ex as FinstatApi.FinstatApiException);
-                    MessageBox.Show(fex.Message, "FinStat API Exception", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    MessageBox.Show(fex.Message, "FinStat SK API Exception", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                }
+                else if (ex is CZ::FinstatApi.FinstatApiException)
+                {
+                    var fex = (ex as CZ::FinstatApi.FinstatApiException);
+                    MessageBox.Show(fex.Message, "FinStat CZ API Exception", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 }
                 else if (ex is WebException)
                 {
