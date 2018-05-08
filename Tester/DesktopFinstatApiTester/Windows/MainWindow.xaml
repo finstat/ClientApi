@@ -216,6 +216,11 @@
                             <Path Data="{DynamicResource IconBookOpenLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
+                    <Fluent:Button x:Name="buttonOpenDailyStatementDiffLegend" Header="Legend" Click="buttonOpenDailyStatementDiffLegend_Click"   >
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconDictionaryLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="Ultimate">
                     <Fluent:Button x:Name="buttonDailyUltimateDiffList" Header="List" Click="buttonDailyUltimateDiffList_Click">
@@ -339,7 +344,18 @@
             </Fluent:StatusBarItem>
             <Fluent:StatusBarItem Title=""
                           HorizontalAlignment="Right">
-                <TextBlock Text="" x:Name="textBlockStatusBarRight"/>
+                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Stretch" Orientation="Horizontal" DataContext="{Binding Limits}">
+                    <Label Content="Limits: "/>
+                    <Label Content="Daily - "/>
+                    <Label Content="{Binding Daily.Current}"/>
+                    <Label Content="/"/>
+                    <Label Content="{Binding Daily.Max}"/>
+                    <Label Content=" | "/>
+                    <Label Content="Monthly - "/>
+                    <Label Content="{Binding Monthly.Current}"/>
+                    <Label Content="/"/>
+                    <Label Content="{Binding Monthly.Max}"/>
+                </StackPanel>
             </Fluent:StatusBarItem>
         </Fluent:StatusBar>
     </Grid>

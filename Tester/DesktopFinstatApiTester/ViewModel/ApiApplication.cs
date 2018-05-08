@@ -11,7 +11,8 @@ namespace DesktopFinstatApiTester.ViewModel
     public class ApiApplication : ViewModel
     {
         private const string fileName = @"application.json";
-        public const string SettingsProperty = "SettingsKey";
+        public const string SettingsProperty = "Settings";
+        public const string LimitsProperty = "Limits";
         public const string ResponseItemsProperty = "ResponseItems";
         public const string ApplicationObjectProperty = "ApplicationObject";
 
@@ -24,11 +25,36 @@ namespace DesktopFinstatApiTester.ViewModel
 
         public Model.Settings Settings { get; set; }
 
+        public Limits _limits = new Limits();
+        public Limits Limits
+        {
+            get { return _limits; }
+            set {
+                if (_limits != null)
+                {
+                    _limits.PropertyChanged -= _limits_PropertyChanged;
+                }
+                _limits = value;
+                if (_limits != null)
+                {
+                    _limits.PropertyChanged += _limits_PropertyChanged;
+                }
+            }
+        }
+
         private ObservableCollection<ResponseItem> _items = new ObservableCollection<ResponseItem>();
         public ObservableCollection<ResponseItem> ResponseItems
         {
             get { return _items; }
             set { _items = value; RaisePropertyChanged(ResponseItemsProperty); }
+        }
+
+        private void _limits_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == Limits.LimitsObjectProperty)
+            {
+                RaisePropertyChanged(LimitsProperty);
+            }
         }
 
         internal ResponseItem Add()

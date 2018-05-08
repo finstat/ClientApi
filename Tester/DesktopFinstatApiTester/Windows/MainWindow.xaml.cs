@@ -1,5 +1,4 @@
 ﻿extern alias CZ;
-
 using Ionic.Zip;
 using System;
 using System.Collections.Generic;
@@ -309,7 +308,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("Detail", "SK", (parameters) =>
             {
                 FinstatApi.ApiClient client = CreateSKApiClient();
-                return client.RequestDetail(parameters[0], IsJSON());
+                var result = client.RequestDetail(parameters[0], IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
 
@@ -318,7 +319,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("Extended", "SK", (parameters) =>
             {
                 var client = CreateSKApiClient();
-                return client.RequestExtendedDetail(parameters[0], IsJSON());
+                var result = client.RequestExtendedDetail(parameters[0], IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
 
@@ -327,7 +330,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("Ultimate", "SK", (parameters) =>
             {
                 var client = CreateSKApiClient();
-                return client.RequestUltimateDetail(parameters[0], IsJSON());
+                var result = client.RequestUltimateDetail(parameters[0], IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
 
@@ -336,7 +341,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("Autocomplete", "SK", (parameters) =>
             {
                 var client = CreateSKApiClient();
-                return client.RequestAutocomplete(parameters[0], IsJSON());
+                var result = client.RequestAutocomplete(parameters[0], IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
 
@@ -345,7 +352,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("AutoLogIn", "SK", (parameters) =>
             {
                 var client = CreateSKApiClient();
-                return client.RequestAutoLogin(parameters[0]);
+                var result = client.RequestAutoLogin(parameters[0]);
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
 
@@ -354,7 +363,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICOAdd", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                return client.Add(parameters[0], IsJSON());
+                var result = client.Add(parameters[0], IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
 
@@ -363,7 +374,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICORemove", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                return client.Remove(parameters[0], IsJSON());
+                var result = client.Remove(parameters[0], IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
 
@@ -372,7 +385,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICOList", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                return client.GetMonitorings(IsJSON());
+                var result = client.GetMonitorings(IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, false);
         }
 
@@ -381,7 +396,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICOReport", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                return client.GetReport(IsJSON());
+                var result = client.GetReport(IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, false);
         }
 
@@ -390,7 +407,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICOProceedings", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                return client.GetProceedings(IsJSON());
+                var result = client.GetProceedings(IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, false);
         }
 
@@ -399,7 +418,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringDateAdd", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                return client.AddDate(parameters[0], IsJSON());
+                var result = client.AddDate(parameters[0], IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
 
@@ -408,7 +429,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringDateRemove", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                return client.RemoveDate(parameters[0], IsJSON());
+                var result = client.RemoveDate(parameters[0], IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
 
@@ -417,7 +440,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringDateList", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                return client.GetDateMonitorings(IsJSON());
+                var result = client.GetDateMonitorings(IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, false);
         }
 
@@ -426,7 +451,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringDateReport", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                return client.GetDateReport(IsJSON());
+                var result = client.GetDateReport(IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, false);
         }
 
@@ -435,7 +462,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringDateProceedings", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                return client.GetDateProceedings(IsJSON());
+                var result = client.GetDateProceedings(IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, false);
         }
 
@@ -444,7 +473,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("DailyDiffList", "SK", (parameters) =>
             {
                 var client = CreateSKApiDailyDiffClient();
-                return client.RequestListOfDailyDiffs(IsJSON());
+                var result = client.RequestListOfDailyDiffs(IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, false);
         }
 
@@ -453,7 +484,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("DailyDiffFile", "SK", (parameters) =>
             {
                 var client = CreateSKApiDailyDiffClient();
-                return client.DownloadDailyDiffFile(parameters[0], parameters[1]);
+                var result = client.DownloadDailyDiffFile(parameters[0], parameters[1]);
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String, ParameterTypeEnum.Folder });
         }
 
@@ -477,7 +510,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("DailyStatementDiffList", "SK", (parameter) =>
             {
                 var client = CreateSKApiDailyStatementDiffClient();
-                return client.RequestListOfDailyStatementDiffs(IsJSON());
+                var result = client.RequestListOfDailyStatementDiffs(IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, false);
         }
 
@@ -486,7 +521,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("DailyStatementDiffFile", "SK", (parameters) =>
             {
                 var client = CreateSKApiDailyStatementDiffClient();
-                return client.DownloadDailyStatementDiffFile(parameters[0], parameters[1]);
+                var result = client.DownloadDailyStatementDiffFile(parameters[0], parameters[1]);
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String, ParameterTypeEnum.Folder });
         }
 
@@ -505,12 +542,25 @@ namespace DesktopFinstatApiTester.Windows
             }, true, new[] { ParameterTypeEnum.File });
         }
 
+        private void buttonOpenDailyStatementDiffLegend_Click(object sender, RoutedEventArgs e)
+        {
+            doApiRequest("DailyStatementDiffFile", "SK", (parameters) =>
+            {
+                var client = CreateSKApiDailyStatementDiffClient();
+                var result = client.RequestStatementLegend();
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
+            }, false);
+        }
+
         private void buttonDailyUltimateDiffList_Click(object sender, RoutedEventArgs e)
         {
             doApiRequest("DailyUltimateDiffList", "SK", (parameter) =>
             {
                 var client = CreateSKApiDailyUltimateDiffClient();
-                return client.RequestListOfDailyUltimateDiffs(IsJSON());
+                var result = client.RequestListOfDailyUltimateDiffs(IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, false);
         }
 
@@ -519,7 +569,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("DailyUltimateDiffFile", "SK", (parameters) =>
             {
                 var client = CreateSKApiDailyUltimateDiffClient();
-                return client.DownloadDailyUltimateDiffFile(parameters[0], parameters[1]);
+                var result = client.DownloadDailyUltimateDiffFile(parameters[0], parameters[1]);
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String, ParameterTypeEnum.Folder });
         }
 
@@ -593,7 +645,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("Detail", "CZ", (parameters) =>
             {
                 var client = CreateCZApiClient();
-                return client.RequestDetail(parameters[0], IsJSON());
+                var result = client.RequestDetail(parameters[0], IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
 
@@ -603,7 +657,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("Autocomplete", "CZ", (parameters) =>
             {
                 var client = CreateCZApiClient();
-                return client.RequestAutocomplete(parameters[0], IsJSON());
+                var result = client.RequestAutocomplete(parameters[0], IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
 
@@ -621,7 +677,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICOAdd", "CZ", (parameters) =>
             {
                 var client = CreateCZApiMonitoringClient();
-                return client.Add(parameters[0], IsJSON());
+                var result = client.Add(parameters[0], IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
 
@@ -630,7 +688,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICORemove", "CZ", (parameters) =>
             {
                 var client = CreateCZApiMonitoringClient();
-                return client.Remove(parameters[0], IsJSON());
+                var result = client.Remove(parameters[0], IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
 
@@ -639,7 +699,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICOList", "CZ", (parameters) =>
             {
                 var client = CreateCZApiMonitoringClient();
-                return client.GetMonitorings(IsJSON());
+                var result = client.GetMonitorings(IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, false);
         }
 
@@ -648,7 +710,9 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICOReport", "CZ", (parameters) =>
             {
                 var client = CreateCZApiMonitoringClient();
-                return client.GetReport(IsJSON());
+                var result = client.GetReport(IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
             }, false);
         }
     }
