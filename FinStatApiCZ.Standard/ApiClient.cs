@@ -33,57 +33,16 @@ namespace FinstatApi
         /// Not valid API key!
         /// or Specified ico {0} not found in database!
         /// or Url {0} not found!
-        /// or Unknown exception while communication with Finstat api!
+        /// or TimeOut exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
         public async Task<DetailResult> RequestDetail(string ico, bool json = false)
         {
-            HttpResponseMessage result = null;
-            try
-            {
-                using (HttpClient client = CreateClient(_timeout))
-                {
-                    var content = new FormUrlEncodedContent(new[] {
-                         new KeyValuePair<string, string>("ico", ico),
-                         new KeyValuePair<string, string>("apiKey", _apiKey),
-                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, ico)),
-                         new KeyValuePair<string, string>("StationId", _stationId),
-                         new KeyValuePair<string, string>("StationName", _stationName),
-                    });
-                    result = await client.PostAsync(_url + "/detail" + (json ? ".json" : null), content);
-                    result.EnsureSuccessStatusCode();
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                        {
-                            if (json)
-                            {
-                                JsonSerializer serializer = new JsonSerializer();
-                                return (DetailResult)serializer.Deserialize(reader, typeof(DetailResult));
-                            }
-                            else
-                            {
-                                XmlSerializer serializer = new XmlSerializer(typeof(DetailResult));
-                                return (DetailResult)serializer.Deserialize(reader);
-                            }
-                        }
-                    }
-                    return null;
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null, ico);
-            }
-            catch (TaskCanceledException e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+            var list = new List<KeyValuePair<string, string>>(new[] {
+                new KeyValuePair<string, string>("ico", ico),
+                new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, ico)),
+            });
+            return await DoApiCall<DetailResult>("/detail", list, json);
         }
     }
 }

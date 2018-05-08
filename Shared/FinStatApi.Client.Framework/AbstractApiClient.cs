@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace FinstatApi
 {
@@ -34,7 +37,6 @@ namespace FinstatApi
         {
 
         }
-
 
         internal Exception ParseErrorResponse(WebException e, string parameter = null)
         {
@@ -100,6 +102,86 @@ namespace FinstatApi
                     }
                 default:
                     throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unspecified exception!", e);
+            }
+        }
+
+        internal byte[] DoApiCall(string methodUrl, System.Collections.Specialized.NameValueCollection methodParams, bool json = false, string method = "POST")
+        {
+            try
+            {
+                System.Collections.Specialized.NameValueCollection reqparm =
+                new System.Collections.Specialized.NameValueCollection
+                {
+                    { "apiKey", _apiKey },
+                    { "StationId", _stationId },
+                    { "StationName", _stationName }
+                };
+                if (methodParams != null && methodParams.Count > 0)
+                {
+                    reqparm.Add(methodParams);
+                }
+
+                using (WebClient client = new WebClientWithTimeout(_timeout))
+                {
+                    var result = client.UploadValues(_url + methodUrl + (json ? ".json" : null), method, reqparm);
+                    Limits = new ViewModel.Limits
+                    {
+                        Daily = new ViewModel.Limit
+                        {
+                            Current = long.Parse(client.ResponseHeaders.Get("Finstat-Daily-Limit-Current")),
+                            Max = long.Parse(client.ResponseHeaders.Get("Finstat-Daily-Limit-Max"))
+                        },
+                        Monthly = new ViewModel.Limit
+                        {
+                            Current = long.Parse(client.ResponseHeaders.Get("Finstat-Monthly-Limit-Current")),
+                            Max = long.Parse(client.ResponseHeaders.Get("Finstat-Monthly-Limit-Max"))
+                        }
+                    };
+
+                    return result;
+                }
+            }
+            catch (WebException e)
+            {
+                throw ParseErrorResponse(e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
+            }
+        }
+
+        internal T DoApiCall<T>(string methodUrl, System.Collections.Specialized.NameValueCollection methodParams, bool json = false, string method = "POST")
+        {
+            try
+            {
+                byte[] responsebytes = DoApiCall(methodUrl, methodParams, json, method);
+                var response = Encoding.UTF8.GetString(responsebytes);
+                using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
+                {
+                    if (json)
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        return (T)serializer.Deserialize(reader, typeof(T));
+                    }
+                    else
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(T));
+                        return (T)serializer.Deserialize(reader);
+                    }
+                }
+            }
+            catch (FinstatApiException e)
+            {
+                throw e;
+            }
+            catch (WebException e)
+            {
+                throw ParseErrorResponse(e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
             }
         }
     }

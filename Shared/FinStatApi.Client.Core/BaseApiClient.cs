@@ -37,53 +37,11 @@ namespace FinstatApi
         /// </exception>
         public async Task<ApiAutocomplete> RequestAutocomplete(string query, bool json = false)
         {
-            HttpResponseMessage result = null;
-            try
-            {
-                using (HttpClient client = CreateClient(_timeout))
-                {
-                    var content = new FormUrlEncodedContent(new[] {
-                         new KeyValuePair<string, string>("query", query ),
-                         new KeyValuePair<string, string>("apiKey", _apiKey),
-                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, query)),
-                         new KeyValuePair<string, string>("StationId", _stationId),
-                         new KeyValuePair<string, string>("StationName", _stationName),
-                    });
-
-                    result = await client.PostAsync(_url + "/autocomplete" + (json ? ".json" : null), content);
-                    result.EnsureSuccessStatusCode();
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                        {
-                            if (json)
-                            {
-                                JsonSerializer serializer = new JsonSerializer();
-                                return (ApiAutocomplete)serializer.Deserialize(reader, typeof(ApiAutocomplete));
-                            }
-                            else
-                            {
-                                XmlSerializer serializer = new XmlSerializer(typeof(ApiAutocomplete));
-                                return (ApiAutocomplete)serializer.Deserialize(reader);
-                            }
-                        }
-                    }
-                    return null;
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
-            }
-            catch (TaskCanceledException e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+            var list = new List<KeyValuePair<string, string>>(new[] {
+                new KeyValuePair<string, string>("query", query ),
+                new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, query)),
+            });
+            return await DoApiCall<ApiAutocomplete>("/autocomplete", list, json);
         }
 
 
@@ -102,57 +60,15 @@ namespace FinstatApi
         /// </exception>
         public async Task<string> RequestAutoLogin(string url, string email = null, bool json = false)
         {
-            HttpResponseMessage result = null;
-            try
+            var list = new List<KeyValuePair<string, string>>(new[] {
+                new KeyValuePair<string, string>("url", url),
+                new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, "autologin")),
+            });
+            if (!string.IsNullOrEmpty(email))
             {
-                using (HttpClient client = CreateClient(_timeout))
-                {
-                    var list = new List<KeyValuePair<string, string>>(new[] {
-                        new KeyValuePair<string, string>("url", url),
-                        new KeyValuePair<string, string>("apiKey", _apiKey),
-                        new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, "autologin")),
-                        new KeyValuePair<string, string>("StationId", _stationId),
-                        new KeyValuePair<string, string>("StationName", _stationName),
-                    });
-                    if (!string.IsNullOrEmpty(email))
-                    {
-                        list.Add(new KeyValuePair<string, string>("email", email));
-                    }
-                    var content = new FormUrlEncodedContent(list);
-                    result = await client.PostAsync(_url + "/autologin" + (json ? ".json" : null), content);
-                    result.EnsureSuccessStatusCode();
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                        {
-                            if (json)
-                            {
-                                JsonSerializer serializer = new JsonSerializer();
-                                return (string)serializer.Deserialize(reader, typeof(string));
-                            }
-                            else
-                            {
-                                XmlSerializer serializer = new XmlSerializer(typeof(string));
-                                return (string)serializer.Deserialize(reader);
-                            }
-                        }
-                    }
-                    return null;
-                }
+                list.Add(new KeyValuePair<string, string>("email", email));
             }
-            catch (HttpRequestException e)
-            {
-                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
-            }
-            catch (TaskCanceledException e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+            return await DoApiCall<string>("/autologin", list, json);
         }
     }
 }

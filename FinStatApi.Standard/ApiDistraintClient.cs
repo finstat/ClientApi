@@ -41,54 +41,12 @@ namespace FinstatApi
         /// </exception>
         public async Task<DistraintResult> RequestDistraintSearch(string ico, string surname, string dateOfBirth, string city, string companyName, string fileReference, bool json = false)
         {
-            HttpResponseMessage result = null;
-            try
-            {
-                using (HttpClient client = CreateClient(_timeout))
-                {
-                    var search = string.Format("{0}|{1}|{2}|{3}|{4}|{5}", ico, surname, dateOfBirth, city, companyName, fileReference);
-                    var content = new FormUrlEncodedContent(new[] {
-                         new KeyValuePair<string, string>("search", search ),
-                         new KeyValuePair<string, string>("apiKey", _apiKey),
-                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, search)),
-                         new KeyValuePair<string, string>("StationId", _stationId),
-                         new KeyValuePair<string, string>("StationName", _stationName),
-                    });
-
-                    result = await client.PostAsync(_url + "/distraintSearch" + (json ? ".json" : null), content);
-                    result.EnsureSuccessStatusCode();
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                        {
-                            if (json)
-                            {
-                                JsonSerializer serializer = new JsonSerializer();
-                                return (DistraintResult)serializer.Deserialize(reader, typeof(DistraintResult));
-                            }
-                            else
-                            {
-                                XmlSerializer serializer = new XmlSerializer(typeof(DistraintResult));
-                                return (DistraintResult)serializer.Deserialize(reader);
-                            }
-                        }
-                    }
-                    return null;
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
-            }
-            catch (TaskCanceledException e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+            var search = string.Format("{0}|{1}|{2}|{3}|{4}|{5}", ico, surname, dateOfBirth, city, companyName, fileReference);
+            var list = new List<KeyValuePair<string, string>>(new[] {
+                new KeyValuePair<string, string>("search", search ),
+                new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, search)),
+            });
+            return await DoApiCall<DistraintResult>("/distraintSearch", list, json);
         }
 
         /// <summary>
@@ -115,55 +73,12 @@ namespace FinstatApi
                     idsParam += (!string.IsNullOrEmpty(idsParam) ? "," : null) + id;
                 }
             }
-
-            HttpResponseMessage result = null;
-            try
-            {
-                using (HttpClient client = CreateClient(_timeout))
-                {
-                    var content = new FormUrlEncodedContent(new[] {
-                         new KeyValuePair<string, string>("token", token ),
-                         new KeyValuePair<string, string>("ids", idsParam ),
-                         new KeyValuePair<string, string>("apiKey", _apiKey),
-                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, token + idsString)),
-                         new KeyValuePair<string, string>("StationId", _stationId),
-                         new KeyValuePair<string, string>("StationName", _stationName),
-                    });
-
-                    result = await client.PostAsync(_url + "/distraintDetail" + (json ? ".json" : null), content);
-                    result.EnsureSuccessStatusCode();
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                        {
-                            if (json)
-                            {
-                                JsonSerializer serializer = new JsonSerializer();
-                                return (DistraintDetailResults)serializer.Deserialize(reader, typeof(DistraintDetailResults));
-                            }
-                            else
-                            {
-                                XmlSerializer serializer = new XmlSerializer(typeof(DistraintDetailResults));
-                                return (DistraintDetailResults)serializer.Deserialize(reader);
-                            }
-                        }
-                    }
-                    return null;
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
-            }
-            catch (TaskCanceledException e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+            var list = new List<KeyValuePair<string, string>>(new[] {
+                new KeyValuePair<string, string>("token", token ),
+                new KeyValuePair<string, string>("ids", idsParam ),
+                new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, token + idsString)),
+            });
+            return await DoApiCall<DistraintDetailResults>("/distraintDetail", list, json);
         }
 
         /// <summary>
@@ -184,54 +99,12 @@ namespace FinstatApi
         /// </exception>
         public async Task<DistraintResult> RequestDistraintResults(string ico, string surname, string dateOfBirth, string city, string companyName, string fileReference, bool json = false)
         {
-            HttpResponseMessage result = null;
-            try
-            {
-                using (HttpClient client = CreateClient(_timeout))
-                {
-                    var search = string.Format("{0}|{1}|{2}|{3}|{4}|{5}", ico, surname, dateOfBirth, city, companyName, fileReference);
-                    var content = new FormUrlEncodedContent(new[] {
-                         new KeyValuePair<string, string>("search", search ),
-                         new KeyValuePair<string, string>("apiKey", _apiKey),
-                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, search)),
-                         new KeyValuePair<string, string>("StationId", _stationId),
-                         new KeyValuePair<string, string>("StationName", _stationName),
-                    });
-
-                    result = await client.PostAsync(_url + "/distraintResults" + (json ? ".json" : null), content);
-                    result.EnsureSuccessStatusCode();
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                        {
-                            if (json)
-                            {
-                                JsonSerializer serializer = new JsonSerializer();
-                                return (DistraintResult)serializer.Deserialize(reader, typeof(DistraintResult));
-                            }
-                            else
-                            {
-                                XmlSerializer serializer = new XmlSerializer(typeof(DistraintResult));
-                                return (DistraintResult)serializer.Deserialize(reader);
-                            }
-                        }
-                    }
-                    return null;
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
-            }
-            catch (TaskCanceledException e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+            var search = string.Format("{0}|{1}|{2}|{3}|{4}|{5}", ico, surname, dateOfBirth, city, companyName, fileReference);
+            var list = new List<KeyValuePair<string, string>>(new[] {
+                new KeyValuePair<string, string>("search", search ),
+                new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, search)),
+            });
+            return await DoApiCall<DistraintResult>("/distraintResults", list, json);
         }
 
         /// <summary>
@@ -248,53 +121,11 @@ namespace FinstatApi
         /// </exception>
         public async Task<DistraintResult> RequestDistraintResultsByToken(string token, bool json = false)
         {
-            HttpResponseMessage result = null;
-            try
-            {
-                using (HttpClient client = CreateClient(_timeout))
-                {
-                    var content = new FormUrlEncodedContent(new[] {
-                         new KeyValuePair<string, string>("token", token ),
-                         new KeyValuePair<string, string>("apiKey", _apiKey),
-                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, token)),
-                         new KeyValuePair<string, string>("StationId", _stationId),
-                         new KeyValuePair<string, string>("StationName", _stationName),
-                    });
-
-                    result = await client.PostAsync(_url + "/distraintResultsByToken" + (json ? ".json" : null), content);
-                    result.EnsureSuccessStatusCode();
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                        {
-                            if (json)
-                            {
-                                JsonSerializer serializer = new JsonSerializer();
-                                return (DistraintResult)serializer.Deserialize(reader, typeof(DistraintResult));
-                            }
-                            else
-                            {
-                                XmlSerializer serializer = new XmlSerializer(typeof(DistraintResult));
-                                return (DistraintResult)serializer.Deserialize(reader);
-                            }
-                        }
-                    }
-                    return null;
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
-            }
-            catch (TaskCanceledException e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+            var list = new List<KeyValuePair<string, string>>(new[] {
+                new KeyValuePair<string, string>("token", token ),
+                new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, token)),
+            });
+            return await DoApiCall<DistraintResult>("/distraintResultsByToken", list, json);
         }
 
         /// <summary>
@@ -311,53 +142,11 @@ namespace FinstatApi
         /// </exception>
         public async Task<DistraintDetailResults> RequestDistraintStoredDetail(string id, bool json = false)
         {
-            HttpResponseMessage result = null;
-            try
-            {
-                using (HttpClient client = CreateClient(_timeout))
-                {
-                    var content = new FormUrlEncodedContent(new[] {
-                         new KeyValuePair<string, string>("id", id ),
-                         new KeyValuePair<string, string>("apiKey", _apiKey),
-                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, id)),
-                         new KeyValuePair<string, string>("StationId", _stationId),
-                         new KeyValuePair<string, string>("StationName", _stationName),
-                    });
-
-                    result = await client.PostAsync(_url + "/distraintStoredDetail" + (json ? ".json" : null), content);
-                    result.EnsureSuccessStatusCode();
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                        {
-                            if (json)
-                            {
-                                JsonSerializer serializer = new JsonSerializer();
-                                return (DistraintDetailResults)serializer.Deserialize(reader, typeof(DistraintDetailResults));
-                            }
-                            else
-                            {
-                                XmlSerializer serializer = new XmlSerializer(typeof(DistraintDetailResults));
-                                return (DistraintDetailResults)serializer.Deserialize(reader);
-                            }
-                        }
-                    }
-                    return null;
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
-            }
-            catch (TaskCanceledException e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+            var list = new List<KeyValuePair<string, string>>(new[] {
+                new KeyValuePair<string, string>("id", id ),
+                new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, id)),
+            });
+            return await DoApiCall<DistraintDetailResults>("/distraintStoredDetail", list, json);
         }
     }
 }

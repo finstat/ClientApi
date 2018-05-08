@@ -1,9 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace FinstatApi
 {
@@ -108,6 +113,97 @@ namespace FinstatApi
                 client.Timeout = new TimeSpan(0, 0, 0, 0, timeoutMiliSeconds.Value);
             }
             return client;
+        }
+
+        internal async Task<byte[]> DoApiCall(string methodUrl, List<KeyValuePair<string, string>> methodParams, bool json = false, string method = "POST")
+        {
+            HttpResponseMessage result = null;
+            try
+            {
+                var list = new List<KeyValuePair<string, string>>(new[] {
+                    new KeyValuePair<string, string>("apiKey", _apiKey),
+                    new KeyValuePair<string, string>("StationId", _stationId),
+                    new KeyValuePair<string, string>("StationName", _stationName),
+                });
+                if (methodParams != null && methodParams.Count > 0)
+                {
+                    list.AddRange(methodParams);
+                }
+                using (HttpClient client = CreateClient(_timeout))
+                {
+                    var content = new FormUrlEncodedContent(list);
+                    result = (method == "POST") ? await client.PostAsync(_url + methodUrl + (json ? ".json" : null), content) : await client.GetAsync(_url + methodUrl);
+                    Limits = new ViewModel.Limits
+                    {
+                        Daily = new ViewModel.Limit
+                        {
+                            Current = long.Parse(result.Headers.GetValues("Finstat-Daily-Limit-Current").First()),
+                            Max = long.Parse(result.Headers.GetValues("Finstat-Daily-Limit-Max").First())
+                        },
+                        Monthly = new ViewModel.Limit
+                        {
+                            Current = long.Parse(result.Headers.GetValues("Finstat-Monthly-Limit-Current").First()),
+                            Max = long.Parse(result.Headers.GetValues("Finstat-Monthly-Limit-Max").First())
+                        }
+                    };
+                    result.EnsureSuccessStatusCode();
+                    if (result.IsSuccessStatusCode)
+                    {
+                        return await result.Content.ReadAsByteArrayAsync();
+                    }
+                    return null;
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
+            }
+            catch (TaskCanceledException e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
+            }
+        }
+
+        internal async Task<T> DoApiCall<T>(string methodUrl, List<KeyValuePair<string, string>> methodParams, bool json = false, string method = "POST")
+        {
+            try
+            {
+                var bytes = await DoApiCall(methodUrl, methodParams, json, method);
+                if (bytes != null)
+                {
+                    var response = Encoding.UTF8.GetString(bytes);
+                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
+                    {
+                        if (json)
+                        {
+                            JsonSerializer serializer = new JsonSerializer();
+                            return (T)serializer.Deserialize(reader, typeof(T));
+                        }
+                        else
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(T));
+                            return (T)serializer.Deserialize(reader);
+                        }
+                    }
+                }
+                return default(T);
+            }
+            catch (FinstatApiException e)
+            {
+                throw e;
+            }
+            catch (TaskCanceledException e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
+            }
+            catch (Exception e)
+            {
+                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
+            }
         }
     }
 }

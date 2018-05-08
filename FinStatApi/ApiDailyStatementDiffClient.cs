@@ -33,43 +33,12 @@ namespace FinstatApi
         /// </exception>
         public DailyDiffList RequestListOfDailyStatementDiffs(bool json = false)
         {
-            try
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "apiKey", _apiKey },
-                            { "Hash", ComputeVerificationHash(_apiKey, _privateKey, null) },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/GetListOfStatementDiffs" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (DailyDiffList)serializer.Deserialize(reader, typeof(DailyDiffList));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(DailyDiffList));
-                            return (DailyDiffList)serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, null) },
+            };
+            return DoApiCall<DailyDiffList>("/GetListOfStatementDiffs", reqparm, json);
         }
 
         /// <summary>
@@ -86,56 +55,28 @@ namespace FinstatApi
         {
             try
             {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
+                System.Collections.Specialized.NameValueCollection reqparm =
+                new System.Collections.Specialized.NameValueCollection
                 {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "apiKey", _apiKey },
-                            { "fileName", fileName },
-                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, fileName) },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/GetStatementFile", "POST", reqparm);
-                    if (responsebytes != null)
+                    { "fileName", fileName },
+                    { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, fileName) },
+                };
+                byte[] responsebytes = DoApiCall("/GetStatementFile", reqparm);
+                if (responsebytes != null)
+                {
+                    string fullExportPath = Path.Combine(exportPath, fileName);
+                    if (File.Exists(fullExportPath))
                     {
-                        string fullExportPath = Path.Combine(exportPath, fileName);
-                        if (File.Exists(fullExportPath))
-                        {
-                            File.Delete(fullExportPath);
-                        }
-                        File.WriteAllBytes(fullExportPath, responsebytes);
-                        return fullExportPath;
+                        File.Delete(fullExportPath);
                     }
-                    return null;
+                    File.WriteAllBytes(fullExportPath, responsebytes);
+                    return fullExportPath;
                 }
+                return null;
             }
-            catch (WebException e)
+            catch (FinstatApiException e)
             {
-                if (e.Response is HttpWebResponse response)
-                {
-                    switch (response.StatusCode)
-                    {
-                        case HttpStatusCode.Forbidden:
-                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.NotValidCustomerKey,
-                                "Not valid API key!", e);
-                        case HttpStatusCode.PaymentRequired:
-                            throw new FinstatApiException(FinstatApiException.FailTypeEnum.LimitExceed,
-                                response.StatusDescription, e);
-                    }
-                }
-                else if (e.Status == WebExceptionStatus.ConnectFailure || e.Status == WebExceptionStatus.NameResolutionFailure)
-                {
-                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.UrlNotFound,
-                                string.Format("Url {0} not found!", _url), e);
-                }
-                else if (e.Status == WebExceptionStatus.Timeout)
-                {
-                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout,
-                                string.Format("Request to url {0} timeouts in {1} miliseconds!", _url, _timeout), e);
-                }
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.OtherCommunicationFail, "Unknown exception while communication with Finstat api!", e);
+                throw e;
             }
             catch (Exception e)
             {
@@ -155,44 +96,13 @@ namespace FinstatApi
         /// </exception>
         public KeyValue[] RequestStatementLegend(string lang = "sk", bool json = false)
         {
-            try
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "apiKey", _apiKey },
-                            { "lang", lang },
-                            { "Hash", ComputeVerificationHash(_apiKey, _privateKey, lang) },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/GetStatementLegend" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (KeyValue[])serializer.Deserialize(reader, typeof(KeyValue[]));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(KeyValue[]));
-                            return (KeyValue[])serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+                { "lang", lang },
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, lang) },
+            };
+            return DoApiCall<KeyValue[]>("/GetStatementLegend", reqparm, json);
         }
     }
 }

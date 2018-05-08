@@ -22,6 +22,7 @@ namespace FinstatApi
             : base(apiKey, privateKey, stationId, stationName, timeout)
         {
         }
+
         /// <summary>
         /// Adds specified ico to monitoring.
         /// </summary>
@@ -31,58 +32,16 @@ namespace FinstatApi
         /// Not valid API key!
         /// or Specified ico {0} not found in database!
         /// or Url {0} not found!
-        /// or Unknown exception while communication with Finstat api!
+        /// or TimeOut exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
         public async Task<bool> Add(string ico, bool json = false)
         {
-            HttpResponseMessage result = null;
-            try
-            {
-                using (HttpClient client = CreateClient(_timeout))
-                {
-                    var content = new FormUrlEncodedContent(new[] {
-                         new KeyValuePair<string, string>("ico", ico),
-                         new KeyValuePair<string, string>("apiKey", _apiKey),
-                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, ico)),
-                         new KeyValuePair<string, string>("StationId", _stationId),
-                         new KeyValuePair<string, string>("StationName", _stationName),
-                    });
-
-                    result = await client.PostAsync(_url + "/AddToMonitoring" + (json ? ".json" : null), content);
-                    result.EnsureSuccessStatusCode();
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                        {
-                            if (json)
-                            {
-                                JsonSerializer serializer = new JsonSerializer();
-                                return (bool)serializer.Deserialize(reader, typeof(bool));
-                            }
-                            else
-                            {
-                                XmlSerializer serializer = new XmlSerializer(typeof(bool));
-                                return (bool)serializer.Deserialize(reader);
-                            }
-                        }
-                    }
-                    return false;
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null, ico);
-            }
-            catch (TaskCanceledException e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+            var list = new List<KeyValuePair<string, string>>(new[] {
+                new KeyValuePair<string, string>("ico", ico),
+                new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, ico)),
+            });
+            return await DoApiCall<bool>("/AddToMonitoring", list, json);
         }
 
         /// <summary>
@@ -94,58 +53,16 @@ namespace FinstatApi
         /// Not valid API key!
         /// or Specified ico {0} not found in database!
         /// or Url {0} not found!
-        /// or Unknown exception while communication with Finstat api!
+        /// or TimeOut exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
         public async Task<bool> Remove(string ico, bool json = false)
         {
-            HttpResponseMessage result = null;
-            try
-            {
-                using (HttpClient client = CreateClient(_timeout))
-                {
-                    var content = new FormUrlEncodedContent(new[] {
-                         new KeyValuePair<string, string>("ico", ico),
-                         new KeyValuePair<string, string>("apiKey", _apiKey),
-                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, ico)),
-                         new KeyValuePair<string, string>("StationId", _stationId),
-                         new KeyValuePair<string, string>("StationName", _stationName),
-                    });
-
-                    result = await client.PostAsync(_url + "/RemoveFromMonitoring" + (json ? ".json" : null), content);
-                    result.EnsureSuccessStatusCode();
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                        {
-                            if (json)
-                            {
-                                JsonSerializer serializer = new JsonSerializer();
-                                return (bool)serializer.Deserialize(reader, typeof(bool));
-                            }
-                            else
-                            {
-                                XmlSerializer serializer = new XmlSerializer(typeof(bool));
-                                return (bool)serializer.Deserialize(reader);
-                            }
-                        }
-                    }
-                    return false;
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null, ico);
-            }
-            catch (TaskCanceledException e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+            var list = new List<KeyValuePair<string, string>>(new[] {
+                new KeyValuePair<string, string>("ico", ico),
+                new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, ico)),
+            });
+            return await DoApiCall<bool>("/RemoveFromMonitoring", list, json);
         }
 
         /// <summary>
@@ -155,57 +72,15 @@ namespace FinstatApi
         /// <exception cref="FinstatApi.FinstatApiException">
         /// Not valid API key!
         /// or Url {0} not found!
-        /// or Unknown exception while communication with Finstat api!
+        /// or TimeOut exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
         public async Task<string[]> GetMonitorings(bool json = false)
         {
-            HttpResponseMessage result = null;
-            try
-            {
-                using (HttpClient client = CreateClient(_timeout))
-                {
-                    var content = new FormUrlEncodedContent(new[] {
-                         new KeyValuePair<string, string>("apiKey", _apiKey),
-                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, "list")),
-                         new KeyValuePair<string, string>("StationId", _stationId),
-                         new KeyValuePair<string, string>("StationName", _stationName),
-                    });
-
-                    result = await client.PostAsync(_url + "/MonitoringList" + (json ? ".json" : null), content);
-                    result.EnsureSuccessStatusCode();
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                        {
-                            if (json)
-                            {
-                                JsonSerializer serializer = new JsonSerializer();
-                                return (string[])serializer.Deserialize(reader, typeof(string[]));
-                            }
-                            else
-                            {
-                                XmlSerializer serializer = new XmlSerializer(typeof(string[]));
-                                return (string[])serializer.Deserialize(reader);
-                            }
-                        }
-                    }
-                    return null;
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
-            }
-            catch (TaskCanceledException e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+            var list = new List<KeyValuePair<string, string>>(new[] {
+                new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, "list")),
+            });
+            return await DoApiCall<string[]>("/MonitoringList", list, json);
         }
 
         /// <summary>
@@ -215,57 +90,15 @@ namespace FinstatApi
         /// <exception cref="FinstatApi.FinstatApiException">
         /// Not valid API key!
         /// or Url {0} not found!
-        /// or Unknown exception while communication with Finstat api!
+        /// or TimeOut exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
         public async Task<Monitoring[]> GetReport(bool json = false)
         {
-            HttpResponseMessage result = null;
-            try
-            {
-                using (HttpClient client = CreateClient(_timeout))
-                {
-                    var content = new FormUrlEncodedContent(new[] {
-                         new KeyValuePair<string, string>("apiKey", _apiKey),
-                         new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, "report")),
-                         new KeyValuePair<string, string>("StationId", _stationId),
-                         new KeyValuePair<string, string>("StationName", _stationName),
-                    });
-
-                    result = await client.PostAsync(_url + "/MonitoringReport" + (json ? ".json" : null), content);
-                    result.EnsureSuccessStatusCode();
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var response = Encoding.UTF8.GetString(await result.Content.ReadAsByteArrayAsync());
-                        using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                        {
-                            if (json)
-                            {
-                                JsonSerializer serializer = new JsonSerializer();
-                                return (Monitoring[])serializer.Deserialize(reader, typeof(Monitoring[]));
-                            }
-                            else
-                            {
-                                XmlSerializer serializer = new XmlSerializer(typeof(Monitoring[]));
-                                return (Monitoring[])serializer.Deserialize(reader);
-                            }
-                        }
-                    }
-                    return null;
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
-            }
-            catch (TaskCanceledException e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout, "Timeout exception while processing Finstat api request!", e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+            var list = new List<KeyValuePair<string, string>>(new[] {
+                new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, "report")),
+            });
+            return await DoApiCall<Monitoring[]>("/MonitoringReport", list, json);
         }
     }
 }

@@ -38,46 +38,14 @@ namespace FinstatApi
         /// </exception>
         public DistraintResult RequestDistraintSearch(string ico, string surname, string dateOfBirth, string city, string companyName, string fileReference, bool json = false)
         {
-            try
+            var search = string.Format("{0}|{1}|{2}|{3}|{4}|{5}", ico, surname, dateOfBirth, city, companyName, fileReference);
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    var search = string.Format("{0}|{1}|{2}|{3}|{4}|{5}", ico, surname, dateOfBirth, city, companyName, fileReference);
-
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "search", search },
-                            { "apiKey", _apiKey },
-                            { "Hash", ComputeVerificationHash(_apiKey, _privateKey, search) },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/distraintSearch" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (DistraintResult)serializer.Deserialize(reader, typeof(DistraintResult));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(DistraintResult));
-                            return (DistraintResult)serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+                { "search", search },
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, search) },
+            };
+            return DoApiCall<DistraintResult>("/distraintSearch", reqparm, json);
         }
 
         /// <summary>
@@ -105,45 +73,14 @@ namespace FinstatApi
                 }
             }
 
-            try
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "token", token },
-                            { "ids", idsParam },
-                            { "apiKey", _apiKey },
-                            { "Hash", ComputeVerificationHash(_apiKey, _privateKey, token + idsString) },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/distraintDetail" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (DistraintDetailResults)serializer.Deserialize(reader, typeof(DistraintDetailResults));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(DistraintDetailResults));
-                            return (DistraintDetailResults)serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+                { "token", token },
+                { "ids", idsParam },
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, token + idsString) },
+            };
+            return DoApiCall<DistraintDetailResults>("/distraintDetail", reqparm, json);
         }
 
         /// <summary>
@@ -164,46 +101,14 @@ namespace FinstatApi
         /// </exception>
         public DistraintResult RequestDistraintResults(string ico, string surname, string dateOfBirth, string city, string companyName, string fileReference, bool json = false)
         {
-            try
+            var search = string.Format("{0}|{1}|{2}|{3}|{4}|{5}", ico, surname, dateOfBirth, city, companyName, fileReference);
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    var search = string.Format("{0}|{1}|{2}|{3}|{4}|{5}", ico, surname, dateOfBirth, city, companyName, fileReference);
-
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "search", search },
-                            { "apiKey", _apiKey },
-                            { "Hash", ComputeVerificationHash(_apiKey, _privateKey, search) },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/distraintResults" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (DistraintResult)serializer.Deserialize(reader, typeof(DistraintResult));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(DistraintResult));
-                            return (DistraintResult)serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+                { "search", search },
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, search) },
+            };
+            return DoApiCall<DistraintResult>("/distraintResults", reqparm, json);
         }
 
         /// <summary>
@@ -220,44 +125,13 @@ namespace FinstatApi
         /// </exception>
         public DistraintResult RequestDistraintResultsByToken(string token, bool json = false)
         {
-            try
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "token", token },
-                            { "apiKey", _apiKey },
-                            { "Hash", ComputeVerificationHash(_apiKey, _privateKey, token) },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/distraintResultsByToken" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (DistraintResult)serializer.Deserialize(reader, typeof(DistraintResult));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(DistraintResult));
-                            return (DistraintResult)serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+                { "token", token },
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, token) },
+            };
+            return DoApiCall<DistraintResult>("/distraintResultsByToken", reqparm, json);
         }
 
         /// <summary>
@@ -274,44 +148,13 @@ namespace FinstatApi
         /// </exception>
         public DistraintDetailResults RequestDistraintStoredDetail(string id, bool json = false)
         {
-            try
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "id", id },
-                            { "apiKey", _apiKey },
-                            { "Hash", ComputeVerificationHash(_apiKey, _privateKey, id) },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/distraintStoredDetail" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (DistraintDetailResults)serializer.Deserialize(reader, typeof(DistraintDetailResults));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(DistraintDetailResults));
-                            return (DistraintDetailResults)serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+                { "id", id },
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, id) },
+            };
+            return DoApiCall<DistraintDetailResults>("/distraintStoredDetail", reqparm, json);
         }
     }
 }

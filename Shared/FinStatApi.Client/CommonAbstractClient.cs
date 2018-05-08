@@ -15,6 +15,8 @@ namespace FinstatApi
         internal readonly string _stationName;
         internal readonly int _timeout;
 
+        public ViewModel.Limits Limits { get; protected set; }
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClient" /> class.

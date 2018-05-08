@@ -29,103 +29,18 @@ namespace FinstatApi
         /// Not valid API key!
         /// or Specified ico {0} not found in database!
         /// or Url {0} not found!
-        /// or Unknown exception while communication with Finstat api!
+        /// or TimeOut exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
         public bool Add(string ico, bool json = false)
         {
-            try
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "ico", ico },
-                            { "apiKey", _apiKey },
-                            { "Hash", ComputeVerificationHash(_apiKey, _privateKey, ico) },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/AddToMonitoring" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (bool)serializer.Deserialize(reader, typeof(bool));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(bool));
-                            return (bool)serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e, ico);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
-        }
-
-        /// <summary>
-        /// Adds specified date to monitoring.
-        /// </summary>
-        /// <param name="date">The date.</param>
-        /// <returns>True if succeed otherwise false.</returns>
-        /// <exception cref="FinstatApi.FinstatApiException">
-        /// Not valid API key!
-        /// or Invalid Date format
-        /// or Url {0} not found!
-        /// or Unknown exception while communication with Finstat api!
-        /// or Unknown exception while communication with Finstat api!
-        /// </exception>
-        public bool AddDate(string date, bool json = false)
-        {
-            try
-            {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "date", date },
-                            { "apiKey", _apiKey },
-                            { "Hash", ComputeVerificationHash(_apiKey, _privateKey, date) },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/AddDateToMonitoring" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (bool)serializer.Deserialize(reader, typeof(bool));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(bool));
-                            return (bool)serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e, date);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+                { "ico", ico },
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, ico) },
+            };
+            return DoApiCall<bool>("/AddToMonitoring", reqparm, json);
         }
 
         /// <summary>
@@ -137,103 +52,18 @@ namespace FinstatApi
         /// Not valid API key!
         /// or Specified ico {0} not found in database!
         /// or Url {0} not found!
-        /// or Unknown exception while communication with Finstat api!
+        /// or TimeOut exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
         public bool Remove(string ico, bool json = false)
         {
-            try
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "ico", ico },
-                            { "apiKey", _apiKey },
-                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, ico) },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/RemoveFromMonitoring" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (bool)serializer.Deserialize(reader, typeof(bool));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(bool));
-                            return (bool)serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e, ico);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
-        }
-
-        /// <summary>
-        /// Removes specified date from monitoring.
-        /// </summary>
-        /// <param name="date">The date.</param>
-        /// <returns>True if succeed otherwise false.</returns>
-        /// <exception cref="FinstatApi.FinstatApiException">
-        /// Not valid API key!
-        /// or Invalid Date format
-        /// or Url {0} not found!
-        /// or Unknown exception while communication with Finstat api!
-        /// or Unknown exception while communication with Finstat api!
-        /// </exception>
-        public bool RemoveDate(string date, bool json = false)
-        {
-            try
-            {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "date", date },
-                            { "apiKey", _apiKey },
-                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, date) },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/RemoveDateFromMonitoring" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (bool)serializer.Deserialize(reader, typeof(bool));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(bool));
-                            return (bool)serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e, date);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+                { "ico", ico },
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, ico) },
+            };
+            return DoApiCall<bool>("/RemoveFromMonitoring", reqparm, json);
         }
 
         /// <summary>
@@ -248,96 +78,13 @@ namespace FinstatApi
         /// </exception>
         public string[] GetMonitorings(bool json = false)
         {
-            try
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "apiKey", _apiKey },
-                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "list") },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/MonitoringList" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (string[])serializer.Deserialize(reader, typeof(string[]));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(string[]));
-                            return (string[])serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "list") },
+            };
+            return DoApiCall<string[]>("/MonitoringList", reqparm, json);
         }
-
-        /// <summary>
-        /// Retrieves list of current monitoring dates.
-        /// </summary>
-        /// <returns>List of monitored dates.</returns>
-        /// <exception cref="FinstatApi.FinstatApiException">
-        /// Not valid API key!
-        /// or Url {0} not found!
-        /// or Unknown exception while communication with Finstat api!
-        /// or Unknown exception while communication with Finstat api!
-        /// </exception>
-        public string[] GetDateMonitorings(bool json = false)
-        {
-            try
-            {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "apiKey", _apiKey },
-                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "datelist") },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/MonitoringDateList" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (string[])serializer.Deserialize(reader, typeof(string[]));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(string[]));
-                            return (string[])serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
-        }
-
 
         /// <summary>
         /// Retrieves report of events in current monitorings.
@@ -346,99 +93,17 @@ namespace FinstatApi
         /// <exception cref="FinstatApi.FinstatApiException">
         /// Not valid API key!
         /// or Url {0} not found!
-        /// or Unknown exception while communication with Finstat api!
+        /// or TimeOut exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
         public Monitoring[] GetReport(bool json = false)
         {
-            try
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "apiKey", _apiKey },
-                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "report") },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/MonitoringReport" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (Monitoring[])serializer.Deserialize(reader, typeof(Monitoring[]));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(Monitoring[]));
-                            return (Monitoring[])serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
-        }
-
-        /// <summary>
-        /// Retrieves report of date events in current monitorings.
-        /// </summary>
-        /// <returns>List of monitoring events.</returns>
-        /// <exception cref="FinstatApi.FinstatApiException">
-        /// Not valid API key!
-        /// or Url {0} not found!
-        /// or Unknown exception while communication with Finstat api!
-        /// or Unknown exception while communication with Finstat api!
-        /// </exception>
-        public MonitoringDate[] GetDateReport(bool json = false)
-        {
-            try
-            {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "apiKey", _apiKey },
-                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "datereport") },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/MonitoringDateReport" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (MonitoringDate[])serializer.Deserialize(reader, typeof(MonitoringDate[]));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(MonitoringDate[]));
-                            return (MonitoringDate[])serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "report") },
+            };
+            return DoApiCall<Monitoring[]>("/MonitoringReport", reqparm, json);
         }
 
         /// <summary>
@@ -448,48 +113,103 @@ namespace FinstatApi
         /// <exception cref="FinstatApi.FinstatApiException">
         /// Not valid API key!
         /// or Url {0} not found!
-        /// or Unknown exception while communication with Finstat api!
+        /// or TimeOut exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
         public ProceedingResult[] GetProceedings(bool json = false)
         {
-            try
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "apiKey", _apiKey },
-                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "proceedings") },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/MonitoringProceedings" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (ProceedingResult[])serializer.Deserialize(reader, typeof(ProceedingResult[]));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(ProceedingResult[]));
-                            return (ProceedingResult[])serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "proceedings") },
+            };
+            return DoApiCall<ProceedingResult[]>("/MonitoringProceedings", reqparm, json);
+        }
+
+        /// <summary>
+        /// Adds specified date to monitoring.
+        /// </summary>
+        /// <param name="date">The date.</param>
+        /// <returns>True if succeed otherwise false.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Invalid Date format
+        /// or Url {0} not found!
+        /// or TimeOut exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public bool AddDate(string date, bool json = false)
+        {
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                throw ParseErrorResponse(e);
-            }
-            catch (Exception e)
+                { "date", date },
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, date) },
+            };
+            return DoApiCall<bool>("/AddDateToMonitoring", reqparm, json);
+        }
+
+        /// <summary>
+        /// Removes specified date from monitoring.
+        /// </summary>
+        /// <param name="date">The date.</param>
+        /// <returns>True if succeed otherwise false.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Invalid Date format
+        /// or Url {0} not found!
+        /// or TimeOut exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public bool RemoveDate(string date, bool json = false)
+        {
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+                { "date", date },
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, date) },
+            };
+            return DoApiCall<bool>("/RemoveDateFromMonitoring", reqparm, json);
+        }
+
+        /// <summary>
+        /// Retrieves list of current monitoring dates.
+        /// </summary>
+        /// <returns>List of monitored dates.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Url {0} not found!
+        /// or TimeOut exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public string[] GetDateMonitorings(bool json = false)
+        {
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
+            {
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "datelist") },
+            };
+            return DoApiCall<string[]>("/MonitoringDateList", reqparm, json);
+        }
+
+        /// <summary>
+        /// Retrieves report of date events in current monitorings.
+        /// </summary>
+        /// <returns>List of monitoring events.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Url {0} not found!
+        /// or TimeOut exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public MonitoringDate[] GetDateReport(bool json = false)
+        {
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
+            {
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "datereport") },
+            };
+            return DoApiCall<MonitoringDate[]>("/MonitoringDateReport", reqparm, json);
         }
 
         /// <summary>
@@ -499,48 +219,17 @@ namespace FinstatApi
         /// <exception cref="FinstatApi.FinstatApiException">
         /// Not valid API key!
         /// or Url {0} not found!
-        /// or Unknown exception while communication with Finstat api!
+        /// or TimeOut exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
         public ProceedingResult[] GetDateProceedings(bool json = false)
         {
-            try
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
             {
-                using (WebClient client = new WebClientWithTimeout(_timeout))
-                {
-                    System.Collections.Specialized.NameValueCollection reqparm =
-                        new System.Collections.Specialized.NameValueCollection
-                        {
-                            { "apiKey", _apiKey },
-                            { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "dateproceedings") },
-                            { "StationId", _stationId },
-                            { "StationName", _stationName }
-                        };
-                    byte[] responsebytes = client.UploadValues(_url + "/MonitoringDateProceedings" + (json ? ".json" : null), "POST", reqparm);
-                    var response = Encoding.UTF8.GetString(responsebytes);
-                    using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
-                    {
-                        if (json)
-                        {
-                            JsonSerializer serializer = new JsonSerializer();
-                            return (ProceedingResult[])serializer.Deserialize(reader, typeof(ProceedingResult[]));
-                        }
-                        else
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(ProceedingResult[]));
-                            return (ProceedingResult[])serializer.Deserialize(reader);
-                        }
-                    }
-                }
-            }
-            catch (WebException e)
-            {
-                throw ParseErrorResponse(e);
-            }
-            catch (Exception e)
-            {
-                throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unknown exception while processing Finstat api request!", e);
-            }
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "dateproceedings") },
+            };
+            return DoApiCall<ProceedingResult[]>("/MonitoringDateProceedings", reqparm, json);
         }
     }
 }
