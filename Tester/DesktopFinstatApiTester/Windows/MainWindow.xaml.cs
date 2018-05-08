@@ -194,7 +194,21 @@ namespace DesktopFinstatApiTester.Windows
                 {
                     var graph = new ViewModel.ObjectViewModelHierarchy(item.Data[0]);
                     treeViewObjectGraph.ItemsSource = graph.FirstGeneration;
+                    graph.FirstGeneration[0].IsSelected = true;
+                    graph.FirstGeneration[0].IsExpanded = true;
                 }
+            }
+        }
+
+        public static void Invoke(DispatcherObject control, Action action)
+        {
+            if (control.Dispatcher.CheckAccess())
+            {
+                action();
+            }
+            else
+            {
+                control.Dispatcher.Invoke(action);
             }
         }
 
@@ -226,17 +240,7 @@ namespace DesktopFinstatApiTester.Windows
                     try
                     {
                         statusWindow.Update(1, "Creating Request");
-                        if (Dispatcher.CheckAccess())
-                        {
-                            item = AppInstance.Add(requestname, apisource, string.Join("; ", parameters));
-                        }
-                        else
-                        {
-                            Dispatcher.BeginInvoke(new Action(() =>
-                            {
-                                item = AppInstance.Add(requestname, apisource, string.Join("; ", parameters));
-                            }));
-                        }
+                        Invoke(this, () => item = AppInstance.Add(requestname, apisource, string.Join("; ", parameters)));
                         statusWindow.Update(2, "Requesting api call");
                         detail = apiCallFunc(parameters.ToArray());
                         statusWindow.Update(3, "Storing Response");
@@ -249,30 +253,18 @@ namespace DesktopFinstatApiTester.Windows
                 () =>
                 {
                     if (ex != null)
-                        if (Dispatcher.CheckAccess())
-                        {
-                            ShowException(ex);
-                        }
-                        else
-                        {
-                            Dispatcher.BeginInvoke(new Action(() =>
-                            {
-                                ShowException(ex);
-                            }));
-                        }
+                    {
+                        Invoke(this, () => ShowException(ex));
+                    }
                     else
                     {
-                        if (Dispatcher.CheckAccess())
-                        {
+                        Invoke(this, () => {
                             item.AddData(new[] { detail });
-                        }
-                        else
-                        {
-                            Dispatcher.BeginInvoke(new Action(() =>
+                            if (item.Data != null && item.Data.Any())
                             {
-                                item.AddData(new[] { detail });
-                            }));
-                        }
+                                datagridResponse.SelectedIndex = 0;
+                            }
+                        });
                     }
                 });
             }
