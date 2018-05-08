@@ -345,16 +345,16 @@
             <Fluent:StatusBarItem Title=""
                           HorizontalAlignment="Right">
                 <StackPanel HorizontalAlignment="Right" VerticalAlignment="Stretch" Orientation="Horizontal" DataContext="{Binding Limits}">
-                    <Label Content="Limits: "/>
-                    <Label Content="Daily - "/>
-                    <Label Content="{Binding Daily.Current}"/>
-                    <Label Content="/"/>
-                    <Label Content="{Binding Daily.Max}"/>
-                    <Label Content=" | "/>
-                    <Label Content="Monthly - "/>
-                    <Label Content="{Binding Monthly.Current}"/>
-                    <Label Content="/"/>
-                    <Label Content="{Binding Monthly.Max}"/>
+                    <Label Content="Limits: " Foreground="White" />
+                    <Label Content="Daily - " Foreground="White" />
+                    <Label Content="{Binding Daily.Current}" Foreground="White" />
+                    <Label Content="/" Foreground="White" />
+                    <Label Content="{Binding Daily.Max}" Foreground="White" />
+                    <Label Content=" | " Foreground="White" />
+                    <Label Content="Monthly - " Foreground="White" />
+                    <Label Content="{Binding Monthly.Current}" Foreground="White" />
+                    <Label Content="/" Foreground="White" />
+                    <Label Content="{Binding Monthly.Max}" Foreground="White" />
                 </StackPanel>
             </Fluent:StatusBarItem>
         </Fluent:StatusBar>
