@@ -137,13 +137,17 @@ namespace FinstatApi
                     {
                         Daily = new ViewModel.Limit
                         {
-                            Current = long.Parse(result.Headers.GetValues("Finstat-Daily-Limit-Current").First()),
-                            Max = long.Parse(result.Headers.GetValues("Finstat-Daily-Limit-Max").First())
+                            Current = (result.Headers != null && result.Headers.Contains("Finstat-Daily-Limit-Current"))
+                                ? long.Parse(result.Headers.GetValues("Finstat-Daily-Limit-Current").First()) : 0,
+                            Max = (result.Headers != null && result.Headers.Contains("Finstat-Daily-Limit-Max"))
+                                ? long.Parse(result.Headers.GetValues("Finstat-Daily-Limit-Max").First()) : 0,
                         },
                         Monthly = new ViewModel.Limit
                         {
-                            Current = long.Parse(result.Headers.GetValues("Finstat-Monthly-Limit-Current").First()),
-                            Max = long.Parse(result.Headers.GetValues("Finstat-Monthly-Limit-Max").First())
+                            Current = (result.Headers != null && result.Headers.Contains("Finstat-Monthly-Limit-Current"))
+                                ? long.Parse(result.Headers.GetValues("Finstat-Monthly-Limit-Current").First()) : 0,
+                            Max = (result.Headers != null && result.Headers.Contains("Finstat-Monthly-Limit-Max"))
+                                ? long.Parse(result.Headers.GetValues("Finstat-Monthly-Limit-Max").First()) : 0
                         }
                     };
                     result.EnsureSuccessStatusCode();
