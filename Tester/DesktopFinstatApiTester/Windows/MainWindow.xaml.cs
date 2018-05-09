@@ -51,9 +51,28 @@ namespace DesktopFinstatApiTester.Windows
             }
         }
 
+        #region Controls
         private void Current_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             ShowException(e.Exception);
+        }
+
+        private void buttonClose_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
+
+        #region Helpers
+        public static void Invoke(DispatcherObject control, Action action)
+        {
+            if (control.Dispatcher.CheckAccess())
+            {
+                action();
+            }
+            else
+            {
+                control.Dispatcher.Invoke(action);
+            }
         }
 
         public void ShowException(Exception ex, string message = null)
@@ -94,11 +113,48 @@ namespace DesktopFinstatApiTester.Windows
                 MessageBox.Show("An error occured", "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
         }
-        private void buttonClose_Click(object sender, RoutedEventArgs e)
+        #endregion
+
+        #region Input-Dialogs
+        private string GetInput()
         {
-            System.Windows.Application.Current.Shutdown();
+            InputWindow input = new InputWindow()
+            {
+                Owner = this,
+            };
+            if (input.ShowDialog() == true)
+            {
+                return input.Text?.Trim();
+            }
+            return null;
         }
 
+        private string GetFolderBrowserDialog()
+        {
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK || dialog.ShowDialog() == System.Windows.Forms.DialogResult.Yes)
+                {
+                    return dialog.SelectedPath;
+                }
+            }
+            return null;
+        }
+
+        private string GetFileBrowserDialog()
+        {
+            using (var dialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK || dialog.ShowDialog() == System.Windows.Forms.DialogResult.Yes)
+                {
+                    return dialog.FileName;
+                }
+            }
+            return null;
+        }
+        #endregion
+
+        #region Control-Settings
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             LoadSettingsViewModel();
@@ -160,44 +216,9 @@ namespace DesktopFinstatApiTester.Windows
             }
             viewModel.FromModel(AppInstance.Settings);
         }
+        #endregion
 
-        private string GetInput()
-        {
-            InputWindow input = new InputWindow()
-            {
-                Owner = this,
-            };
-            if (input.ShowDialog() == true)
-            {
-                return input.Text?.Trim();
-            }
-            return null;
-        }
-
-        private string GetFolderBrowserDialog()
-        {
-            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
-            {
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK || dialog.ShowDialog() == System.Windows.Forms.DialogResult.Yes)
-                {
-                   return dialog.SelectedPath;
-                }
-            }
-            return null;
-        }
-
-        private string GetFileBrowserDialog()
-        {
-            using (var dialog = new System.Windows.Forms.OpenFileDialog())
-            {
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK || dialog.ShowDialog() == System.Windows.Forms.DialogResult.Yes)
-                {
-                    return dialog.FileName;
-                }
-            }
-            return null;
-        }
-
+        #region Control-DataGridResponse
         private void datagridResponse_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             treeViewObjectGraph.ItemsSource = null;
@@ -214,17 +235,69 @@ namespace DesktopFinstatApiTester.Windows
                 }
             }
         }
+        #endregion
 
-        public static void Invoke(DispatcherObject control, Action action)
+        #region Control-TreeViewObjectGraph
+        private void treeViewObjectGraph_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (control.Dispatcher.CheckAccess())
+            treeViewObjectGraph.ContextMenu = treeViewObjectGraph.Resources["TreeViewItemContextMenu"] as System.Windows.Controls.ContextMenu;
+        }
+
+        private void treeViewCopyToClipboard_Click(object sender, RoutedEventArgs e)
+        {
+            if (treeViewObjectGraph.SelectedItem != null)
             {
-                action();
+                Clipboard.SetText(treeViewObjectGraph.SelectedItem.ToString());
             }
-            else
+        }
+
+        private void treeViewCopyValueToClipboard_Click(object sender, RoutedEventArgs e)
+        {
+            if (treeViewObjectGraph.SelectedItem != null)
             {
-                control.Dispatcher.Invoke(action);
+                var item = (ViewModel.ObjectViewModel)treeViewObjectGraph.SelectedItem;
+                Clipboard.SetText(item.Value.ToString());
             }
+        }
+
+        private void treeViewShowInOutputWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if (treeViewObjectGraph.SelectedItem != null)
+            {
+                OutputWindow window = new OutputWindow(treeViewObjectGraph.SelectedItem.ToString())
+                {
+                    Owner = this,
+                    Title = "Selected Result Node"
+                };
+                var result = window.ShowDialog();
+            }
+        }
+
+        private void treeViewSelect_Click(object sender, RoutedEventArgs e)
+        {
+            if (treeViewObjectGraph.SelectedItem != null)
+            {
+                var item = (ViewModel.ObjectViewModel)treeViewObjectGraph.SelectedItem;
+                item.IsSelected = !item.IsSelected;
+            }
+        }
+
+        private void treeViewToggle_Click(object sender, RoutedEventArgs e)
+        {
+            if (treeViewObjectGraph.SelectedItem != null)
+            {
+                var item = (ViewModel.ObjectViewModel)treeViewObjectGraph.SelectedItem;
+                item.IsExpanded = !item.IsExpanded;
+            }
+        }
+        #endregion
+        #endregion
+
+        #region API
+        #region API-Helpers
+        private bool IsJSON()
+        {
+            return AppInstance?.Settings?.ResponseType == Model.ResponseType.JSON;
         }
 
         private void doApiRequest(string requestname, string apisource, Func<string[], object> apiCallFunc, bool hasParameter, ParameterTypeEnum[] parameterTypes = null)
@@ -233,15 +306,15 @@ namespace DesktopFinstatApiTester.Windows
             if (hasParameter)
             {
                 if (parameterTypes != null && parameterTypes.Any())
-                foreach(var parameterType in parameterTypes)
-                switch (parameterType)
-                {
-                    case ParameterTypeEnum.String: parameters.Add(GetInput()); break;
-                    case ParameterTypeEnum.Folder: parameters.Add(GetFolderBrowserDialog()); break;
-                    case ParameterTypeEnum.File: parameters.Add(GetFileBrowserDialog()); break;
-                }
+                    foreach (var parameterType in parameterTypes)
+                        switch (parameterType)
+                        {
+                            case ParameterTypeEnum.String: parameters.Add(GetInput()); break;
+                            case ParameterTypeEnum.Folder: parameters.Add(GetFolderBrowserDialog()); break;
+                            case ParameterTypeEnum.File: parameters.Add(GetFileBrowserDialog()); break;
+                        }
             }
-            if (!hasParameter || (hasParameter && parameters != null && !parameters.Any(x=> string.IsNullOrEmpty(x))))
+            if (!hasParameter || (hasParameter && parameters != null && !parameters.Any(x => string.IsNullOrEmpty(x))))
             {
                 object detail = null;
                 ViewModel.ResponseItem item = null;
@@ -283,12 +356,14 @@ namespace DesktopFinstatApiTester.Windows
                     }
                 });
             }
-            else if (hasParameter && ( parameters == null || !parameters.Any()|| parameters.Any(x => string.IsNullOrEmpty(x))))
+            else if (hasParameter && (parameters == null || !parameters.Any() || parameters.Any(x => string.IsNullOrEmpty(x))))
             {
                 MessageBox.Show("No parameters supplied or missing parameters", "Error", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
             }
         }
+        #endregion
 
+        #region SK-Init
         private FinstatApi.ApiClient CreateSKApiClient()
         {
             return new FinstatApi.ApiClient("https://www.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
@@ -313,12 +388,22 @@ namespace DesktopFinstatApiTester.Windows
         {
             return new FinstatApi.ApiDailyUltimateDiffClient("https://www.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
         }
+        #endregion
 
-        private bool IsJSON()
+        #region CZ-Init
+        private CZ::FinstatApi.ApiClient CreateCZApiClient()
         {
-            return AppInstance?.Settings?.ResponseType == Model.ResponseType.JSON;
+
+            return new CZ::FinstatApi.ApiClient("https://cz.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
         }
 
+        private CZ::FinstatApi.ApiMonitoringClient CreateCZApiMonitoringClient()
+        {
+            return new CZ::FinstatApi.ApiMonitoringClient("https://cz.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+        }
+        #endregion
+
+        #region SK-Detail
         private void buttonDetail_Click(object sender, RoutedEventArgs e)
         {
             doApiRequest("Detail", "SK", (parameters) =>
@@ -351,7 +436,9 @@ namespace DesktopFinstatApiTester.Windows
                 return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
+        #endregion
 
+        #region SK-Auto
         private void buttonAutoComplete_Click(object sender, RoutedEventArgs e)
         {
             doApiRequest("Autocomplete", "SK", (parameters) =>
@@ -373,7 +460,9 @@ namespace DesktopFinstatApiTester.Windows
                 return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
+        #endregion
 
+        #region Sk-MonitoringICO
         private void buttonMonitoringIcoAdd_Click(object sender, RoutedEventArgs e)
         {
             doApiRequest("MonitoringICOAdd", "SK", (parameters) =>
@@ -428,7 +517,9 @@ namespace DesktopFinstatApiTester.Windows
                 return result;
             }, false);
         }
+        #endregion
 
+        #region SK-MonitoringDate
         private void buttonMonitoringDateAdd_Click(object sender, RoutedEventArgs e)
         {
             doApiRequest("MonitoringDateAdd", "SK", (parameters) =>
@@ -483,7 +574,9 @@ namespace DesktopFinstatApiTester.Windows
                 return result;
             }, false);
         }
+        #endregion
 
+        #region SK-DailyDiff
         private void buttonDailyDiffList_Click(object sender, RoutedEventArgs e)
         {
             doApiRequest("DailyDiffList", "SK", (parameters) =>
@@ -520,7 +613,9 @@ namespace DesktopFinstatApiTester.Windows
                 }
             }, true, new[] { ParameterTypeEnum.File });
         }
+        #endregion
 
+        #region SK-DailyStatementDiff
         private void buttonDailyStatementDiffList_Click(object sender, RoutedEventArgs e)
         {
             doApiRequest("DailyStatementDiffList", "SK", (parameter) =>
@@ -558,6 +653,7 @@ namespace DesktopFinstatApiTester.Windows
             }, true, new[] { ParameterTypeEnum.File });
         }
 
+
         private void buttonOpenDailyStatementDiffLegend_Click(object sender, RoutedEventArgs e)
         {
             doApiRequest("DailyStatementDiffFile", "SK", (parameters) =>
@@ -568,7 +664,9 @@ namespace DesktopFinstatApiTester.Windows
                 return result;
             }, false);
         }
+        #endregion
 
+        #region SK-DailyUltimateDiff
         private void buttonDailyUltimateDiffList_Click(object sender, RoutedEventArgs e)
         {
             doApiRequest("DailyUltimateDiffList", "SK", (parameter) =>
@@ -590,72 +688,9 @@ namespace DesktopFinstatApiTester.Windows
                 return result;
             }, true, new[] { ParameterTypeEnum.String, ParameterTypeEnum.Folder });
         }
+        #endregion
 
-
-        private void treeViewObjectGraph_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            treeViewObjectGraph.ContextMenu = treeViewObjectGraph.Resources["TreeViewItemContextMenu"] as System.Windows.Controls.ContextMenu;
-        }
-
-        private void treeViewCopyToClipboard_Click(object sender, RoutedEventArgs e)
-        {
-            if (treeViewObjectGraph.SelectedItem != null)
-            {
-                Clipboard.SetText(treeViewObjectGraph.SelectedItem.ToString());
-            }
-        }
-
-        private void treeViewCopyValueToClipboard_Click(object sender, RoutedEventArgs e)
-        {
-            if (treeViewObjectGraph.SelectedItem != null)
-            {
-                var item = (ViewModel.ObjectViewModel)treeViewObjectGraph.SelectedItem;
-                Clipboard.SetText(item.Value.ToString());
-            }
-        }
-
-        private void treeViewShowInOutputWindow_Click(object sender, RoutedEventArgs e)
-        {
-            if (treeViewObjectGraph.SelectedItem != null)
-            {
-                OutputWindow window = new OutputWindow(treeViewObjectGraph.SelectedItem.ToString())
-                {
-                    Owner = this,
-                    Title = "Selected Result Node"
-                };
-                var result = window.ShowDialog();
-            }
-        }
-
-        private void treeViewSelect_Click(object sender, RoutedEventArgs e)
-        {
-            if (treeViewObjectGraph.SelectedItem != null)
-            {
-                var item = (ViewModel.ObjectViewModel)treeViewObjectGraph.SelectedItem;
-                item.IsSelected = !item.IsSelected;
-            }
-        }
-
-        private void treeViewToggle_Click(object sender, RoutedEventArgs e)
-        {
-            if (treeViewObjectGraph.SelectedItem != null)
-            {
-                var item = (ViewModel.ObjectViewModel)treeViewObjectGraph.SelectedItem;
-                item.IsExpanded = !item.IsExpanded;
-            }
-        }
-
-        private CZ::FinstatApi.ApiClient CreateCZApiClient()
-        {
-
-            return new CZ::FinstatApi.ApiClient("https://cz.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
-        }
-
-        private CZ::FinstatApi.ApiMonitoringClient CreateCZApiMonitoringClient()
-        {
-            return new CZ::FinstatApi.ApiMonitoringClient("https://cz.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
-        }
-
+        #region CZ-Detail
         private void buttonCZDetail_Click(object sender, RoutedEventArgs e)
         {
             doApiRequest("Detail", "CZ", (parameters) =>
@@ -666,7 +701,9 @@ namespace DesktopFinstatApiTester.Windows
                 return result;
             }, true, new[] { ParameterTypeEnum.String });
         }
+        #endregion
 
+        #region CZ-Auto
         private void buttonCZAutoComplete_Click(object sender, RoutedEventArgs e)
         {
 
@@ -687,7 +724,9 @@ namespace DesktopFinstatApiTester.Windows
                 return client.RequestAutoLogin(parameters[0]);
             }, true, new[] { ParameterTypeEnum.String });
         }
+        #endregion
 
+        #region CZ-Monitoring
         private void buttonCZMonitoringIcoAdd_Click(object sender, RoutedEventArgs e)
         {
             doApiRequest("MonitoringICOAdd", "CZ", (parameters) =>
@@ -731,5 +770,7 @@ namespace DesktopFinstatApiTester.Windows
                 return result;
             }, false);
         }
+        #endregion
+        #endregion
     }
 }
