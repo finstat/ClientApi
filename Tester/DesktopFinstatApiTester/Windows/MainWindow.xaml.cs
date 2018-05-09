@@ -127,6 +127,22 @@ namespace DesktopFinstatApiTester.Windows
                 }
                 settingBackStage.IsOpen = false;
             }
+            else
+            {
+                var errors = controlSettings.GetErrors();
+                StringBuilder text = new StringBuilder();
+                foreach (var kvp in errors)
+                {
+                    foreach (var item in kvp.Value)
+                    {
+                        text.AppendLine(string.Format("{0}: {1}", kvp.Key, item));
+                    }
+                }
+                if (text.Length > 0)
+                {
+                    MessageBox.Show(text.ToString(), "Form errors", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                }
+            }
         }
 
         private void backStageTabItemAccess_Initialized(object sender, EventArgs e)
