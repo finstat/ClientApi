@@ -32,6 +32,20 @@ namespace DesktopFinstatApiTester.Windows
             None
         }
 
+        protected class ApiCallParameter
+        {
+            public ParameterTypeEnum Type { get; set; } = ParameterTypeEnum.String;
+            public string Title { get; set; }
+
+            public ApiCallParameter() : this(string.Empty) { }
+            public ApiCallParameter(string title = null) : this(ParameterTypeEnum.String, title) { }
+            public ApiCallParameter(ParameterTypeEnum type = ParameterTypeEnum.String, string title = null)
+            {
+                Type = Type;
+                Title = title;
+            }
+        }
+
         protected ViewModel.ApiApplication AppInstance
         {
             get
@@ -116,23 +130,33 @@ namespace DesktopFinstatApiTester.Windows
         #endregion
 
         #region Input-Dialogs
-        private string GetInput()
+        private string GetInput(ApiCallParameter parameter)
         {
-            InputWindow input = new InputWindow()
+            InputWindow dialog = new InputWindow()
             {
                 Owner = this,
             };
-            if (input.ShowDialog() == true)
+
+            if (parameter != null && !string.IsNullOrEmpty(parameter?.Title))
             {
-                return input.Text?.Trim();
+                dialog.Title = parameter?.Title;
+            }
+
+            if (dialog.ShowDialog() == true)
+            {
+                return (!string.IsNullOrEmpty(dialog.Text)) ? dialog.Text.Trim() : null;
             }
             return null;
         }
 
-        private string GetFolderBrowserDialog()
+        private string GetFolderBrowserDialog(ApiCallParameter parameter)
         {
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
+                if (parameter != null && !string.IsNullOrEmpty(parameter?.Title))
+                {
+                    dialog.Description = parameter?.Title;
+                }
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK || dialog.ShowDialog() == System.Windows.Forms.DialogResult.Yes)
                 {
                     return dialog.SelectedPath;
@@ -141,10 +165,14 @@ namespace DesktopFinstatApiTester.Windows
             return null;
         }
 
-        private string GetFileBrowserDialog()
+        private string GetFileBrowserDialog(ApiCallParameter parameter)
         {
             using (var dialog = new System.Windows.Forms.OpenFileDialog())
             {
+                if (parameter != null && !string.IsNullOrEmpty(parameter?.Title))
+                {
+                    dialog.Title = parameter?.Title;
+                }
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK || dialog.ShowDialog() == System.Windows.Forms.DialogResult.Yes)
                 {
                     return dialog.FileName;
@@ -300,26 +328,33 @@ namespace DesktopFinstatApiTester.Windows
             return AppInstance?.Settings?.ResponseType == Model.ResponseType.JSON;
         }
 
-        private void doApiRequest(string requestname, string apisource, Func<string[], object> apiCallFunc, bool hasParameter, ParameterTypeEnum[] parameterTypes = null)
+        private void doApiRequest(string requestname, string apisource, Func<object[], object> apiCallFunc, ApiCallParameter[] parameterTypes = null)
         {
-            List<string> parameters = new List<string>();
+            bool hasParameter = parameterTypes != null && parameterTypes.Any();
+
+            List<object> parameters = new List<object>();
             if (hasParameter)
             {
                 if (parameterTypes != null && parameterTypes.Any())
+                {
                     foreach (var parameterType in parameterTypes)
-                        switch (parameterType)
+                    {
+                        switch (parameterType.Type)
                         {
-                            case ParameterTypeEnum.String: parameters.Add(GetInput()); break;
-                            case ParameterTypeEnum.Folder: parameters.Add(GetFolderBrowserDialog()); break;
-                            case ParameterTypeEnum.File: parameters.Add(GetFileBrowserDialog()); break;
+                            case ParameterTypeEnum.String: parameters.Add(GetInput(parameterType)); break;
+                            case ParameterTypeEnum.Folder: parameters.Add(GetFolderBrowserDialog(parameterType)); break;
+                            case ParameterTypeEnum.File: parameters.Add(GetFileBrowserDialog(parameterType)); break;
                         }
+                    }
+                }
             }
-            if (!hasParameter || (hasParameter && parameters != null && !parameters.Any(x => string.IsNullOrEmpty(x))))
+
+            if (!hasParameter || (hasParameter && parameters != null && !parameters.Any(x =>  x == null)))
             {
                 object detail = null;
                 ViewModel.ResponseItem item = null;
                 Exception ex = null;
-                var statusWindow = new Windows.StatusWindow(3)
+                var statusWindow = new StatusWindow(3)
                 {
                     Owner = this
                 };
@@ -356,7 +391,7 @@ namespace DesktopFinstatApiTester.Windows
                     }
                 });
             }
-            else if (hasParameter && (parameters == null || !parameters.Any() || parameters.Any(x => string.IsNullOrEmpty(x))))
+            else if (hasParameter && (parameters == null || !parameters.Any() || parameters.Any(x => x == null)))
             {
                 MessageBox.Show("No parameters supplied or missing parameters", "Error", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
             }
@@ -409,10 +444,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("Detail", "SK", (parameters) =>
             {
                 FinstatApi.ApiClient client = CreateSKApiClient();
-                var result = client.RequestDetail(parameters[0], IsJSON());
+                var result = client.RequestDetail((string)parameters[0], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO") }
+            );
         }
 
         private void buttonExtended_Click(object sender, RoutedEventArgs e)
@@ -420,10 +457,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("Extended", "SK", (parameters) =>
             {
                 var client = CreateSKApiClient();
-                var result = client.RequestExtendedDetail(parameters[0], IsJSON());
+                var result = client.RequestExtendedDetail((string)parameters[0], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO")
+            });
         }
 
         private void buttonUltimate_Click(object sender, RoutedEventArgs e)
@@ -431,10 +470,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("Ultimate", "SK", (parameters) =>
             {
                 var client = CreateSKApiClient();
-                var result = client.RequestUltimateDetail(parameters[0], IsJSON());
+                var result = client.RequestUltimateDetail((string)parameters[0], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO")
+            });
         }
         #endregion
 
@@ -444,10 +485,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("Autocomplete", "SK", (parameters) =>
             {
                 var client = CreateSKApiClient();
-                var result = client.RequestAutocomplete(parameters[0], IsJSON());
+                var result = client.RequestAutocomplete((string)parameters[0], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "Text")
+            });
         }
 
         private void buttonAutoLogin_Click(object sender, RoutedEventArgs e)
@@ -455,10 +498,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("AutoLogIn", "SK", (parameters) =>
             {
                 var client = CreateSKApiClient();
-                var result = client.RequestAutoLogin(parameters[0]);
+                var result = client.RequestAutoLogin((string)parameters[0]);
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "FinStat URL")
+            });
         }
         #endregion
 
@@ -468,10 +513,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICOAdd", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                var result = client.Add(parameters[0], IsJSON());
+                var result = client.Add((string)parameters[0], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO")
+            });
         }
 
         private void buttonMonitoringIcoRemove_Click(object sender, RoutedEventArgs e)
@@ -479,10 +526,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICORemove", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                var result = client.Remove(parameters[0], IsJSON());
+                var result = client.Remove((string)parameters[0], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO")
+            });
         }
 
         private void buttonMonitoringIcoList_Click(object sender, RoutedEventArgs e)
@@ -493,7 +542,7 @@ namespace DesktopFinstatApiTester.Windows
                 var result = client.GetMonitorings(IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, false);
+            });
         }
 
         private void buttonMonitoringIcoReport_Click(object sender, RoutedEventArgs e)
@@ -504,7 +553,7 @@ namespace DesktopFinstatApiTester.Windows
                 var result = client.GetReport(IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, false);
+            });
         }
 
         private void buttonMonitoringIcoProceedings_Click(object sender, RoutedEventArgs e)
@@ -515,7 +564,7 @@ namespace DesktopFinstatApiTester.Windows
                 var result = client.GetProceedings(IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, false);
+            });
         }
         #endregion
 
@@ -525,10 +574,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringDateAdd", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                var result = client.AddDate(parameters[0], IsJSON());
+                var result = client.AddDate((string)parameters[0], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "Date")
+            });
         }
 
         private void buttonMonitoringDateRemove_Click(object sender, RoutedEventArgs e)
@@ -536,10 +587,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringDateRemove", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                var result = client.RemoveDate(parameters[0], IsJSON());
+                var result = client.RemoveDate((string)parameters[0], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "Date")
+            });
         }
 
         private void buttonMonitoringDateList_Click(object sender, RoutedEventArgs e)
@@ -550,7 +603,7 @@ namespace DesktopFinstatApiTester.Windows
                 var result = client.GetDateMonitorings(IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, false);
+            });
         }
 
         private void buttonMonitoringDateReport_Click(object sender, RoutedEventArgs e)
@@ -561,7 +614,7 @@ namespace DesktopFinstatApiTester.Windows
                 var result = client.GetDateReport(IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, false);
+            });
         }
 
         private void buttonMonitoringDateProceedings_Click(object sender, RoutedEventArgs e)
@@ -572,7 +625,7 @@ namespace DesktopFinstatApiTester.Windows
                 var result = client.GetDateProceedings(IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, false);
+            });
         }
         #endregion
 
@@ -585,7 +638,7 @@ namespace DesktopFinstatApiTester.Windows
                 var result = client.RequestListOfDailyDiffs(IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, false);
+            });
         }
 
         private void buttonDailyDiffFile_Click(object sender, RoutedEventArgs e)
@@ -593,17 +646,20 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("DailyDiffFile", "SK", (parameters) =>
             {
                 var client = CreateSKApiDailyDiffClient();
-                var result = client.DownloadDailyDiffFile(parameters[0], parameters[1]);
+                var result = client.DownloadDailyDiffFile((string)parameters[0], (string)parameters[1]);
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String, ParameterTypeEnum.Folder });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "File"),
+                new ApiCallParameter(ParameterTypeEnum.Folder, "Select Save Folder")
+            });
         }
 
         private void buttonOpenDailyDiffFile_Click(object sender, RoutedEventArgs e)
         {
             doApiRequest("Open DailyDiffFile", "SK", (parameters) =>
             {
-                using (ZipFile zip = new ZipFile(parameters[0]))
+                using (ZipFile zip = new ZipFile((string)parameters[0]))
                 {
                     var enumerator = zip.Entries.GetEnumerator();
                     enumerator.MoveNext();
@@ -611,7 +667,9 @@ namespace DesktopFinstatApiTester.Windows
                     XmlSerializer serializer = new XmlSerializer(typeof(FinstatApi.ViewModel.Diff.ExtendedResult[]));
                     return (FinstatApi.ViewModel.Diff.ExtendedResult[])serializer.Deserialize(firstItem.OpenReader());
                 }
-            }, true, new[] { ParameterTypeEnum.File });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.File, "Open Zip File")
+            });
         }
         #endregion
 
@@ -624,7 +682,7 @@ namespace DesktopFinstatApiTester.Windows
                 var result = client.RequestListOfDailyStatementDiffs(IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, false);
+            });
         }
 
         private void buttonDailyStatementDiffFile_Click(object sender, RoutedEventArgs e)
@@ -632,17 +690,20 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("DailyStatementDiffFile", "SK", (parameters) =>
             {
                 var client = CreateSKApiDailyStatementDiffClient();
-                var result = client.DownloadDailyStatementDiffFile(parameters[0], parameters[1]);
+                var result = client.DownloadDailyStatementDiffFile((string)parameters[0], (string)parameters[1]);
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String, ParameterTypeEnum.Folder });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "File"),
+                new ApiCallParameter(ParameterTypeEnum.Folder, "Select Save Folder")
+            });
         }
 
         private void buttonOpenDailyStatementDiffFile_Click(object sender, RoutedEventArgs e)
         {
             doApiRequest("Open DailyStatementDiffFile", "SK", (parameters) =>
             {
-                using (ZipFile zip = new ZipFile(parameters[0]))
+                using (ZipFile zip = new ZipFile((string)parameters[0]))
                 {
                     var enumerator = zip.Entries.GetEnumerator();
                     enumerator.MoveNext();
@@ -650,7 +711,9 @@ namespace DesktopFinstatApiTester.Windows
                     XmlSerializer serializer = new XmlSerializer(typeof(FinstatApi.ViewModel.Diff.StatementResult[]));
                     return (FinstatApi.ViewModel.Diff.StatementResult[])serializer.Deserialize(firstItem.OpenReader());
                 }
-            }, true, new[] { ParameterTypeEnum.File });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.File, "Open Zip File")
+            });
         }
 
 
@@ -662,7 +725,7 @@ namespace DesktopFinstatApiTester.Windows
                 var result = client.RequestStatementLegend();
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, false);
+            });
         }
         #endregion
 
@@ -675,7 +738,7 @@ namespace DesktopFinstatApiTester.Windows
                 var result = client.RequestListOfDailyUltimateDiffs(IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, false);
+            });
         }
 
         private void buttonDailyUltimateDiffFile_Click(object sender, RoutedEventArgs e)
@@ -683,10 +746,13 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("DailyUltimateDiffFile", "SK", (parameters) =>
             {
                 var client = CreateSKApiDailyUltimateDiffClient();
-                var result = client.DownloadDailyUltimateDiffFile(parameters[0], parameters[1]);
+                var result = client.DownloadDailyUltimateDiffFile((string)parameters[0], (string)parameters[1]);
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String, ParameterTypeEnum.Folder });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "File"),
+                new ApiCallParameter(ParameterTypeEnum.Folder, "Select Save Folder")
+            });
         }
         #endregion
 
@@ -696,10 +762,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("Detail", "CZ", (parameters) =>
             {
                 var client = CreateCZApiClient();
-                var result = client.RequestDetail(parameters[0], IsJSON());
+                var result = client.RequestDetail((string)parameters[0], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO")
+            });
         }
         #endregion
 
@@ -710,10 +778,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("Autocomplete", "CZ", (parameters) =>
             {
                 var client = CreateCZApiClient();
-                var result = client.RequestAutocomplete(parameters[0], IsJSON());
+                var result = client.RequestAutocomplete((string)parameters[0], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "Text")
+            });
         }
 
         private void buttonCZAutoLogin_Click(object sender, RoutedEventArgs e)
@@ -721,8 +791,10 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("AutoLogIn", "CZ", (parameters) =>
             {
                 var client = CreateCZApiClient();
-                return client.RequestAutoLogin(parameters[0]);
-            }, true, new[] { ParameterTypeEnum.String });
+                return client.RequestAutoLogin((string)parameters[0]);
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "FinStat URL")
+            });
         }
         #endregion
 
@@ -732,10 +804,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICOAdd", "CZ", (parameters) =>
             {
                 var client = CreateCZApiMonitoringClient();
-                var result = client.Add(parameters[0], IsJSON());
+                var result = client.Add((string)parameters[0], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO")
+            });
         }
 
         private void buttonCZMonitoringIcoRemove_Click(object sender, RoutedEventArgs e)
@@ -743,10 +817,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICORemove", "CZ", (parameters) =>
             {
                 var client = CreateCZApiMonitoringClient();
-                var result = client.Remove(parameters[0], IsJSON());
+                var result = client.Remove((string)parameters[0], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, true, new[] { ParameterTypeEnum.String });
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO")
+            });
         }
 
         private void buttonCZMonitoringIcoList_Click(object sender, RoutedEventArgs e)
@@ -757,7 +833,7 @@ namespace DesktopFinstatApiTester.Windows
                 var result = client.GetMonitorings(IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, false);
+            });
         }
 
         private void buttonCZMonitoringIcoReport_Click(object sender, RoutedEventArgs e)
@@ -768,7 +844,7 @@ namespace DesktopFinstatApiTester.Windows
                 var result = client.GetReport(IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
-            }, false);
+            });
         }
         #endregion
         #endregion
