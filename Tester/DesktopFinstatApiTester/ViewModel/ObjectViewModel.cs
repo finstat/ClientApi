@@ -85,6 +85,11 @@ namespace DesktopFinstatApiTester.ViewModel
                 type.IsEnum);
         }
 
+        public object Object
+        {
+            get { return _object; }
+        }
+
         public ObjectViewModel Parent
         {
             get { return _parent; }

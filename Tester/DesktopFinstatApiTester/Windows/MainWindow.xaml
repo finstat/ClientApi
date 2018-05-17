@@ -92,7 +92,7 @@
                     </Fluent:Button>
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="CZ Other">
-                    <Fluent:Button x:Name="buttonCZAutoComplete" Header="Autocomplete" Click="buttonCZAutoComplete_Click">
+                    <Fluent:Button x:Name="buttonCZAutoComplete" Header="Auto Complete" Click="buttonCZAutoComplete_Click">
                         <Fluent:Button.LargeIcon>
                             <Path Data="{DynamicResource IconSearchLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Fluent:Button.LargeIcon>
@@ -333,6 +333,9 @@
                     <Separator/>
                     <MenuItem x:Name="treeViewShowInOutputWindow" Header="Show In Output Window" Click="treeViewShowInOutputWindow_Click" />
                     <MenuItem x:Name="treeViewCopyToClipboard" Header="Copy To Clipboard" Click="treeViewCopyToClipboard_Click" />
+                    <Separator/>
+                    <MenuItem x:Name="treeViewShowXMLInOutputWindow" Header="Show XML In Output Window" Click="treeViewShowXMLInOutputWindow_Click"/>
+                    <MenuItem x:Name="treeViewShowJSONInOutputWindow" Header="Show JSON In Output Window"  Click="treeViewShowJSONInOutputWindow_Click"/>
                 </ContextMenu>
             </TreeView.Resources>
         </TreeView>

@@ -1,7 +1,9 @@
 ﻿extern alias CZ;
 using Ionic.Zip;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -293,6 +295,39 @@ namespace DesktopFinstatApiTester.Windows
             if (treeViewObjectGraph.SelectedItem != null)
             {
                 OutputWindow window = new OutputWindow(treeViewObjectGraph.SelectedItem.ToString())
+                {
+                    Owner = this,
+                    Title = "Selected Result Node"
+                };
+                var result = window.ShowDialog();
+            }
+        }
+
+        private void treeViewShowXMLInOutputWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if(treeViewObjectGraph.SelectedItem != null)
+            {
+                var item = (ViewModel.ObjectViewModel)treeViewObjectGraph.SelectedItem;
+                MemoryStream ms = new MemoryStream();
+                XmlSerializer serializer = new XmlSerializer(item.Object.GetType());
+                serializer.Serialize(ms, item.Object);
+                ms.Position = 0;
+                StreamReader r = new StreamReader(ms);
+                OutputWindow window = new OutputWindow(r.ReadToEnd())
+                {
+                    Owner = this,
+                    Title = "Selected Result Node"
+                };
+                var result = window.ShowDialog();
+            }
+        }
+
+        private void treeViewShowJSONInOutputWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if (treeViewObjectGraph.SelectedItem != null)
+            {
+                var item = (ViewModel.ObjectViewModel)treeViewObjectGraph.SelectedItem;
+                OutputWindow window = new OutputWindow(JsonConvert.SerializeObject(item.Object, Formatting.Indented))
                 {
                     Owner = this,
                     Title = "Selected Result Node"
@@ -847,6 +882,7 @@ namespace DesktopFinstatApiTester.Windows
             });
         }
         #endregion
+
         #endregion
     }
 }
