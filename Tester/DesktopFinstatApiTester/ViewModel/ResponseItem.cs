@@ -12,7 +12,7 @@ namespace DesktopFinstatApiTester.ViewModel
         public const string ParameterProperty = "Parameter";
         public const string ApiSourceProperty = "ApiSource";
         public const string SendProperty = "Send";
-        public const string RecieveProperty = "Recieve";
+        public const string ReceivedProperty = "Received";
         public const string DataProperty = "Data";
         public const string DataCountProperty = "DataCount";
         public const string ResponseItemObjectProperty = "ResponseItem";
@@ -87,16 +87,16 @@ namespace DesktopFinstatApiTester.ViewModel
             }
         }
 
-        private DateTime? _recieve = null;
-        public DateTime? Recieve
+        private DateTime? _received = null;
+        public DateTime? Received
         {
-            get { return _recieve; }
+            get { return _received; }
             set
             {
-                if (_recieve != value)
+                if (_received != value)
                 {
-                    _recieve = value;
-                    RaisePropertyChanged(RecieveProperty);
+                    _received = value;
+                    RaisePropertyChanged(ReceivedProperty);
                 }
             }
         }
@@ -126,7 +126,7 @@ namespace DesktopFinstatApiTester.ViewModel
 
         private void ResponseItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (new[] {RequestProperty, ParameterProperty, SendProperty, RecieveProperty, DataProperty, ApiSourceProperty }.Contains(e.PropertyName))
+            if (new[] {RequestProperty, ParameterProperty, SendProperty, ReceivedProperty, DataProperty, ApiSourceProperty }.Contains(e.PropertyName))
             {
                 RaisePropertyChanged(ResponseItemObjectProperty);
             }
@@ -135,7 +135,7 @@ namespace DesktopFinstatApiTester.ViewModel
         internal void AddData(object[] data)
         {
             Data = data;
-            Recieve = DateTime.UtcNow;
+            Received = DateTime.UtcNow;
         }
     }
 }

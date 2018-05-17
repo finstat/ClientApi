@@ -276,11 +276,11 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Recieve" Width="30*">
+                <DataGridTemplateColumn Header="Received" Width="30*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <Label Content="{Binding Recieve, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" VerticalAlignment="Stretch" />
+                                <Label Content="{Binding Received, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" VerticalAlignment="Stretch" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
