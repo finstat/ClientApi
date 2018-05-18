@@ -142,7 +142,7 @@ namespace DesktopFinstatApiTester.Windows
             {
                 title = parameter?.Title;
             }
-            return (MessageBox.Show(title, "Prompt", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.Yes);
+            return (MessageBox.Show(title, "Prompt", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes);
         }
 
         private string GetInput(ApiCallParameter parameter)
@@ -418,7 +418,7 @@ namespace DesktopFinstatApiTester.Windows
                                 : (new[] { ParameterTypeEnum.String, ParameterTypeEnum.Folder, ParameterTypeEnum.File }.Contains(parameterType.Type)) ? !string.IsNullOrEmpty((string)parameter) : true;
                             if (
                                 !valid
-                                && MessageBox.Show("Value is not valid or empty. Do you want to fix it?", "Prompt", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.No
+                                && MessageBox.Show("Value is not valid or empty. Do you want to fix it?", "Prompt", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No
                             )
                             {
                                 valid = true;
