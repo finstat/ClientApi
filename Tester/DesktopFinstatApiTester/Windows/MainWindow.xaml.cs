@@ -580,7 +580,8 @@ namespace DesktopFinstatApiTester.Windows
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
             }, new[] {
-                new ApiCallParameter(ParameterTypeEnum.String, "FinStat URL")
+                new ApiCallParameter(ParameterTypeEnum.String, "FinStat URL"),
+                new ApiCallParameter(ParameterTypeEnum.String, "Email", (parameter) => true)
             });
         }
         #endregion
@@ -955,7 +956,8 @@ namespace DesktopFinstatApiTester.Windows
                 var client = CreateCZApiClient();
                 return client.RequestAutoLogin((string)parameters[0]);
             }, new[] {
-                new ApiCallParameter(ParameterTypeEnum.String, "FinStat URL")
+                new ApiCallParameter(ParameterTypeEnum.String, "FinStat URL"),
+                new ApiCallParameter(ParameterTypeEnum.String, "Email", (parameter) => true)
             });
         }
         #endregion
