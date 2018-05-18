@@ -833,6 +833,7 @@ namespace DesktopFinstatApiTester.Windows
             });
         }
         #endregion
+
         #region SK-Distraint
         private void buttonDistraintSearch_Click(object sender, RoutedEventArgs e)
         {
@@ -841,16 +842,16 @@ namespace DesktopFinstatApiTester.Windows
                 doApiRequest("DistraintSearch", "SK", (parameters) =>
                 {
                     var client = CreateSKApiDistraintClient();
-                    var result = client.RequestDistraintSearch((string)parameters[0], (string)parameters[1], (string)parameters[2], (string)parameters[3], (string)parameters[4], (string)parameters[5]);
+                    var result = client.RequestDistraintResults((string)parameters[0], (string)parameters[1], (string)parameters[2], (string)parameters[3], (string)parameters[4], (string)parameters[5]);
                     AppInstance.Limits.FromModel(client.Limits);
                     return result;
                 }, new[] {
-                    new ApiCallParameter(ParameterTypeEnum.String, "IČO"),
-                    new ApiCallParameter(ParameterTypeEnum.String, "Surname"),
-                    new ApiCallParameter(ParameterTypeEnum.String, "Date of Birth"),
-                    new ApiCallParameter(ParameterTypeEnum.String, "City"),
-                    new ApiCallParameter(ParameterTypeEnum.String, "Company Name"),
-                    new ApiCallParameter(ParameterTypeEnum.String, "File Reference"),
+                    new ApiCallParameter(ParameterTypeEnum.String, "IČO", (parameter) => true),
+                    new ApiCallParameter(ParameterTypeEnum.String, "Surname", (parameter) => true),
+                    new ApiCallParameter(ParameterTypeEnum.String, "Date of Birth", (parameter) => true),
+                    new ApiCallParameter(ParameterTypeEnum.String, "City", (parameter) => true),
+                    new ApiCallParameter(ParameterTypeEnum.String, "Company Name", (parameter) => true),
+                    new ApiCallParameter(ParameterTypeEnum.String, "File Reference", (parameter) => true),
                 });
             }
         }
@@ -881,12 +882,12 @@ namespace DesktopFinstatApiTester.Windows
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
             }, new[] {
-                new ApiCallParameter(ParameterTypeEnum.String, "IČO"),
-                new ApiCallParameter(ParameterTypeEnum.String, "Surname"),
-                new ApiCallParameter(ParameterTypeEnum.String, "Date of Birth"),
-                new ApiCallParameter(ParameterTypeEnum.String, "City"),
-                new ApiCallParameter(ParameterTypeEnum.String, "Company Name"),
-                new ApiCallParameter(ParameterTypeEnum.String, "File Reference"),
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO", (parameter) => true),
+                new ApiCallParameter(ParameterTypeEnum.String, "Surname", (parameter) => true),
+                new ApiCallParameter(ParameterTypeEnum.String, "Date of Birth", (parameter) => true),
+                new ApiCallParameter(ParameterTypeEnum.String, "City", (parameter) => true),
+                new ApiCallParameter(ParameterTypeEnum.String, "Company Name", (parameter) => true),
+                new ApiCallParameter(ParameterTypeEnum.String, "File Reference", (parameter) => true),
             });
         }
 
