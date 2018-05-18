@@ -43,8 +43,8 @@
                                     </Grid.RowDefinitions>
                                     <Label Grid.ColumnSpan="3" Content="Api Keys" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Margin="{DynamicResource Margin5}"/>
                                     <controls:SettingControl Grid.ColumnSpan="3" Grid.Row="1" x:Name="controlSettings"/>
-                                    <Button x:Name="buttonSave"  Content="Save" Grid.Column="0" HorizontalAlignment="Stretch" Margin="{DynamicResource Margin5}" Grid.Row="2" VerticalAlignment="Stretch" Width="Auto" Click="buttonSave_Click"/>
-                                    <Button x:Name="buttonSaveAndStore"  Content="Save and Store" Grid.Column="1" HorizontalAlignment="Stretch" Margin="{DynamicResource Margin5}" Grid.Row="2" VerticalAlignment="Stretch" Width="Auto" Click="buttonSaveAndStore_Click"/>
+                                    <Button x:Name="buttonSave"  Content="Use" Grid.Column="0" HorizontalAlignment="Stretch" Margin="{DynamicResource Margin5}" Grid.Row="2" VerticalAlignment="Stretch" Width="Auto" Click="buttonSave_Click"/>
+                                    <Button x:Name="buttonSaveAndStore"  Content="Use and Save" Grid.Column="1" HorizontalAlignment="Stretch" Margin="{DynamicResource Margin5}" Grid.Row="2" VerticalAlignment="Stretch" Width="Auto" Click="buttonSaveAndStore_Click"/>
                                     <Button x:Name="buttonCancel" Content="Cancel" Grid.Column="2" HorizontalAlignment="Stretch" Margin="{DynamicResource Margin5}" Grid.Row="2" VerticalAlignment="Stretch" Width="Auto" Click="buttonCancel_Click" />
                                 </Grid>
                             </Fluent:BackstageTabItem.Content>
