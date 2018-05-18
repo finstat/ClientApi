@@ -31,6 +31,7 @@ namespace DesktopFinstatApiTester.Windows
             String,
             Folder,
             File,
+            Prompt,
             None
         }
 
@@ -38,13 +39,15 @@ namespace DesktopFinstatApiTester.Windows
         {
             public ParameterTypeEnum Type { get; set; } = ParameterTypeEnum.String;
             public string Title { get; set; }
+            public Func<object, bool> ValidFunction { get; set; } = null;
 
-            public ApiCallParameter() : this(string.Empty) { }
-            public ApiCallParameter(string title = null) : this(ParameterTypeEnum.String, title) { }
-            public ApiCallParameter(ParameterTypeEnum type = ParameterTypeEnum.String, string title = null)
+            public ApiCallParameter(Func<object, bool> validFunction = null) : this(string.Empty, validFunction) { }
+            public ApiCallParameter(string title = null, Func<object, bool> validFunction = null) : this(ParameterTypeEnum.String, title, validFunction) { }
+            public ApiCallParameter(ParameterTypeEnum type = ParameterTypeEnum.String, string title = null, Func<object, bool> validFunction = null)
             {
                 Type = Type;
                 Title = title;
+                ValidFunction = validFunction;
             }
         }
 
@@ -132,6 +135,16 @@ namespace DesktopFinstatApiTester.Windows
         #endregion
 
         #region Input-Dialogs
+        private bool GetPrompt(ApiCallParameter parameter)
+        {
+            var title = "Confirm action?";
+            if(parameter != null && !string.IsNullOrEmpty(parameter?.Title))
+            {
+                title = parameter?.Title;
+            }
+            return (MessageBox.Show(title, "Prompt", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.Yes);
+        }
+
         private string GetInput(ApiCallParameter parameter)
         {
             InputWindow dialog = new InputWindow()
@@ -142,11 +155,26 @@ namespace DesktopFinstatApiTester.Windows
             if (parameter != null && !string.IsNullOrEmpty(parameter?.Title))
             {
                 dialog.Title = parameter?.Title;
+                dialog.textBoxInput.Text = parameter.Title;
+                dialog.textBoxInput.GotFocus += (sender, e) =>
+                {
+                    if (dialog.textBoxInput.Text == parameter?.Title)
+                    {
+                        dialog.textBoxInput.Text = string.Empty;
+                    }
+                };
+                dialog.textBoxInput.LostFocus += (sender, e) =>
+                {
+                    if (String.IsNullOrWhiteSpace(dialog.textBoxInput.Text))
+                    {
+                        dialog.textBoxInput.Text = parameter?.Title;
+                    }
+                };
             }
 
             if (dialog.ShowDialog() == true)
             {
-                return (!string.IsNullOrEmpty(dialog.Text)) ? dialog.Text.Trim() : null;
+                return (!string.IsNullOrEmpty(dialog.Text) && dialog.Text != parameter?.Title) ? dialog.Text.Trim() : null;
             }
             return null;
         }
@@ -374,62 +402,72 @@ namespace DesktopFinstatApiTester.Windows
                 {
                     foreach (var parameterType in parameterTypes)
                     {
-                        switch (parameterType.Type)
+                        object parameter = null;
+                        bool valid = false;
+                        while (!valid)
                         {
-                            case ParameterTypeEnum.String: parameters.Add(GetInput(parameterType)); break;
-                            case ParameterTypeEnum.Folder: parameters.Add(GetFolderBrowserDialog(parameterType)); break;
-                            case ParameterTypeEnum.File: parameters.Add(GetFileBrowserDialog(parameterType)); break;
+                            switch (parameterType.Type)
+                            {
+                                case ParameterTypeEnum.String: parameter = GetInput(parameterType); break;
+                                case ParameterTypeEnum.Folder: parameter = GetFolderBrowserDialog(parameterType); break;
+                                case ParameterTypeEnum.File: parameter = GetFileBrowserDialog(parameterType); break;
+                                case ParameterTypeEnum.Prompt: parameter = GetPrompt(parameterType); break;
+                            }
+                            valid = (parameterType.ValidFunction != null)
+                                ? parameterType.ValidFunction(parameter)
+                                : (new[] { ParameterTypeEnum.String, ParameterTypeEnum.Folder, ParameterTypeEnum.File }.Contains(parameterType.Type)) ? !string.IsNullOrEmpty((string)parameter) : true;
+                            if (
+                                !valid
+                                && MessageBox.Show("Value is not valid or empty. Do you want to fix it?", "Prompt", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.No
+                            )
+                            {
+                                valid = true;
+                            }
                         }
+                        parameters.Add(parameter);
                     }
                 }
             }
-
-            if (!hasParameter || (hasParameter && parameters != null && !parameters.Any(x =>  x == null)))
+            object detail = null;
+            ViewModel.ResponseItem item = null;
+            Exception ex = null;
+            var statusWindow = new StatusWindow(3)
             {
-                object detail = null;
-                ViewModel.ResponseItem item = null;
-                Exception ex = null;
-                var statusWindow = new StatusWindow(3)
-                {
-                    Owner = this
-                };
-                statusWindow.Start(() =>
-                {
-                    try
-                    {
-                        statusWindow.Update(1, "Creating Request");
-                        Invoke(this, () => item = AppInstance.Add(requestname, apisource, string.Join("; ", parameters)));
-                        statusWindow.Update(2, "Requesting api call");
-                        detail = apiCallFunc(parameters.ToArray());
-                        statusWindow.Update(3, "Storing Response");
-                    }
-                    catch (Exception e)
-                    {
-                        ex = e;
-                    }
-                },
-                () =>
-                {
-                    if (ex != null)
-                    {
-                        Invoke(this, () => ShowException(ex));
-                    }
-                    else
-                    {
-                        Invoke(this, () => {
-                            item.AddData(new[] { detail });
-                            if (item.Data != null && item.Data.Any())
-                            {
-                                datagridResponse.SelectedIndex = 0;
-                            }
-                        });
-                    }
-                });
-            }
-            else if (hasParameter && (parameters == null || !parameters.Any() || parameters.Any(x => x == null)))
+                Owner = this
+            };
+            statusWindow.Start(() =>
             {
-                MessageBox.Show("No parameters supplied or missing parameters", "Error", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
-            }
+                try
+                {
+                    statusWindow.Update(1, "Creating Request");
+                    Invoke(this, () => item = AppInstance.Add(requestname, apisource, string.Join("; ", parameters)));
+                    statusWindow.Update(2, "Requesting api call");
+                    detail = apiCallFunc(parameters.ToArray());
+                    statusWindow.Update(3, "Storing Response");
+                }
+                catch (Exception e)
+                {
+                    ex = e;
+                }
+            },
+            () =>
+            {
+                if (ex != null)
+                {
+                    Invoke(this, () => ShowException(ex));
+                }
+                else
+                {
+                    Invoke(this, () =>
+                    {
+                        item.AddData(new[] { detail });
+                        if (item.Data != null && item.Data.Any())
+                        {
+                            datagridResponse.SelectedIndex = 0;
+                        }
+                    });
+                }
+            });
         }
         #endregion
 
@@ -457,6 +495,11 @@ namespace DesktopFinstatApiTester.Windows
         private FinstatApi.ApiDailyUltimateDiffClient CreateSKApiDailyUltimateDiffClient()
         {
             return new FinstatApi.ApiDailyUltimateDiffClient("https://www.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+        }
+
+        private FinstatApi.ApiDistraintClient CreateSKApiDistraintClient()
+        {
+            return new FinstatApi.ApiDistraintClient("https://www.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
         }
         #endregion
 
@@ -787,6 +830,89 @@ namespace DesktopFinstatApiTester.Windows
             }, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "File"),
                 new ApiCallParameter(ParameterTypeEnum.Folder, "Select Save Folder")
+            });
+        }
+        #endregion
+        #region SK-Distraint
+        private void buttonDistraintSearch_Click(object sender, RoutedEventArgs e)
+        {
+            if (GetPrompt(new ApiCallParameter(ParameterTypeEnum.Prompt, "This method will charge your FinStat credit. Do you want to continue?")))
+            {
+                doApiRequest("DistraintSearch", "SK", (parameters) =>
+                {
+                    var client = CreateSKApiDistraintClient();
+                    var result = client.RequestDistraintSearch((string)parameters[0], (string)parameters[1], (string)parameters[2], (string)parameters[3], (string)parameters[4], (string)parameters[5]);
+                    AppInstance.Limits.FromModel(client.Limits);
+                    return result;
+                }, new[] {
+                    new ApiCallParameter(ParameterTypeEnum.String, "IČO"),
+                    new ApiCallParameter(ParameterTypeEnum.String, "Surname"),
+                    new ApiCallParameter(ParameterTypeEnum.String, "Date of Birth"),
+                    new ApiCallParameter(ParameterTypeEnum.String, "City"),
+                    new ApiCallParameter(ParameterTypeEnum.String, "Company Name"),
+                    new ApiCallParameter(ParameterTypeEnum.String, "File Reference"),
+                });
+            }
+        }
+
+        private void buttonDistraintDetail_Click(object sender, RoutedEventArgs e)
+        {
+            if (GetPrompt(new ApiCallParameter(ParameterTypeEnum.Prompt, "This method will charge your FinStat credit. Do you want to continue?")))
+            {
+                doApiRequest("DistraintDetail", "SK", (parameters) =>
+                {
+                    var client = CreateSKApiDistraintClient();
+                    var result = client.RequestDistraintDetail((string)parameters[0], ((string)parameters[1]).Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries).Select(x=> Int32.Parse(x.Trim())).ToArray());
+                    AppInstance.Limits.FromModel(client.Limits);
+                    return result;
+                }, new[] {
+                    new ApiCallParameter(ParameterTypeEnum.String, "Token"),
+                    new ApiCallParameter(ParameterTypeEnum.String, "Detail ID List"),
+                });
+            }
+        }
+
+        private void buttonDistraintResults_Click(object sender, RoutedEventArgs e)
+        {
+            doApiRequest("DistraintResults", "SK", (parameters) =>
+            {
+                var client = CreateSKApiDistraintClient();
+                var result = client.RequestDistraintResults((string)parameters[0], (string)parameters[1], (string)parameters[2], (string)parameters[3], (string)parameters[4], (string)parameters[5]);
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO"),
+                new ApiCallParameter(ParameterTypeEnum.String, "Surname"),
+                new ApiCallParameter(ParameterTypeEnum.String, "Date of Birth"),
+                new ApiCallParameter(ParameterTypeEnum.String, "City"),
+                new ApiCallParameter(ParameterTypeEnum.String, "Company Name"),
+                new ApiCallParameter(ParameterTypeEnum.String, "File Reference"),
+            });
+        }
+
+        private void buttonDistraintResultsToken_Click(object sender, RoutedEventArgs e)
+        {
+            doApiRequest("DistraintResultsByToken", "SK", (parameters) =>
+            {
+                var client = CreateSKApiDistraintClient();
+                var result = client.RequestDistraintResultsByToken((string)parameters[0]);
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "Token"),
+            });
+        }
+
+        private void buttonDistraintStoredDetail_Click(object sender, RoutedEventArgs e)
+        {
+            doApiRequest("DistraintStoredDetail", "SK", (parameters) =>
+            {
+                var client = CreateSKApiDistraintClient();
+                var result = client.RequestDistraintStoredDetail((string)parameters[0]);
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "Detail ID"),
             });
         }
         #endregion

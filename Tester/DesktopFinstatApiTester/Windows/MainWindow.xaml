@@ -236,6 +236,35 @@
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Header="Distraint">
+                <Fluent:RibbonGroupBox Header="Paied">
+                    <Fluent:Button x:Name="buttonDistraintSearch" Header="Search" Click="buttonDistraintSearch_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconSearchLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button x:Name="buttonDistraintDetail" Header="Detail" Click="buttonDistraintDetail_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconDetailLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox>
+                    <Fluent:Button x:Name="buttonDistraintResults" Header="Results" Click="buttonDistraintResults_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconListLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button x:Name="buttonDistraintResultsToken" Header="Results By Token" Click="buttonDistraintResultsToken_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconListLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button x:Name="buttonDistraintStoredDetail" Header="Stored Detail" Click="buttonDistraintStoredDetail_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconDetailLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
         </Fluent:Ribbon>
         <DataGrid x:Name="datagridResponse" HorizontalAlignment="Stretch" Height="Auto" Margin="{DynamicResource Margin5}" ItemsSource="{Binding ResponseItems}" Grid.Row="1" VerticalAlignment="Stretch" Width="Auto" SelectionMode="Single" AutoGenerateColumns="False" CanUserAddRows="False" SelectionChanged="datagridResponse_SelectionChanged">
