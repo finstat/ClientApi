@@ -236,7 +236,7 @@
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Header="Distraint">
-                <Fluent:RibbonGroupBox Header="Paied">
+                <Fluent:RibbonGroupBox Header="Paid">
                     <Fluent:Button x:Name="buttonDistraintSearch" Header="Search" Click="buttonDistraintSearch_Click">
                         <Fluent:Button.LargeIcon>
                             <Path Data="{DynamicResource IconSearchLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
