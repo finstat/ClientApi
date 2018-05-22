@@ -14,6 +14,8 @@ namespace DesktopFinstatApiTester.ViewModel
         public const string TimeOutProperty = "TimeOut";
         public const string StationIDProperty = "StationID";
         public const string StationNameProperty = "StationName";
+        public const string FinStatApiUrlProperty = "FinStatApiUrl";
+        public const string FinStatApiUrlPropertyCZ = "FinStatApiUrlCZ";
         public const string SettingsObjectProperty = "SettingsObject";
 
         public Settings()
@@ -84,6 +86,34 @@ namespace DesktopFinstatApiTester.ViewModel
             }
         }
 
+        private string _FinStatApiUrl;
+        public string FinStatApiUrl
+        {
+            get { return _FinStatApiUrl; }
+            set
+            {
+                if (_FinStatApiUrl != value)
+                {
+                    _FinStatApiUrl = value;
+                    RaisePropertyChanged(FinStatApiUrlProperty);
+                }
+            }
+        }
+
+        private string _FinStatApiUrlCZ;
+        public string FinStatApiUrlCZ
+        {
+            get { return _FinStatApiUrlCZ; }
+            set
+            {
+                if (_FinStatApiUrlCZ != value)
+                {
+                    _FinStatApiUrlCZ = value;
+                    RaisePropertyChanged(FinStatApiUrlPropertyCZ);
+                }
+            }
+        }
+
         private ResponseType _responseType;
         public ResponseType ResponseType
         {
@@ -108,7 +138,7 @@ namespace DesktopFinstatApiTester.ViewModel
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (new[] { TimeOutProperty, StationNameProperty, StationIDProperty, ApiKeysProperty, ResponseTypeProperty }.Contains(e.PropertyName))
+            if (new[] { TimeOutProperty, StationNameProperty, StationIDProperty, ApiKeysProperty, ResponseTypeProperty, FinStatApiUrlProperty, FinStatApiUrlPropertyCZ }.Contains(e.PropertyName))
             {
                 RaisePropertyChanged(SettingsObjectProperty);
             }
@@ -123,6 +153,8 @@ namespace DesktopFinstatApiTester.ViewModel
                 TimeOut = model.TimeOut;
                 StationName = model.StationName;
                 StationID = model.StationID;
+                FinStatApiUrl = model.FinStatApiUrl;
+                FinStatApiUrlCZ = model.FinStatApiUrlCZ;
             }
         }
 
@@ -137,6 +169,9 @@ namespace DesktopFinstatApiTester.ViewModel
             model.StationName = StationName;
             model.StationID = StationID;
             model.TimeOut = TimeOut;
+            model.FinStatApiUrl = FinStatApiUrl;
+            model.FinStatApiUrlCZ = FinStatApiUrlCZ;
+
             return model;
         }
     }

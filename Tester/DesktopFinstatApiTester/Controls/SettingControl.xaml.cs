@@ -71,6 +71,26 @@ namespace DesktopFinstatApiTester.Controls
                     result.Add("StationTimeOut", new[] { "Value is empty" });
                 }
 
+                errors = Validation.GetErrors(textBoxApiUrl);
+                if (errors != null && errors.Any())
+                {
+                    result.Add("FinStatApiUrl", errors.Select(x => x.ErrorContent).ToArray());
+                }
+                else if (string.IsNullOrEmpty(textBoxApiUrl.Text.Trim()))
+                {
+                    result.Add("FinStatApiUrl", new[] { "Value is empty" });
+                }
+
+                errors = Validation.GetErrors(textBoxApiUrlCZ);
+                if (errors != null && errors.Any())
+                {
+                    result.Add("FinStatApiUrlCZ", errors.Select(x => x.ErrorContent).ToArray());
+                }
+                else if (string.IsNullOrEmpty(textBoxApiUrlCZ.Text.Trim()))
+                {
+                    result.Add("FinStatApiUrlCZ", new[] { "Value is empty" });
+                }
+
                 var controlErrors = controlApiKeys.GetErrors();
                 if (controlErrors != null && controlErrors.Any(x => x.Value != null && x.Value.Any()))
                 {
@@ -106,6 +126,14 @@ namespace DesktopFinstatApiTester.Controls
                 return false;
             }
             if (Validation.GetHasError(comboBoxResponseType) || comboBoxResponseType.SelectedIndex < 0)
+            {
+                return false;
+            }
+            if (Validation.GetHasError(textBoxApiUrl) || string.IsNullOrEmpty(textBoxApiUrl.Text))
+            {
+                return false;
+            }
+            if (Validation.GetHasError(textBoxApiUrlCZ) || string.IsNullOrEmpty(textBoxApiUrlCZ.Text))
             {
                 return false;
             }

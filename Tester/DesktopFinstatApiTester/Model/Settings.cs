@@ -17,5 +17,8 @@ namespace DesktopFinstatApiTester.Model
         public string StationName { get; set; } = "Api Tester Desktop";
         public string StationID { get; set; } = "api-tester";
         public int TimeOut { get; set; } = 3000;
+
+        public string FinStatApiUrl { get; set; } = "https://www.finstat.sk/api";
+        public string FinStatApiUrlCZ { get; set; } = "https://cz.finstat.sk/api";
     }
 }

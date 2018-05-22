@@ -474,32 +474,32 @@ namespace DesktopFinstatApiTester.Windows
         #region SK-Init
         private FinstatApi.ApiClient CreateSKApiClient()
         {
-            return new FinstatApi.ApiClient("https://www.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            return new FinstatApi.ApiClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
         }
 
         private FinstatApi.ApiMonitoringClient CreateSKApiMonitoringClient()
         {
-            return new FinstatApi.ApiMonitoringClient("https://www.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            return new FinstatApi.ApiMonitoringClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
         }
 
         private FinstatApi.ApiDailyDiffClient CreateSKApiDailyDiffClient()
         {
-            return new FinstatApi.ApiDailyDiffClient("https://www.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            return new FinstatApi.ApiDailyDiffClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
         }
 
         private FinstatApi.ApiDailyStatementDiffClient CreateSKApiDailyStatementDiffClient()
         {
-            return new FinstatApi.ApiDailyStatementDiffClient("https://www.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            return new FinstatApi.ApiDailyStatementDiffClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
         }
 
         private FinstatApi.ApiDailyUltimateDiffClient CreateSKApiDailyUltimateDiffClient()
         {
-            return new FinstatApi.ApiDailyUltimateDiffClient("https://www.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            return new FinstatApi.ApiDailyUltimateDiffClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
         }
 
         private FinstatApi.ApiDistraintClient CreateSKApiDistraintClient()
         {
-            return new FinstatApi.ApiDistraintClient("https://www.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            return new FinstatApi.ApiDistraintClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
         }
         #endregion
 
@@ -507,12 +507,12 @@ namespace DesktopFinstatApiTester.Windows
         private CZ::FinstatApi.ApiClient CreateCZApiClient()
         {
 
-            return new CZ::FinstatApi.ApiClient("https://cz.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            return new CZ::FinstatApi.ApiClient(AppInstance.Settings.FinStatApiUrlCZ, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
         }
 
         private CZ::FinstatApi.ApiMonitoringClient CreateCZApiMonitoringClient()
         {
-            return new CZ::FinstatApi.ApiMonitoringClient("https://cz.finstat.sk/api", AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            return new CZ::FinstatApi.ApiMonitoringClient(AppInstance.Settings.FinStatApiUrlCZ, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
         }
         #endregion
 

@@ -6,14 +6,16 @@
              xmlns:local="clr-namespace:DesktopFinstatApiTester.Controls"
              xmlns:controls="clr-namespace:DesktopFinstatApiTester.Controls"
              mc:Ignorable="d"
-             d:DesignHeight="210" d:DesignWidth="800">
+             d:DesignHeight="280" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="130"/>
             <ColumnDefinition Width="100*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="35"/>
             <RowDefinition Height="35"/>
             <RowDefinition Height="35"/>
             <RowDefinition Height="35"/>
@@ -24,9 +26,13 @@
         <TextBox x:Name="textBoxStationID" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" Height="Auto" Margin="{DynamicResource Margin5}" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="Auto" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Text="{Binding StationID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBox x:Name="textBoxTimeOut" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch" Height="Auto" Margin="{DynamicResource Margin5}" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="Auto" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Text="{Binding TimeOut, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <ComboBox x:Name="comboBoxResponseType" Grid.Column="1" HorizontalAlignment="Stretch" Margin="{DynamicResource Margin5}" Grid.Row="4" VerticalAlignment="Stretch" Width="Auto" SelectedValue="{Binding ResponseType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox x:Name="textBoxApiUrl" Grid.Column="1" Grid.Row="5" HorizontalAlignment="Stretch" Height="Auto" Margin="{DynamicResource Margin5}" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="Auto" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Text="{Binding FinStatApiUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox x:Name="textBoxApiUrlCZ" Grid.Column="1" Grid.Row="6" HorizontalAlignment="Stretch" Height="Auto" Margin="{DynamicResource Margin5}" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="Auto" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Text="{Binding FinStatApiUrlCZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Label Grid.Row="1" Content="Station Name:" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Margin="{DynamicResource Margin5}"/>
         <Label Grid.Row="2" Content="Station ID:" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Margin="{DynamicResource Margin5}"/>
         <Label Grid.Row="3" Content="TimeOut:" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Margin="{DynamicResource Margin5}"/>
         <Label Grid.Row="4" Content="Response:" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Margin="{DynamicResource Margin5}"/>
+        <Label Grid.Row="5" Content="FinStat API URL:" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Margin="{DynamicResource Margin5}"/>
+        <Label Grid.Row="6" Content="FinStat API CZ URL:" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Margin="{DynamicResource Margin5}"/>
     </Grid>
 </UserControl>
