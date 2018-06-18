@@ -188,12 +188,15 @@ namespace FinstatApi
             public DateTime? StartDate { get; set; }
             public string ExitReason { get; set; }
             public string Status { get; set; }
+            public string FileReference { get; set; }
+            public string CourtCode { get; set; }
 
             public override string ToString()
             {
                 StringBuilder dataString = new StringBuilder();
                 dataString.Append(base.ToString());
-                dataString.Append(string.Format("StartDate: {0}", StartDate));
+                dataString.Append(string.Format("FileReference: {0}", FileReference));
+                dataString.Append(string.Format("CourtCode: {0}", CourtCode));
                 dataString.Append(string.Format("ExitReason: {0}", ExitReason));
                 dataString.Append(string.Format("Status: {0}", Status));
                 return dataString.ToString();

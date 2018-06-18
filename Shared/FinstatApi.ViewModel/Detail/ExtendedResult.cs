@@ -49,6 +49,7 @@ namespace FinstatApi
         public Ratio[] Ratios { get; set; }
         public JudgementCount[] JudgementCounts { get; set; }
         public DateTime? JudgementLastPublishedDate { get; set; }
+        public ReceivableDebt[] StateReceivables { get; set; }
 
         public override string ToString()
         {
@@ -65,6 +66,7 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("GrossMargin: {0}", GrossMargin));
             dataString.AppendLine(string.Format("ROA: {0}", ROA));
             dataString.AppendLine(string.Format("Debts: {0}", Debts == null ? "no debt" : Debt.AsString(Debts)));
+            dataString.AppendLine(string.Format("StateReceivables: {0}", StateReceivables == null ? "no state receivables" : Debt.AsString(StateReceivables)));
             dataString.AppendLine(string.Format("PaymentOrders: {0}", PaymentOrders == null ? "no payment orders" : PaymentOrder.AsString(PaymentOrders)));
             dataString.AppendLine(string.Format("CreditScore: {0}", CreditScoreValue != null ? CreditScoreValue.Value.ToString("0.00") + " " + CreditScoreState : null));
             dataString.AppendLine(string.Format("SelfEmployed: {0}", SelfEmployed));
@@ -194,7 +196,13 @@ namespace FinstatApi
                 }
                 return dataString.ToString();
             }
+        }
 
+        public class ReceivableDebt : Debt {
+            public override string ToString()
+            {
+                return base.ToString();
+            }
         }
 
         public class PaymentOrder
