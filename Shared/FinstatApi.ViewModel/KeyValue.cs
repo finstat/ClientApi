@@ -9,6 +9,12 @@ namespace FinstatApi.ViewModel
         public string Key { get; set; }
         public object Value { get; set; }
 
+        public KeyValue(string key = null, object value = null)
+        {
+            Key = key;
+            Value = value;
+        }
+
         public override string ToString()
         {
             return string.Format("{0}:{1}", Key, Value);

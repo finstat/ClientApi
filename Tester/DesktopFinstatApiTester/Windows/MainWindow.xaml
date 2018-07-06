@@ -325,49 +325,30 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <!-- Code From https://stackoverflow.com/questions/3668802/looking-for-an-object-graph-tree-view-control-for-wpf?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa-->
-        <TreeView Name="treeViewObjectGraph" Margin="{DynamicResource Margin5}" Grid.Row="1" Grid.Column="1" FontSize="13" FontFamily="Consolas" MouseRightButtonDown="treeViewObjectGraph_MouseRightButtonDown">
-            <TreeView.ItemContainerStyle>
-                <Style TargetType="{x:Type TreeViewItem}">
-                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
-                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                    <Setter Property="FontWeight" Value="Normal" />
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="FontWeight" Value="Bold" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </TreeView.ItemContainerStyle>
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <TextBlock Text="{Binding PropertyInfo}" Grid.Column="0" Grid.Row="0" Padding="{DynamicResource Margin2-0}" />
-                        <TextBlock Text="{Binding Value}" Grid.Column="2" Grid.Row="0" Padding="{DynamicResource Margin2-0}" />
-                    </Grid>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-            <TreeView.Resources>
-                <ContextMenu x:Key ="TreeViewItemContextMenu"  StaysOpen="true">
-                    <!--MenuItem x:Name="treeViewToggle" Header="Toggle Expand" Click="treeViewToggle_Click"/>
+        <TabControl Name ="tabControlResponse"  Grid.Row="1" Grid.Column="1">
+            <TabItem Header="Data">
+                <!-- Code From https://stackoverflow.com/questions/3668802/looking-for-an-object-graph-tree-view-control-for-wpf?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa-->
+                <TreeView Name="treeViewObjectGraph" Margin="{DynamicResource Margin5}"  FontSize="13" FontFamily="Consolas" MouseRightButtonDown="treeViewObjectGraph_MouseRightButtonDown" ItemContainerStyle="{DynamicResource StyleGraphTreeViewItem}" ItemTemplate="{DynamicResource TemplateTreeViewItem}">
+                    <TreeView.Resources>
+                        <ContextMenu x:Key ="TreeViewItemContextMenu"  StaysOpen="true">
+                            <!--MenuItem x:Name="treeViewToggle" Header="Toggle Expand" Click="treeViewToggle_Click"/>
                     <MenuItem x:Name="treeViewSelect" Header="Toggle Select" Click="treeViewSelect_Click" /-->
-                    <MenuItem x:Name="treeViewCopyValueToClipboard" Header="Copy Value To Clipboard" Click="treeViewCopyValueToClipboard_Click"/>
-                    <Separator/>
-                    <MenuItem x:Name="treeViewShowInOutputWindow" Header="Show In Output Window" Click="treeViewShowInOutputWindow_Click" />
-                    <MenuItem x:Name="treeViewCopyToClipboard" Header="Copy To Clipboard" Click="treeViewCopyToClipboard_Click" />
-                    <Separator/>
-                    <MenuItem x:Name="treeViewShowXMLInOutputWindow" Header="Show XML In Output Window" Click="treeViewShowXMLInOutputWindow_Click"/>
-                    <MenuItem x:Name="treeViewShowJSONInOutputWindow" Header="Show JSON In Output Window"  Click="treeViewShowJSONInOutputWindow_Click"/>
-                </ContextMenu>
-            </TreeView.Resources>
-        </TreeView>
+                            <MenuItem x:Name="treeViewCopyValueToClipboard" Header="Copy Value To Clipboard" Click="treeViewCopyValueToClipboard_Click"/>
+                            <Separator/>
+                            <MenuItem x:Name="treeViewShowInOutputWindow" Header="Show In Output Window" Click="treeViewShowInOutputWindow_Click" />
+                            <MenuItem x:Name="treeViewCopyToClipboard" Header="Copy To Clipboard" Click="treeViewCopyToClipboard_Click" />
+                            <Separator/>
+                            <MenuItem x:Name="treeViewShowXMLInOutputWindow" Header="Show XML In Output Window" Click="treeViewShowXMLInOutputWindow_Click"/>
+                            <MenuItem x:Name="treeViewShowJSONInOutputWindow" Header="Show JSON In Output Window"  Click="treeViewShowJSONInOutputWindow_Click"/>
+                        </ContextMenu>
+                    </TreeView.Resources>
+                </TreeView>
+            </TabItem>
+            <TabItem Header="Headers">
+                <!-- Code From https://stackoverflow.com/questions/3668802/looking-for-an-object-graph-tree-view-control-for-wpf?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa-->
+                <TreeView Name="treeViewHeadersGraph" Margin="{DynamicResource Margin5}"  FontSize="13" FontFamily="Consolas" ItemContainerStyle="{DynamicResource StyleGraphTreeViewItem}" ItemTemplate="{DynamicResource TemplateTreeViewItem}" />
+            </TabItem>
+        </TabControl>
         <Fluent:StatusBar Grid.Row="2" Grid.ColumnSpan="2" >
             <Fluent:StatusBarItem Title=""
                           Value="150"

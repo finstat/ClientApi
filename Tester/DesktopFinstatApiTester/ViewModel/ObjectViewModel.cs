@@ -49,16 +49,23 @@ namespace DesktopFinstatApiTester.ViewModel
                 if (!IsPrintableType(_type))
                 {
                     var collection = _object as IEnumerable<object>;
+                    var dictionary = _object as System.Collections.IDictionary;
                     // the public properties of this object are its children
                     // if this is a collection type, add the contained items to the children
 
-                    var children = (collection == null)
+                    var children = (collection == null && dictionary == null)
                         ? _type.GetProperties() .Where(p => !p.GetIndexParameters().Any()) // exclude indexed parameters for now
                         .Select(p => new ObjectViewModel(p.GetValue(_object, null), p, this))
                         .ToList()
                     : new List<ObjectViewModel>();
-
-                    if (collection != null)
+                    if (dictionary != null)
+                    {
+                        foreach (var item in dictionary)
+                        {
+                            children.Add(new ObjectViewModel(item, null, this)); // todo: add something to view the index value
+                        }
+                    }
+                    else if (collection != null)
                     {
                         foreach (var item in collection)
                         {

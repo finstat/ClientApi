@@ -1,4 +1,6 @@
 ﻿extern alias CZ;
+
+using DesktopFinstatApiTester.ViewModel;
 using Ionic.Zip;
 using Newtonsoft.Json;
 using System;
@@ -280,6 +282,7 @@ namespace DesktopFinstatApiTester.Windows
         private void datagridResponse_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             treeViewObjectGraph.ItemsSource = null;
+            treeViewHeadersGraph.ItemsSource = null;
             var grid = (DataGrid)sender;
             if (grid.SelectedItems != null && grid.SelectedItems.Count > 0)
             {
@@ -290,6 +293,14 @@ namespace DesktopFinstatApiTester.Windows
                     treeViewObjectGraph.ItemsSource = graph.FirstGeneration;
                     graph.FirstGeneration[0].IsSelected = true;
                     graph.FirstGeneration[0].IsExpanded = true;
+
+                    var graph2 = new ViewModel.ObjectViewModelHierarchy(new BasicResponse{
+                        RequestHeaders = item.RequestHeaders,
+                        ResponseHeaders = item.ResponseHeaders,
+                    });
+                    treeViewHeadersGraph.ItemsSource = graph2.FirstGeneration;
+                    graph2.FirstGeneration[0].IsSelected = true;
+                    graph2.FirstGeneration[0].IsExpanded = true;
                 }
             }
         }
@@ -391,6 +402,31 @@ namespace DesktopFinstatApiTester.Windows
             return AppInstance?.Settings?.ResponseType == Model.ResponseType.JSON;
         }
 
+        private void Client_OnResponse(Dictionary<string, string[]> header)
+        {
+            if (AppInstance?.ResponseItems != null && AppInstance.ResponseItems.Any())
+            {
+                var first = AppInstance.ResponseItems.First();
+                if (first != null)
+                {
+                    first.ResponseHeaders = header;
+                }
+            }
+        }
+
+        private void Client_OnRequest(Dictionary<string, string[]> header)
+        {
+            if (AppInstance?.ResponseItems != null && AppInstance.ResponseItems.Any())
+            {
+                var first = AppInstance.ResponseItems.First();
+                if (first != null)
+                {
+                    first.RequestHeaders = header;
+                }
+            }
+        }
+
+
         private void doApiRequest(string requestname, string apisource, Func<object[], object> apiCallFunc, ApiCallParameter[] parameterTypes = null)
         {
             bool hasParameter = parameterTypes != null && parameterTypes.Any();
@@ -474,45 +510,67 @@ namespace DesktopFinstatApiTester.Windows
         #region SK-Init
         private FinstatApi.ApiClient CreateSKApiClient()
         {
-            return new FinstatApi.ApiClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            var client  = new FinstatApi.ApiClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            client.OnRequest += Client_OnRequest;
+            client.OnResponse += Client_OnResponse;
+            return client;
         }
-
         private FinstatApi.ApiMonitoringClient CreateSKApiMonitoringClient()
         {
-            return new FinstatApi.ApiMonitoringClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            var client = new FinstatApi.ApiMonitoringClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            client.OnRequest += Client_OnRequest;
+            client.OnResponse += Client_OnResponse;
+            return client;
         }
 
         private FinstatApi.ApiDailyDiffClient CreateSKApiDailyDiffClient()
         {
-            return new FinstatApi.ApiDailyDiffClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            var client = new FinstatApi.ApiDailyDiffClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            client.OnRequest += Client_OnRequest;
+            client.OnResponse += Client_OnResponse;
+            return client;
         }
 
         private FinstatApi.ApiDailyStatementDiffClient CreateSKApiDailyStatementDiffClient()
         {
-            return new FinstatApi.ApiDailyStatementDiffClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            var client = new FinstatApi.ApiDailyStatementDiffClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            client.OnRequest += Client_OnRequest;
+            client.OnResponse += Client_OnResponse;
+            return client;
         }
 
         private FinstatApi.ApiDailyUltimateDiffClient CreateSKApiDailyUltimateDiffClient()
         {
-            return new FinstatApi.ApiDailyUltimateDiffClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            var client = new FinstatApi.ApiDailyUltimateDiffClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            client.OnRequest += Client_OnRequest;
+            client.OnResponse += Client_OnResponse;
+            return client;
         }
 
         private FinstatApi.ApiDistraintClient CreateSKApiDistraintClient()
         {
-            return new FinstatApi.ApiDistraintClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            var client = new FinstatApi.ApiDistraintClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            client.OnRequest += Client_OnRequest;
+            client.OnResponse += Client_OnResponse;
+            return client;
         }
         #endregion
 
         #region CZ-Init
         private CZ::FinstatApi.ApiClient CreateCZApiClient()
         {
-
-            return new CZ::FinstatApi.ApiClient(AppInstance.Settings.FinStatApiUrlCZ, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            var client = new CZ::FinstatApi.ApiClient(AppInstance.Settings.FinStatApiUrlCZ, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            client.OnRequest += Client_OnRequest;
+            client.OnResponse += Client_OnResponse;
+            return client;
         }
 
         private CZ::FinstatApi.ApiMonitoringClient CreateCZApiMonitoringClient()
         {
-            return new CZ::FinstatApi.ApiMonitoringClient(AppInstance.Settings.FinStatApiUrlCZ, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            var client = new CZ::FinstatApi.ApiMonitoringClient(AppInstance.Settings.FinStatApiUrlCZ, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            client.OnRequest += Client_OnRequest;
+            client.OnResponse += Client_OnResponse;
+            return client;
         }
         #endregion
 

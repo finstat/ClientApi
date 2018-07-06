@@ -123,24 +123,38 @@ namespace FinstatApi
 
                 using (WebClient client = new WebClientWithTimeout(_timeout))
                 {
-                    var result = client.UploadValues(_url + methodUrl + (json ? ".json" : null), method, reqparm);
-                    Limits = new ViewModel.Limits
+                    var requestHeaders = new Dictionary<string, string[]>();
+                    if (reqparm != null)
                     {
-                        Daily = new ViewModel.Limit
+                        foreach (var param in reqparm.AllKeys)
                         {
-                            Current = (client.ResponseHeaders != null && !string.IsNullOrEmpty(client.ResponseHeaders.Get("Finstat-Daily-Limit-Current")))
-                                ? long.Parse(client.ResponseHeaders.Get("Finstat-Daily-Limit-Current")) : 0,
-                            Max = (client.ResponseHeaders != null && !string.IsNullOrEmpty(client.ResponseHeaders.Get("Finstat-Daily-Limit-MAx")))
-                                ? long.Parse(client.ResponseHeaders.Get("Finstat-Daily-Limit-Max")) : 0
-                        },
-                        Monthly = new ViewModel.Limit
+                            requestHeaders.Add(param, reqparm.GetValues(param));
+                        }
+                        RaiseOnRequest(requestHeaders);
+                    }
+
+                    client.UploadValuesCompleted += (object sender, UploadValuesCompletedEventArgs e) => {
+                        if (client.Headers != null)
                         {
-                            Current = (client.ResponseHeaders != null && !string.IsNullOrEmpty(client.ResponseHeaders.Get("Finstat-Monthly-Limit-Current")))
-                                ? long.Parse(client.ResponseHeaders.Get("Finstat-Monthly-Limit-Current")) : 0,
-                            Max = (client.ResponseHeaders != null && !string.IsNullOrEmpty(client.ResponseHeaders.Get("Finstat-Monthly-Limit-Max")))
-                                ? long.Parse(client.ResponseHeaders.Get("Finstat-Monthly-Limit-Max")) : 0
+                            foreach (var headerKey in client.Headers.AllKeys)
+                            {
+                                requestHeaders.Add(headerKey, client.ResponseHeaders.GetValues(headerKey));
+                            }
+                            RaiseOnRequest(requestHeaders);
                         }
                     };
+
+                    var result = client.UploadValues(_url + methodUrl + (json ? ".json" : null), method, reqparm);
+
+                    if (client.ResponseHeaders != null)
+                    {
+                        var responseHeaders = new Dictionary<string, string[]>();
+                        foreach (var headerKey in client.ResponseHeaders.AllKeys)
+                        {
+                            responseHeaders.Add(headerKey, client.ResponseHeaders.GetValues(headerKey));
+                        }
+                        RaiseOnResponse(responseHeaders);
+                    }
 
                     return result;
                 }

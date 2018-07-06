@@ -131,25 +131,34 @@ namespace FinstatApi
                 }
                 using (HttpClient client = CreateClient(_timeout))
                 {
-                    var content = new FormUrlEncodedContent(list);
-                    result = (method == "POST") ? await client.PostAsync(_url + methodUrl + (json ? ".json" : null), content) : await client.GetAsync(_url + methodUrl);
-                    Limits = new ViewModel.Limits
+                    var requestHeaders = new Dictionary<string, string[]>();
+                    if (list != null)
                     {
-                        Daily = new ViewModel.Limit
+                        foreach (var param in list)
                         {
-                            Current = (result.Headers != null && result.Headers.Contains("Finstat-Daily-Limit-Current"))
-                                ? long.Parse(result.Headers.GetValues("Finstat-Daily-Limit-Current").First()) : 0,
-                            Max = (result.Headers != null && result.Headers.Contains("Finstat-Daily-Limit-Max"))
-                                ? long.Parse(result.Headers.GetValues("Finstat-Daily-Limit-Max").First()) : 0,
-                        },
-                        Monthly = new ViewModel.Limit
-                        {
-                            Current = (result.Headers != null && result.Headers.Contains("Finstat-Monthly-Limit-Current"))
-                                ? long.Parse(result.Headers.GetValues("Finstat-Monthly-Limit-Current").First()) : 0,
-                            Max = (result.Headers != null && result.Headers.Contains("Finstat-Monthly-Limit-Max"))
-                                ? long.Parse(result.Headers.GetValues("Finstat-Monthly-Limit-Max").First()) : 0
+                            requestHeaders.Add(param.Key, result.Headers.GetValues(param.Key).ToArray());
                         }
-                    };
+                        RaiseOnRequest(requestHeaders);
+                    }
+                    var content = new FormUrlEncodedContent(list);
+                    if (content.Headers != null)
+                    {
+                        foreach (var header in content.Headers)
+                        {
+                            requestHeaders.Add(header.Key, result.Headers.GetValues(header.Key).ToArray());
+                        }
+                        RaiseOnRequest(requestHeaders);
+                    }
+                    result = (method == "POST") ? await client.PostAsync(_url + methodUrl + (json ? ".json" : null), content) : await client.GetAsync(_url + methodUrl);
+                    if (result.Headers != null)
+                    {
+                        var responseHeaders = new Dictionary<string, string[]>();
+                        foreach (var header in result.Headers)
+                        {
+                            responseHeaders.Add(header.Key, result.Headers.GetValues(header.Key).ToArray());
+                        }
+                        RaiseOnResponse(responseHeaders);
+                    }
                     result.EnsureSuccessStatusCode();
                     if (result.IsSuccessStatusCode)
                     {

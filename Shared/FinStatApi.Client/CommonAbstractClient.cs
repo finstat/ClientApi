@@ -6,6 +6,8 @@ using System.Text;
 
 namespace FinstatApi
 {
+    public delegate void HeadersDelegate(Dictionary<string, string[]> header);
+
     public class CommonAbstractApiClient
     {
         internal readonly string _url;
@@ -16,7 +18,8 @@ namespace FinstatApi
         internal readonly int _timeout;
 
         public ViewModel.Limits Limits { get; protected set; }
-
+        public event HeadersDelegate OnRequest;
+        public event HeadersDelegate OnResponse;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClient" /> class.
@@ -46,6 +49,29 @@ namespace FinstatApi
             _stationName = stationName;
             _timeout = timeout;
             _url = url.TrimEnd('/');
+
+            OnResponse += CommonAbstractApiClient_OnResponse;
+        }
+
+        private void CommonAbstractApiClient_OnResponse(Dictionary<string, string[]> header)
+        {
+            Limits = new ViewModel.Limits
+            {
+                Daily = new ViewModel.Limit
+                {
+                    Current = (header != null && header.ContainsKey("Finstat-Daily-Limit-Current") && header["Finstat-Daily-Limit-Current"] != null && header["Finstat-Daily-Limit-Current"].Length > 0)
+                    ? long.Parse(header["Finstat-Daily-Limit-Current"][0]) : 0,
+                    Max = (header != null && header.ContainsKey("Finstat-Daily-Limit-Max") && header["Finstat-Daily-Limit-Max"] != null && header["Finstat-Daily-Limit-Max"].Length > 0)
+                    ? long.Parse(header["Finstat-Daily-Limit-Max"][0]) : 0
+                },
+                Monthly = new ViewModel.Limit
+                {
+                    Current = (header != null && header.ContainsKey("Finstat-Monthly-Limit-Current") && header["Finstat-Monthly-Limit-Current"] != null && header["Finstat-Monthly-Limit-Current"].Length > 0)
+                    ? long.Parse(header["Finstat-Monthly-Limit-Current"][0]) : 0,
+                    Max = (header != null && header.ContainsKey("Finstat-Monthly-Limit-Max") && header["Finstat-Monthly-Limit-Max"] != null && header["Finstat-Monthly-Limit-Max"].Length > 0)
+                    ? long.Parse(header["Finstat-Monthly-Limit-Max"][0]) : 0
+                }
+            };
         }
 
         /// <summary>
@@ -72,6 +98,16 @@ namespace FinstatApi
                 hashString.Append(String.Format("{0:x2}", x));
             }
             return hashString.ToString();
+        }
+
+        protected void RaiseOnResponse(Dictionary<string, string[]> header)
+        {
+            OnResponse?.Invoke(header);
+        }
+
+        protected void RaiseOnRequest(Dictionary<string, string[]> header)
+        {
+            OnRequest?.Invoke(header);
         }
     }
 }

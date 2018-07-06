@@ -6,7 +6,40 @@ using FinstatApi;
 
 namespace DesktopFinstatApiTester.ViewModel
 {
-    public class ResponseItem : ViewModel
+    public class BasicResponse : ViewModel
+    {
+        public const string RequestHeadersProperty = "RequestHeaders";
+        public const string ResponseHeadersProperty = "ResponseHeaders";
+
+        private Dictionary<string, string[]> _requestHeaders = null;
+        public Dictionary<string, string[]> RequestHeaders
+        {
+            get { return _requestHeaders; }
+            set
+            {
+                if (_requestHeaders != value)
+                {
+                    _requestHeaders = value;
+                    RaisePropertyChanged(RequestHeadersProperty);
+                }
+            }
+        }
+
+        private Dictionary<string, string[]> _responseHeaders = null;
+        public Dictionary<string, string[]> ResponseHeaders
+        {
+            get { return _responseHeaders; }
+            set
+            {
+                if (_responseHeaders != value)
+                {
+                    _responseHeaders = value;
+                    RaisePropertyChanged(ResponseHeadersProperty);
+                }
+            }
+        }
+    }
+    public class ResponseItem : BasicResponse
     {
         public const string RequestProperty = "Request";
         public const string ParameterProperty = "Parameter";
@@ -15,6 +48,7 @@ namespace DesktopFinstatApiTester.ViewModel
         public const string ReceivedProperty = "Received";
         public const string DataProperty = "Data";
         public const string DataCountProperty = "DataCount";
+
         public const string ResponseItemObjectProperty = "ResponseItem";
 
         public ResponseItem()
@@ -126,7 +160,7 @@ namespace DesktopFinstatApiTester.ViewModel
 
         private void ResponseItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (new[] {RequestProperty, ParameterProperty, SendProperty, ReceivedProperty, DataProperty, ApiSourceProperty }.Contains(e.PropertyName))
+            if (new[] {RequestProperty, ParameterProperty, SendProperty, ReceivedProperty, DataProperty, ApiSourceProperty, ResponseHeadersProperty, RequestHeadersProperty }.Contains(e.PropertyName))
             {
                 RaisePropertyChanged(ResponseItemObjectProperty);
             }
