@@ -47,7 +47,7 @@ namespace DesktopFinstatApiTester.Windows
             public ApiCallParameter(string title = null, Func<object, bool> validFunction = null) : this(ParameterTypeEnum.String, title, validFunction) { }
             public ApiCallParameter(ParameterTypeEnum type = ParameterTypeEnum.String, string title = null, Func<object, bool> validFunction = null)
             {
-                Type = Type;
+                Type = type;
                 Title = title;
                 ValidFunction = validFunction;
             }
@@ -889,6 +889,23 @@ namespace DesktopFinstatApiTester.Windows
             }, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "File"),
                 new ApiCallParameter(ParameterTypeEnum.Folder, "Select Save Folder")
+            });
+        }
+
+        private void buttonOpenDailyUltimateDiffFile_Click(object sender, RoutedEventArgs e)
+        {
+            doApiRequest("Open DailyUltimateDiffFile", "SK", (parameters) =>
+            {
+                using (ZipFile zip = new ZipFile((string)parameters[0]))
+                {
+                    var enumerator = zip.Entries.GetEnumerator();
+                    enumerator.MoveNext();
+                    ZipEntry firstItem = enumerator.Current;
+                    XmlSerializer serializer = new XmlSerializer(typeof(FinstatApi.ViewModel.Diff.UltimateResult[]));
+                    return (FinstatApi.ViewModel.Diff.UltimateResult[])serializer.Deserialize(firstItem.OpenReader());
+                }
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.File, "Open Zip File")
             });
         }
         #endregion

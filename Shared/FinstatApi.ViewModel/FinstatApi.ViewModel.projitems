@@ -18,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Diff\DailyDiffList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diff\ExtendedResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diff\StatementResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diff\UltimateResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Distraint\Bailiff.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Distraint\Debtor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Distraint\DistraintDetailResult.cs" />

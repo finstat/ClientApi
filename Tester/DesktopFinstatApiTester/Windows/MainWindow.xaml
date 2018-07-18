@@ -233,6 +233,11 @@
                             <Path Data="{DynamicResource IconDownloadLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
+                    <Fluent:Button x:Name="buttonOpenDailyUltimateDiffFile" Header="Open" Click="buttonOpenDailyUltimateDiffFile_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconBookOpenLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Header="Distraint">
