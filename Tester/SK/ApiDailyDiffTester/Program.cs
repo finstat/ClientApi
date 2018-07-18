@@ -102,6 +102,29 @@ namespace ApiDailyDiffTester
         }
 
         /// <summary>
+        /// Test pre stiahnutie zoznamu ultimate diff suborov z daily diff
+        /// </summary>
+        public static DailyDiffList GetListOfUltimateDiffs()
+        {
+            try
+            {
+                ApiDailyUltimateDiffClient apiClient = new ApiDailyUltimateDiffClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 200000);
+                DailyDiffList result = apiClient.RequestListOfDailyUltimateDiffs();
+                Console.WriteLine("There are " + result.Files.Length + " files in daily diff export.");
+                for (int i = 0, count = result.Files.Length >= 10 ? 10 : result.Files.Length; i < count; i++)
+                {
+                    Console.WriteLine(i + ": " + result.Files[i]);
+                }
+                return result;
+            }
+            catch (FinstatApiException apiException)
+            {
+                Console.WriteLine("Get current list of diff files fails with exception: " + apiException);
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Test pre stiahnutie daily diff zip suboru
         /// </summary>
         private static string DownloadDiffFile(string fileName)
@@ -132,6 +155,28 @@ namespace ApiDailyDiffTester
             {
                 ApiDailyStatementDiffClient apiClient = new ApiDailyStatementDiffClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 200000);
                 string pathToDownloadedFile = apiClient.DownloadDailyStatementDiffFile(fileName, Directory.GetCurrentDirectory());
+                if (!string.IsNullOrEmpty(pathToDownloadedFile))
+                {
+                    Console.WriteLine("File was succesfully downloaded to {0} with size {1}.", pathToDownloadedFile, new FileInfo(pathToDownloadedFile).Length);
+                }
+                return pathToDownloadedFile;
+            }
+            catch (FinstatApiException apiException)
+            {
+                Console.WriteLine("Download file fails with exception: " + apiException);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Test pre stiahnutie daily diff zip suboru
+        /// </summary>
+        private static string DownloadUltimateDiffFile(string fileName)
+        {
+            try
+            {
+                ApiDailyUltimateDiffClient apiClient = new ApiDailyUltimateDiffClient(ApiUrlConst, _apiKey, _privateKey, "api test", "api test", 200000);
+                string pathToDownloadedFile = apiClient.DownloadDailyUltimateDiffFile(fileName, Directory.GetCurrentDirectory());
                 if (!string.IsNullOrEmpty(pathToDownloadedFile))
                 {
                     Console.WriteLine("File was succesfully downloaded to {0} with size {1}.", pathToDownloadedFile, new FileInfo(pathToDownloadedFile).Length);
@@ -199,6 +244,26 @@ namespace ApiDailyDiffTester
                     ZipEntry firstItem = enumerator.Current;
                     XmlSerializer serializer = new XmlSerializer(typeof(StatementResult[]));
                     return (StatementResult[])serializer.Deserialize(firstItem.OpenReader());
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("Unable to decompress and deserialize with exception: " + exception);
+                return null;
+            }
+        }
+
+        private static FinstatApi.ViewModel.Diff.UltimateResult[] ExtractAndDeserializeUltimate(string fileName)
+        {
+            try
+            {
+                using (ZipFile zip = new ZipFile(fileName))
+                {
+                    var enumerator = zip.Entries.GetEnumerator();
+                    enumerator.MoveNext();
+                    ZipEntry firstItem = enumerator.Current;
+                    XmlSerializer serializer = new XmlSerializer(typeof(FinstatApi.ViewModel.Diff.UltimateResult[]));
+                    return (FinstatApi.ViewModel.Diff.UltimateResult[])serializer.Deserialize(firstItem.OpenReader());
                 }
             }
             catch (Exception exception)
