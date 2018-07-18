@@ -426,7 +426,6 @@ namespace DesktopFinstatApiTester.Windows
             }
         }
 
-
         private void doApiRequest(string requestname, string apisource, Func<object[], object> apiCallFunc, ApiCallParameter[] parameterTypes = null)
         {
             bool hasParameter = parameterTypes != null && parameterTypes.Any();
@@ -515,6 +514,7 @@ namespace DesktopFinstatApiTester.Windows
             client.OnResponse += Client_OnResponse;
             return client;
         }
+
         private FinstatApi.ApiMonitoringClient CreateSKApiMonitoringClient()
         {
             var client = new FinstatApi.ApiMonitoringClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
