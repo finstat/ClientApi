@@ -9,6 +9,9 @@ namespace FinstatApi.ViewModel
         public string Key { get; set; }
         public object Value { get; set; }
 
+        public KeyValue() : this(null, null)
+        {}
+
         public KeyValue(string key = null, object value = null)
         {
             Key = key;

@@ -853,7 +853,6 @@ namespace DesktopFinstatApiTester.Windows
             });
         }
 
-
         private void buttonOpenDailyStatementDiffLegend_Click(object sender, RoutedEventArgs e)
         {
             doApiRequest("DailyStatementDiffFile", "SK", (parameters) =>
