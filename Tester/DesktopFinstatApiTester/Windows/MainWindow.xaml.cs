@@ -31,16 +31,19 @@ namespace DesktopFinstatApiTester.Windows
         protected enum ParameterTypeEnum
         {
             String,
+            Int,
             Folder,
             File,
             Prompt,
-            None
+            Pick,
+            None,
         }
 
         protected class ApiCallParameter
         {
             public ParameterTypeEnum Type { get; set; } = ParameterTypeEnum.String;
             public string Title { get; set; }
+            public IEnumerable<object> Values { get; set; }
             public Func<object, bool> ValidFunction { get; set; } = null;
 
             public ApiCallParameter(Func<object, bool> validFunction = null) : this(string.Empty, validFunction) { }
@@ -145,6 +148,25 @@ namespace DesktopFinstatApiTester.Windows
                 title = parameter?.Title;
             }
             return (MessageBox.Show(title, "Prompt", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes);
+        }
+
+        private object GetPick(ApiCallParameter parameter)
+        {
+            PickWindow dialog = new PickWindow(parameter.Values)
+            {
+                Owner = this,
+            };
+
+            if (parameter != null && !string.IsNullOrEmpty(parameter?.Title))
+            {
+                dialog.Title = parameter?.Title;
+            }
+
+            if (dialog.ShowDialog() == true)
+            {
+                return dialog.Value;
+            }
+            return null;
         }
 
         private string GetInput(ApiCallParameter parameter)
@@ -444,19 +466,36 @@ namespace DesktopFinstatApiTester.Windows
                             switch (parameterType.Type)
                             {
                                 case ParameterTypeEnum.String: parameter = GetInput(parameterType); break;
+                                case ParameterTypeEnum.Int: parameter = GetInput(parameterType); break;
                                 case ParameterTypeEnum.Folder: parameter = GetFolderBrowserDialog(parameterType); break;
                                 case ParameterTypeEnum.File: parameter = GetFileBrowserDialog(parameterType); break;
                                 case ParameterTypeEnum.Prompt: parameter = GetPrompt(parameterType); break;
+                                case ParameterTypeEnum.Pick: parameter = GetPick(parameterType); break;
                             }
                             valid = (parameterType.ValidFunction != null)
-                                ? parameterType.ValidFunction(parameter)
-                                : (new[] { ParameterTypeEnum.String, ParameterTypeEnum.Folder, ParameterTypeEnum.File }.Contains(parameterType.Type)) ? !string.IsNullOrEmpty((string)parameter) : true;
+                                    ? parameterType.ValidFunction(parameter)
+                                    : (new[] { ParameterTypeEnum.String, ParameterTypeEnum.Int, ParameterTypeEnum.Folder, ParameterTypeEnum.File }.Contains(parameterType.Type))
+                                        ? !string.IsNullOrEmpty((string)parameter)
+                                        : (parameterType.Type == ParameterTypeEnum.Pick && parameter == null)
+                                            ? false
+                                            : true;
                             if (
                                 !valid
                                 && MessageBox.Show("Value is not valid or empty. Do you want to fix it?", "Prompt", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No
                             )
                             {
                                 valid = true;
+                            }
+                            if (valid && parameterType.Type == ParameterTypeEnum.Int)
+                            {
+                                if (int.TryParse((string)parameter, out int result))
+                                {
+                                    parameter = result;
+                                }
+                                else if(MessageBox.Show("Value is not valid for int number. Do you want to fix it?", "Prompt", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
+                                {
+                                    valid = false;
+                                }
                             }
                         }
                         parameters.Add(parameter);
@@ -534,6 +573,14 @@ namespace DesktopFinstatApiTester.Windows
         private FinstatApi.ApiDailyStatementDiffClient CreateSKApiDailyStatementDiffClient()
         {
             var client = new FinstatApi.ApiDailyStatementDiffClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            client.OnRequest += Client_OnRequest;
+            client.OnResponse += Client_OnResponse;
+            return client;
+        }
+
+        private FinstatApi.ApiStatementClient CreateSKApiStatementClient()
+        {
+            var client = new FinstatApi.ApiStatementClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
             client.OnRequest += Client_OnRequest;
             client.OnResponse += Client_OnResponse;
             return client;
@@ -855,7 +902,7 @@ namespace DesktopFinstatApiTester.Windows
 
         private void buttonOpenDailyStatementDiffLegend_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("DailyStatementDiffFile", "SK", (parameters) =>
+            doApiRequest("DailyStatementDiffLegend", "SK", (parameters) =>
             {
                 var client = CreateSKApiDailyStatementDiffClient();
                 var result = client.RequestStatementLegend();
@@ -863,6 +910,7 @@ namespace DesktopFinstatApiTester.Windows
                 return result;
             });
         }
+
         #endregion
 
         #region SK-DailyUltimateDiff
@@ -907,6 +955,78 @@ namespace DesktopFinstatApiTester.Windows
                 new ApiCallParameter(ParameterTypeEnum.File, "Open Zip File")
             });
         }
+        #endregion
+
+        #region SK-Statement
+        private void buttonStatements_Click(object sender, RoutedEventArgs e)
+        {
+            doApiRequest("Statements", "SK", (parameters) =>
+            {
+                var client = CreateSKApiStatementClient();
+                var result = client.RequestStatements((string)parameters[0]);
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
+            }, new[] {
+                 new ApiCallParameter(ParameterTypeEnum.String, "ICO")
+            });
+        }
+
+        private void buttonStatementDetiail_Click(object sender, RoutedEventArgs e)
+        {
+            doApiRequest("Statements", "SK", (parameters) =>
+            {
+                var client = CreateSKApiStatementClient();
+                var result = client.RequestStatementDetail((string)parameters[0], (int)parameters[1], (FinstatApi.Statement.TemplateTypeEnum)parameters[2]);
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
+            }, new[] {
+                 new ApiCallParameter(ParameterTypeEnum.String, "ICO"),
+                 new ApiCallParameter(ParameterTypeEnum.Int, "Year"),
+                 new ApiCallParameter(ParameterTypeEnum.Pick, "Template") {
+                     Values =  new object[]
+                     {
+                         FinstatApi.Statement.TemplateTypeEnum.Template2011v2,
+                         FinstatApi.Statement.TemplateTypeEnum.Template2014,
+                         FinstatApi.Statement.TemplateTypeEnum.Template2014micro,
+                         FinstatApi.Statement.TemplateTypeEnum.TemplateFinancial,
+                         FinstatApi.Statement.TemplateTypeEnum.TemplateNujPU,
+                         FinstatApi.Statement.TemplateTypeEnum.TemplateROPO
+                     }
+                 },
+            });
+        }
+
+        private void buttonStatementLegend_Click(object sender, RoutedEventArgs e)
+        {
+            doApiRequest("StatementDiffFile", "SK", (parameters) =>
+            {
+                var client = CreateSKApiStatementClient();
+                var result = client.RequestStatementLegend((FinstatApi.Statement.TemplateTypeEnum)parameters[0], (string)parameters[1]);
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.Pick, "Template") {
+                     Values =  new object[]
+                     {
+                         FinstatApi.Statement.TemplateTypeEnum.Template2011v2,
+                         FinstatApi.Statement.TemplateTypeEnum.Template2014,
+                         FinstatApi.Statement.TemplateTypeEnum.Template2014micro,
+                         FinstatApi.Statement.TemplateTypeEnum.TemplateFinancial,
+                         FinstatApi.Statement.TemplateTypeEnum.TemplateNujPU,
+                         FinstatApi.Statement.TemplateTypeEnum.TemplateROPO
+                     }
+                 },
+                new ApiCallParameter(ParameterTypeEnum.Pick, "Language") {
+                     Values =  new object[]
+                     {
+                         "SK",
+                         "EN"
+                     }
+                 }
+            });
+        }
+
+
         #endregion
 
         #region SK-Distraint

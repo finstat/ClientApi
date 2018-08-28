@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="ApiClient.cs" />
     <Compile Include="ApiDailyDiffClient.cs" />
+    <Compile Include="ApiStatementClient.cs" />
     <Compile Include="ApiDailyStatementDiffClient.cs" />
     <Compile Include="ApiDailyUltimateDiffClient.cs" />
     <Compile Include="ApiDistraintClient.cs" />

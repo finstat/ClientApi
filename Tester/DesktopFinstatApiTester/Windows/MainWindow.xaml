@@ -182,6 +182,25 @@
                     </Fluent:Button>
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
+            <Fluent:RibbonTabItem Header="Statement">
+                <Fluent:RibbonGroupBox Header="Statement">
+                    <Fluent:Button x:Name="buttonStatements" Header="List" Click="buttonStatements_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconListLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button x:Name="buttonStatementDetiail" Header="Detail" Click="buttonStatementDetiail_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconDetailLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button x:Name="buttonStatementLegend" Header="Legend" Click="buttonStatementLegend_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconDictionaryLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Header="Diff">
                 <Fluent:RibbonGroupBox Header="Daily">
                     <Fluent:Button x:Name="buttonDailyDiffList" Header="List" Click="buttonDailyDiffList_Click">

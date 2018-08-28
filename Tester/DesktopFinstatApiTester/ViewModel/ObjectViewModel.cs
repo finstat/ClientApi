@@ -48,26 +48,26 @@ namespace DesktopFinstatApiTester.ViewModel
                 // exclude value types and strings from listing child members
                 if (!IsPrintableType(_type))
                 {
-                    var collection = _object as IEnumerable<object>;
+                    var type = _object.GetType();
                     var dictionary = _object as System.Collections.IDictionary;
                     // the public properties of this object are its children
                     // if this is a collection type, add the contained items to the children
 
-                    var children = (collection == null && dictionary == null)
+                    var children = (dictionary == null && !type.IsArray)
                         ? _type.GetProperties() .Where(p => !p.GetIndexParameters().Any()) // exclude indexed parameters for now
                         .Select(p => new ObjectViewModel(p.GetValue(_object, null), p, this))
                         .ToList()
                     : new List<ObjectViewModel>();
-                    if (dictionary != null)
+                    if (type.IsArray)
                     {
-                        foreach (var item in dictionary)
+                        foreach (var item in (Array)_object)
                         {
                             children.Add(new ObjectViewModel(item, null, this)); // todo: add something to view the index value
                         }
                     }
-                    else if (collection != null)
+                    else if (dictionary != null)
                     {
-                        foreach (var item in collection)
+                        foreach (var item in dictionary)
                         {
                             children.Add(new ObjectViewModel(item, null, this)); // todo: add something to view the index value
                         }
@@ -265,10 +265,7 @@ namespace DesktopFinstatApiTester.ViewModel
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion
