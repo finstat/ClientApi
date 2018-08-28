@@ -98,7 +98,7 @@ namespace FinstatApi
                     }
                     else
                     {
-                        throw new FinstatApiException(FinstatApiException.FailTypeEnum.TooShort, "Specified query is too short!", e);
+                        throw new FinstatApiException(FinstatApiException.FailTypeEnum.TooShort, "Specified parameters are not valid!", e);
                     }
                 default:
                     throw new FinstatApiException(FinstatApiException.FailTypeEnum.Unknown, "Unspecified exception!", e);
@@ -161,6 +161,12 @@ namespace FinstatApi
             }
             catch (WebException e)
             {
+                var responseHeaders = new Dictionary<string, string[]>();
+                foreach (var headerKey in e.Response.Headers.AllKeys)
+                {
+                    responseHeaders.Add(headerKey, e.Response.Headers.GetValues(headerKey));
+                }
+                RaiseOnResponse(responseHeaders);
                 throw ParseErrorResponse(e);
             }
             catch (Exception e)
@@ -195,6 +201,12 @@ namespace FinstatApi
             }
             catch (WebException e)
             {
+                var responseHeaders = new Dictionary<string, string[]>();
+                foreach (var headerKey in e.Response.Headers.AllKeys)
+                {
+                    responseHeaders.Add(headerKey, e.Response.Headers.GetValues(headerKey));
+                }
+                RaiseOnResponse(responseHeaders);
                 throw ParseErrorResponse(e);
             }
             catch (Exception e)

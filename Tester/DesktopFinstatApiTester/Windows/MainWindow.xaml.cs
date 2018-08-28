@@ -309,9 +309,9 @@ namespace DesktopFinstatApiTester.Windows
             if (grid.SelectedItems != null && grid.SelectedItems.Count > 0)
             {
                 var item = (ViewModel.ResponseItem)grid.SelectedItem;
-                if (item != null && item.DataCount > 0)
+                if (item != null)
                 {
-                    var graph = new ViewModel.ObjectViewModelHierarchy(item.Data[0]);
+                    var graph = new ViewModel.ObjectViewModelHierarchy((item.DataCount > 0) ? item.Data[0] : null);
                     treeViewObjectGraph.ItemsSource = graph.FirstGeneration;
                     graph.FirstGeneration[0].IsSelected = true;
                     graph.FirstGeneration[0].IsExpanded = true;
