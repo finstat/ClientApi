@@ -53,7 +53,7 @@ namespace FinstatApi
         /// or Timeout exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exceptio
-        public async Task<Statement.AbstractStatementResult> RequestStatementDetail(string ico, int year, Statement.TemplateTypeEnum template, bool json = false)
+        public async Task<Statement.StatementResult> RequestStatementDetail(string ico, int year, Statement.TemplateTypeEnum template, bool json = false)
         {
             var list = new List<KeyValuePair<string, string>>(new[] {
                 new KeyValuePair<string, string>("ico", ico),
@@ -61,9 +61,7 @@ namespace FinstatApi
                 new KeyValuePair<string, string>("template", template.ToString()),
                 new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, ico + "|" + year)),
             });
-            return (new[] { Statement.TemplateTypeEnum.TemplateNujPU, Statement.TemplateTypeEnum.TemplateROPO }.Contains(template))
-                ? (await DoApiCall<Statement.NonProfitStatementResult>("/GetStatementDetail", list, json) as Statement.AbstractStatementResult)
-                : (await DoApiCall<Statement.StatementResult>("/GetStatementDetail", list, json) as Statement.AbstractStatementResult);
+            return await DoApiCall<Statement.StatementResult>("/GetStatementDetail", list, json);
         }
 
         /// <summary>

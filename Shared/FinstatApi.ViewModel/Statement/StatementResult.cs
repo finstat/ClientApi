@@ -30,7 +30,7 @@ namespace FinstatApi.Statement
         public double? Previous { get; set; }
     }
 
-    public abstract class AbstractStatementResult
+    public class StatementResult
     {
         public string ICO { get; set; }
         public string Name { get; set; }
@@ -44,16 +44,6 @@ namespace FinstatApi.Statement
 
         public StatementValue[] Assets { get; set; }
         public StatementValue[] LiabilitiesAndEquity { get; set; }
-    }
-
-    public class StatementResult : AbstractStatementResult
-    {
-        public StatementValue[] Income { get; set; }
-    }
-
-    public class NonProfitStatementResult : AbstractStatementResult
-    {
-        public StatementValue[] Expenses { get; set; }
-        public StatementValue[] Revenue { get; set; }
+        public StatementValue[] IncomeStatement { get; set; }
     }
 }
