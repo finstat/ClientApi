@@ -397,6 +397,20 @@ namespace DesktopFinstatApiTester.Windows
             }
         }
 
+        private void treeViewShowTreeInOutputWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if(treeViewObjectGraph.SelectedItem != null)
+            {
+                var item = (ViewModel.ObjectViewModel)treeViewObjectGraph.SelectedItem;
+                OutputWindow window = new OutputWindow(item.ToString())
+                {
+                    Owner = this,
+                    Title = "Selected Result Node"
+                };
+                var result = window.ShowDialog();
+            }
+        }
+
         private void treeViewSelect_Click(object sender, RoutedEventArgs e)
         {
             if (treeViewObjectGraph.SelectedItem != null)

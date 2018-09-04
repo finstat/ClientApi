@@ -362,6 +362,7 @@
                             <MenuItem x:Name="treeViewShowInOutputWindow" Header="Show In Output Window" Click="treeViewShowInOutputWindow_Click" />
                             <MenuItem x:Name="treeViewCopyToClipboard" Header="Copy To Clipboard" Click="treeViewCopyToClipboard_Click" />
                             <Separator/>
+                            <MenuItem x:Name="treeViewShowTreeOutputWindow" Header="Show Tree In Output Window" Click="treeViewShowTreeInOutputWindow_Click" />
                             <MenuItem x:Name="treeViewShowXMLInOutputWindow" Header="Show XML In Output Window" Click="treeViewShowXMLInOutputWindow_Click"/>
                             <MenuItem x:Name="treeViewShowJSONInOutputWindow" Header="Show JSON In Output Window"  Click="treeViewShowJSONInOutputWindow_Click"/>
                         </ContextMenu>

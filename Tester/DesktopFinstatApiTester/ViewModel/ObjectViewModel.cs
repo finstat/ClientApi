@@ -76,6 +76,7 @@ namespace DesktopFinstatApiTester.ViewModel
                     _children = new ReadOnlyCollection<ObjectViewModel>(children);
                     this.OnPropertyChanged("Children");
                     this.OnPropertyChanged("PropertyInfo");
+                    this.OnPropertyChanged("PropertyDetail");
                 }
             }
         }
@@ -170,9 +171,18 @@ namespace DesktopFinstatApiTester.ViewModel
         {
             get
             {
-                return string.Format("{0}[{1}{2}]:",
+                return string.Format("{0}[{1}]:",
                     Name,
-                    Type,
+                    Type
+                );
+            }
+        }
+
+        public string PropertyDetail
+        {
+            get
+            {
+                return string.Format("{0}",
                     Children != null && Children.Any() && Children.Any(x => x._object != null) ? string.Format(" Children: {0}", Children.Count(x => x._object != null)) : null
                 );
             }
