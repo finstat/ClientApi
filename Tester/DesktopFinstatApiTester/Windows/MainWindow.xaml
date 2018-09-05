@@ -373,6 +373,9 @@
                 <!-- Code From https://stackoverflow.com/questions/3668802/looking-for-an-object-graph-tree-view-control-for-wpf?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa-->
                 <TreeView Name="treeViewHeadersGraph" Margin="{DynamicResource Margin5}"  FontSize="13" FontFamily="Consolas" ItemContainerStyle="{DynamicResource StyleGraphTreeViewItem}" ItemTemplate="{DynamicResource TemplateTreeViewItem}" />
             </TabItem>
+            <TabItem Header="Response">
+                <TextBox Name="textBoxRespones" Margin="{DynamicResource Margin5}" FontSize="13" FontFamily="Consolas" />
+            </TabItem>
         </TabControl>
         <Fluent:StatusBar Grid.Row="2" Grid.ColumnSpan="2" >
             <Fluent:StatusBarItem Title=""

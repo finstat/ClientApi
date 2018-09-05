@@ -145,7 +145,6 @@ namespace FinstatApi
                     };
 
                     var result = client.UploadValues(_url + methodUrl + (json ? ".json" : null), method, reqparm);
-
                     if (client.ResponseHeaders != null)
                     {
                         var responseHeaders = new Dictionary<string, string[]>();
@@ -161,6 +160,8 @@ namespace FinstatApi
             }
             catch (WebException e)
             {
+                var resp = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
+                RaiseOnErrorResponseContent(Encoding.UTF8.GetBytes(resp));
                 var responseHeaders = new Dictionary<string, string[]>();
                 foreach (var headerKey in e.Response.Headers.AllKeys)
                 {
@@ -181,6 +182,7 @@ namespace FinstatApi
             {
                 byte[] responsebytes = DoApiCall(methodUrl, methodParams, json, method);
                 var response = Encoding.UTF8.GetString(responsebytes);
+
                 using (var reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(response))))
                 {
                     if (json)

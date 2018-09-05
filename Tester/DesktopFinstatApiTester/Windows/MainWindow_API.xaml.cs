@@ -37,6 +37,18 @@ namespace DesktopFinstatApiTester.Windows
             }
         }
 
+        private void Client_OnResponseContent(byte[] content)
+        {
+            if (AppInstance?.ResponseItems != null && AppInstance.ResponseItems.Any())
+            {
+                var first = AppInstance.ResponseItems.First();
+                if (first != null)
+                {
+                    first.Content = content;
+                }
+            }
+        }
+
         private void doApiRequest(string requestname, string apisource, Func<object[], object> apiCallFunc, ApiCallParameter[] parameterTypes = null)
         {
             bool hasParameter = parameterTypes != null && parameterTypes.Any();

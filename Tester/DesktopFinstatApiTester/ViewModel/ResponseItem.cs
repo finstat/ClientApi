@@ -46,6 +46,7 @@ namespace DesktopFinstatApiTester.ViewModel
         public const string ApiSourceProperty = "ApiSource";
         public const string SendProperty = "Send";
         public const string ReceivedProperty = "Received";
+        public const string ContentProperty = "Content";
         public const string DataProperty = "Data";
         public const string DataCountProperty = "DataCount";
 
@@ -155,6 +156,20 @@ namespace DesktopFinstatApiTester.ViewModel
             get
             {
                 return (Data != null) ? Data.Length : 0;
+            }
+        }
+
+        private byte[] _content = null;
+        public byte[] Content
+        {
+            get { return _content; }
+            set
+            {
+                if (_content != value)
+                {
+                    _content = value;
+                    RaisePropertyChanged(ContentProperty);
+                }
             }
         }
 

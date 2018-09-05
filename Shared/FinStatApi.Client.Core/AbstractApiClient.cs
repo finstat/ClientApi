@@ -118,6 +118,7 @@ namespace FinstatApi
         internal async Task<byte[]> DoApiCall(string methodUrl, List<KeyValuePair<string, string>> methodParams, bool json = false, string method = "POST")
         {
             HttpResponseMessage result = null;
+            byte[] resultContent = null;
             try
             {
                 var list = new List<KeyValuePair<string, string>>(new[] {
@@ -150,6 +151,7 @@ namespace FinstatApi
                         RaiseOnRequest(requestHeaders);
                     }
                     result = (method == "POST") ? await client.PostAsync(_url + methodUrl + (json ? ".json" : null), content) : await client.GetAsync(_url + methodUrl);
+                    resultContent = await result.Content.ReadAsByteArrayAsync();
                     if (result.Headers != null)
                     {
                         var responseHeaders = new Dictionary<string, string[]>();
@@ -162,13 +164,14 @@ namespace FinstatApi
                     result.EnsureSuccessStatusCode();
                     if (result.IsSuccessStatusCode)
                     {
-                        return await result.Content.ReadAsByteArrayAsync();
+                        return resultContent;
                     }
                     return null;
                 }
             }
             catch (HttpRequestException e)
             {
+                RaiseOnErrorResponseContent(resultContent);
                 throw ParseErrorResponse(e, (result != null) ? result.StatusCode : (HttpStatusCode?)null);
             }
             catch (TaskCanceledException e)

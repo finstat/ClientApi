@@ -13,6 +13,7 @@ namespace DesktopFinstatApiTester.Windows
             var client = new FinstatApi.ApiClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
             client.OnRequest += Client_OnRequest;
             client.OnResponse += Client_OnResponse;
+            client.OnErrorResponseContent += Client_OnResponseContent;
             return client;
         }
 
@@ -21,6 +22,7 @@ namespace DesktopFinstatApiTester.Windows
             var client = new FinstatApi.ApiMonitoringClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
             client.OnRequest += Client_OnRequest;
             client.OnResponse += Client_OnResponse;
+            client.OnErrorResponseContent += Client_OnResponseContent;
             return client;
         }
 
@@ -29,6 +31,7 @@ namespace DesktopFinstatApiTester.Windows
             var client = new FinstatApi.ApiDailyDiffClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
             client.OnRequest += Client_OnRequest;
             client.OnResponse += Client_OnResponse;
+            client.OnErrorResponseContent += Client_OnResponseContent;
             return client;
         }
 
@@ -37,6 +40,7 @@ namespace DesktopFinstatApiTester.Windows
             var client = new FinstatApi.ApiDailyStatementDiffClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
             client.OnRequest += Client_OnRequest;
             client.OnResponse += Client_OnResponse;
+            client.OnErrorResponseContent += Client_OnResponseContent;
             return client;
         }
 
@@ -45,6 +49,7 @@ namespace DesktopFinstatApiTester.Windows
             var client = new FinstatApi.ApiStatementClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
             client.OnRequest += Client_OnRequest;
             client.OnResponse += Client_OnResponse;
+            client.OnErrorResponseContent += Client_OnResponseContent;
             return client;
         }
 
@@ -53,6 +58,7 @@ namespace DesktopFinstatApiTester.Windows
             var client = new FinstatApi.ApiDailyUltimateDiffClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
             client.OnRequest += Client_OnRequest;
             client.OnResponse += Client_OnResponse;
+            client.OnErrorResponseContent += Client_OnResponseContent;
             return client;
         }
 
@@ -61,6 +67,7 @@ namespace DesktopFinstatApiTester.Windows
             var client = new FinstatApi.ApiDistraintClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
             client.OnRequest += Client_OnRequest;
             client.OnResponse += Client_OnResponse;
+            client.OnErrorResponseContent += Client_OnResponseContent;
             return client;
         }
     }

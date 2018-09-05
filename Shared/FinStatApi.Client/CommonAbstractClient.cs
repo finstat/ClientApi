@@ -7,6 +7,7 @@ using System.Text;
 namespace FinstatApi
 {
     public delegate void HeadersDelegate(Dictionary<string, string[]> header);
+    public delegate void ContentDelegate(byte[] content);
 
     public class CommonAbstractApiClient
     {
@@ -20,6 +21,7 @@ namespace FinstatApi
         public ViewModel.Limits Limits { get; protected set; }
         public event HeadersDelegate OnRequest;
         public event HeadersDelegate OnResponse;
+        public event ContentDelegate OnErrorResponseContent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClient" /> class.
@@ -108,6 +110,11 @@ namespace FinstatApi
         protected void RaiseOnRequest(Dictionary<string, string[]> header)
         {
             OnRequest?.Invoke(header);
+        }
+
+        protected void RaiseOnErrorResponseContent(byte[] content)
+        {
+            OnErrorResponseContent?.Invoke(content);
         }
     }
 }

@@ -38,6 +38,8 @@ namespace DesktopFinstatApiTester.Windows
                     treeViewHeadersGraph.ItemsSource = graph2.FirstGeneration;
                     graph2.FirstGeneration[0].IsSelected = true;
                     graph2.FirstGeneration[0].IsExpanded = true;
+
+                    textBoxRespones.Text = (item.Content != null && item.Content.Any()) ? Encoding.UTF8.GetString(item.Content) : null;
                 }
             }
         }
