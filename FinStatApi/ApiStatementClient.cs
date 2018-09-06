@@ -52,7 +52,7 @@ namespace FinstatApi
         /// or Timeout exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exceptio
-        public Statement.StatementResult RequestStatementDetail(string ico, int year, Statement.TemplateTypeEnum template, bool json = false)
+        public Statement.AbstractStatementResult RequestStatementDetail(string ico, int year, Statement.TemplateTypeEnum template, bool json = false)
         {
             System.Collections.Specialized.NameValueCollection reqparm =
             new System.Collections.Specialized.NameValueCollection
@@ -62,7 +62,9 @@ namespace FinstatApi
                 { "template", template.ToString() },
                 { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, ico+ "|" + year) },
             };
-            return DoApiCall<Statement.StatementResult>("/GetStatementDetail", reqparm, json);
+            return (template == Statement.TemplateTypeEnum.TemplateNujPU || template == Statement.TemplateTypeEnum.TemplateROPO)
+                 ? (DoApiCall<Statement.NonProfitStatementResult>("/GetStatementDetail", reqparm, json) as Statement.AbstractStatementResult)
+                 : (DoApiCall<Statement.StatementResult>("/GetStatementDetail", reqparm, json) as Statement.AbstractStatementResult);
         }
 
         /// <summary>
@@ -75,7 +77,7 @@ namespace FinstatApi
         /// or Timeout exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public KeyValue[] RequestStatementLegend(Statement.TemplateTypeEnum template, string lang = "sk", bool json = false)
+        public Statement.AbstractStatementLegendResult RequestStatementLegend(Statement.TemplateTypeEnum template, string lang = "sk", bool json = false)
         {
             System.Collections.Specialized.NameValueCollection reqparm =
             new System.Collections.Specialized.NameValueCollection
@@ -84,7 +86,9 @@ namespace FinstatApi
                 { "template", template.ToString() },
                 { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, lang) },
             };
-            return DoApiCall<KeyValue[]>("/GetStatementLegend", reqparm, json);
+            return (template == Statement.TemplateTypeEnum.TemplateNujPU || template == Statement.TemplateTypeEnum.TemplateROPO)
+                ? (DoApiCall<Statement.NonProfitStatementLegendResult>("/GetStatementTemplateLegend", reqparm, json) as Statement.AbstractStatementLegendResult)
+                : (DoApiCall<Statement.StatementLegendResult>("/GetStatementTemplateLegend", reqparm, json) as Statement.AbstractStatementLegendResult);
         }
     }
 }

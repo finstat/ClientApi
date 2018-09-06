@@ -14,6 +14,30 @@ namespace FinstatApi.Statement
         TemplateNujPU
     }
 
+    public abstract class AbstractStatementLegendResult
+    {
+        public StatementLegendValue[] Assets { get; set; }
+        public StatementLegendValue[] LiabilitiesAndEquity { get; set; }
+    }
+
+    public class StatementLegendResult : AbstractStatementLegendResult
+    {
+        public StatementLegendValue[] IncomeStatement { get; set; }
+    }
+
+    public class NonProfitStatementLegendResult : AbstractStatementLegendResult
+    {
+        public StatementLegendValue[] Expenses { get; set; }
+        public StatementLegendValue[] Revenue { get; set; }
+    }
+
+    public class StatementLegendValue
+    {
+        public string ReportRow { get; set; }
+        public string ReportSection { get; set; }
+        public string Name { get; set; }
+    }
+
     public class StatementItem
     {
         public int Year { get; set; }
@@ -25,12 +49,25 @@ namespace FinstatApi.Statement
 
     public class StatementValue
     {
-        public string Key { get; set; }
+        public string ReportRow { get; set; }
+        public string ReportSection { get; set; }
         public double? Actual { get; set; }
         public double? Previous { get; set; }
     }
 
-    public class StatementResult
+    public class AssetStatementValue : StatementValue
+    {
+        public double? ActualBrutto { get; set; }
+        public double? ActualCorrection { get; set; }
+    }
+
+    public class NonProfitAssetStatementValue : StatementValue
+    {
+        public double? ActualMain { get; set; }
+        public double? ActualCommercial { get; set; }
+    }
+
+    public abstract class AbstractStatementResult
     {
         public string ICO { get; set; }
         public string Name { get; set; }
@@ -41,9 +78,19 @@ namespace FinstatApi.Statement
         public TemplateTypeEnum Format { get; set; }
         public TemplateTypeEnum OriginalFormat { get; set; }
         public string Source { get; set; }
-
-        public StatementValue[] Assets { get; set; }
         public StatementValue[] LiabilitiesAndEquity { get; set; }
+    }
+
+    public class StatementResult : AbstractStatementResult
+    {
+        public AssetStatementValue[] Assets { get; set; }
         public StatementValue[] IncomeStatement { get; set; }
+    }
+
+    public class NonProfitStatementResult : AbstractStatementResult
+    {
+        public NonProfitAssetStatementValue[] Assets { get; set; }
+        public StatementValue[] Expenses { get; set; }
+        public StatementValue[] Revenue { get; set; }
     }
 }
