@@ -61,7 +61,7 @@ namespace FinstatApi.Statement
         public double? ActualCorrection { get; set; }
     }
 
-    public class NonProfitAssetStatementValue : StatementValue
+    public class FinanceStatementValue : StatementValue
     {
         public double? ActualMain { get; set; }
         public double? ActualCommercial { get; set; }
@@ -89,8 +89,8 @@ namespace FinstatApi.Statement
 
     public class NonProfitStatementResult : AbstractStatementResult
     {
-        public NonProfitAssetStatementValue[] Assets { get; set; }
-        public StatementValue[] Expenses { get; set; }
-        public StatementValue[] Revenue { get; set; }
+        public AssetStatementValue[] Assets { get; set; }
+        public FinanceStatementValue[] Expenses { get; set; }
+        public FinanceStatementValue[] Revenue { get; set; }
     }
 }
