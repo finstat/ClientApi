@@ -365,6 +365,8 @@
                             <MenuItem x:Name="treeViewShowTreeOutputWindow" Header="Show Tree In Output Window" Click="treeViewShowTreeInOutputWindow_Click" />
                             <MenuItem x:Name="treeViewShowXMLInOutputWindow" Header="Show XML In Output Window" Click="treeViewShowXMLInOutputWindow_Click"/>
                             <MenuItem x:Name="treeViewShowJSONInOutputWindow" Header="Show JSON In Output Window"  Click="treeViewShowJSONInOutputWindow_Click"/>
+                            <Separator/>
+                            <MenuItem x:Name="treeViewShowResponseOutputWindow" Header="Show Error Response " Click="treeViewShowResponseOutputWindow_Click" />
                         </ContextMenu>
                     </TreeView.Resources>
                 </TreeView>
@@ -372,9 +374,6 @@
             <TabItem Header="Headers">
                 <!-- Code From https://stackoverflow.com/questions/3668802/looking-for-an-object-graph-tree-view-control-for-wpf?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa-->
                 <TreeView Name="treeViewHeadersGraph" Margin="{DynamicResource Margin5}"  FontSize="13" FontFamily="Consolas" ItemContainerStyle="{DynamicResource StyleGraphTreeViewItem}" ItemTemplate="{DynamicResource TemplateTreeViewItem}" />
-            </TabItem>
-            <TabItem Header="Response">
-                <TextBox Name="textBoxRespones" Margin="{DynamicResource Margin5}" FontSize="13" FontFamily="Consolas" />
             </TabItem>
         </TabControl>
         <Fluent:StatusBar Grid.Row="2" Grid.ColumnSpan="2" >
