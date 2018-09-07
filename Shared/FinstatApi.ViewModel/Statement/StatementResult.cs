@@ -78,18 +78,17 @@ namespace FinstatApi.Statement
         public TemplateTypeEnum Format { get; set; }
         public TemplateTypeEnum OriginalFormat { get; set; }
         public string Source { get; set; }
+        public AssetStatementValue[] Assets { get; set; }
         public StatementValue[] LiabilitiesAndEquity { get; set; }
     }
 
     public class StatementResult : AbstractStatementResult
     {
-        public AssetStatementValue[] Assets { get; set; }
         public StatementValue[] IncomeStatement { get; set; }
     }
 
     public class NonProfitStatementResult : AbstractStatementResult
     {
-        public AssetStatementValue[] Assets { get; set; }
         public FinancialStatementValue[] Expenses { get; set; }
         public FinancialStatementValue[] Revenue { get; set; }
     }
