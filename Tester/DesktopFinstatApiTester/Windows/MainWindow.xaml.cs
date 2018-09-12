@@ -102,25 +102,27 @@ namespace DesktopFinstatApiTester.Windows
         {
             if (ex != null)
             {
+                var exmessage = ex.Message;
+                var extitle = "Error";
                 if (ex is FinstatApi.FinstatApiException)
                 {
-                    var fex = (ex as FinstatApi.FinstatApiException);
-                    MessageBox.Show(fex.Message, "FinStat SK API Exception", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    extitle = "FinStat SK API Exception";
                 }
                 else if (ex is CZ::FinstatApi.FinstatApiException)
                 {
                     var fex = (ex as CZ::FinstatApi.FinstatApiException);
-                    MessageBox.Show(fex.Message, "FinStat CZ API Exception", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    extitle = "FinStat CZ API Exception";
                 }
                 else if (ex is WebException)
                 {
-                    MessageBox.Show(ex.Message, "Web Exception", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    extitle = "Web Exception";
                 }
                 else if (ex is TimeoutException)
                 {
-                    MessageBox.Show(ex.Message, "Timeout Exception", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    extitle = "Timeout Exception";
                 }
-                else if(MessageBox.Show(((!String.IsNullOrEmpty(message)) ? message : "An error occured.") + " Want to see more details?", "Error", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.Yes)
+
+                if (MessageBox.Show(((!String.IsNullOrEmpty(message)) ? message : ex.Message) + " Want to see more details?", extitle, MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.Yes)
                 {
                     var text = ex.Message + "\n-------------\n" + ex.StackTrace;
                     OutputWindow window = new OutputWindow(text)
