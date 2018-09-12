@@ -10,7 +10,7 @@ namespace DesktopFinstatApiTester.Windows
     {
         private void buttonStatements_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("Statements", "SK", (parameters) =>
+            doApiRequest("StatementList", "SK", (parameters) =>
             {
                 var client = CreateSKApiStatementClient();
                 var result = client.RequestStatements((string)parameters[0]);
@@ -21,9 +21,9 @@ namespace DesktopFinstatApiTester.Windows
             });
         }
 
-        private void buttonStatementDetiail_Click(object sender, RoutedEventArgs e)
+        private void buttonStatementDetail_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("Statements", "SK", (parameters) =>
+            doApiRequest("StatementDetail", "SK", (parameters) =>
             {
                 var client = CreateSKApiStatementClient();
                 var result = client.RequestStatementDetail((string)parameters[0], (int)parameters[1], (FinstatApi.Statement.TemplateTypeEnum)parameters[2]);
@@ -48,7 +48,7 @@ namespace DesktopFinstatApiTester.Windows
 
         private void buttonStatementLegend_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("StatementDiffFile", "SK", (parameters) =>
+            doApiRequest("StatementTemplateLegend", "SK", (parameters) =>
             {
                 var client = CreateSKApiStatementClient();
                 var result = client.RequestStatementLegend((FinstatApi.Statement.TemplateTypeEnum)parameters[0], (string)parameters[1]);

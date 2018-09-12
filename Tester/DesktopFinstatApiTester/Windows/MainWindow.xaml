@@ -189,7 +189,7 @@
                             <Path Data="{DynamicResource IconListLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
-                    <Fluent:Button x:Name="buttonStatementDetiail" Header="Detail" Click="buttonStatementDetiail_Click">
+                    <Fluent:Button x:Name="buttonStatementDetail" Header="Detail" Click="buttonStatementDetail_Click">
                         <Fluent:Button.LargeIcon>
                             <Path Data="{DynamicResource IconDetailLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Fluent:Button.LargeIcon>
