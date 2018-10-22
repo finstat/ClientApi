@@ -8,6 +8,7 @@ namespace FinstatApi.ViewModel.Diff
     {
         public string Country { get; set; }
         public DateTime? ORCancelled { get; set; }
+        public DateTime? ORRemoved { get; set; }
         public bool SelfEmployed { get; set; }
         public NameParts StructuredName { get; set; }
         public string ORSection { get; set; }
