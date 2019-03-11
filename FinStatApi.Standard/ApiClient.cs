@@ -82,7 +82,7 @@ namespace FinstatApi
                 new KeyValuePair<string, string>("ico", ico),
                 new KeyValuePair<string, string>("Hash", ComputeVerificationHash(_apiKey, _privateKey, ico)),
             });
-            return await DoApiCall<UltimateResult>("/detail", list, json);
+            return await DoApiCall<UltimateResult>("/ultimate", list, json);
         }
     }
 }
