@@ -41,6 +41,40 @@ namespace DesktopFinstatApiTester.Windows
                 }
             }
         }
+
+        private void dataGridShowResponseOutputWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if (datagridResponse.SelectedItems != null && datagridResponse.SelectedItems.Count > 0)
+            {
+                var item = (ViewModel.ResponseItem)datagridResponse.SelectedItem;
+                if (item != null && item.Content != null && item.Content.Any())
+                {
+                    OutputWindow window = new OutputWindow(Encoding.UTF8.GetString(item.Content))
+                    {
+                        Owner = this,
+                        Title = "Error response body"
+                    };
+                    var result = window.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("No error response for this request", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                }
+            }
+        }
+
+        private void dataGridRepeatRequest_Click(object sender, RoutedEventArgs e)
+        {
+            if (datagridResponse.SelectedItems != null && datagridResponse.SelectedItems.Count > 0)
+            {
+                var item = (ViewModel.ResponseItem)datagridResponse.SelectedItem;
+                if (item != null)
+                {
+                    //doApiRequest(item.Request, item.ApiSource)
+                }
+            }
+        }
+
         #endregion
 
         #region Control-TreeViewObjectGraph
@@ -123,27 +157,6 @@ namespace DesktopFinstatApiTester.Windows
                     Title = "Selected Result Node"
                 };
                 var result = window.ShowDialog();
-            }
-        }
-
-        private void treeViewShowResponseOutputWindow_Click(object sender, RoutedEventArgs e)
-        {
-            if (datagridResponse.SelectedItems != null && datagridResponse.SelectedItems.Count > 0)
-            {
-                var item = (ViewModel.ResponseItem)datagridResponse.SelectedItem;
-                if (item != null && item.Content != null && item.Content.Any())
-                {
-                    OutputWindow window = new OutputWindow(Encoding.UTF8.GetString(item.Content))
-                    {
-                        Owner = this,
-                        Title = "Error response body"
-                    };
-                    var result = window.ShowDialog();
-                }
-                else
-                {
-                    MessageBox.Show("No error response for this request", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
-                }
             }
         }
 

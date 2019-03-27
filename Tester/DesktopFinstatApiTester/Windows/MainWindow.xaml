@@ -219,6 +219,23 @@
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
                 </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Ultimate">
+                    <Fluent:Button x:Name="buttonDailyUltimateDiffList" Header="List" Click="buttonDailyUltimateDiffList_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconListLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button x:Name="buttonDailyUltimateDiffFile" Header="File" Click="buttonDailyUltimateDiffFile_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconDownloadLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button x:Name="buttonOpenDailyUltimateDiffFile" Header="Open" Click="buttonOpenDailyUltimateDiffFile_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconBookOpenLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="Statement">
                     <Fluent:Button x:Name="buttonDailyStatementDiffList" Header="List" Click="buttonDailyStatementDiffList_Click">
                         <Fluent:Button.LargeIcon>
@@ -241,20 +258,25 @@
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
                 </Fluent:RibbonGroupBox>
-                <Fluent:RibbonGroupBox Header="Ultimate">
-                    <Fluent:Button x:Name="buttonDailyUltimateDiffList" Header="List" Click="buttonDailyUltimateDiffList_Click">
+                <Fluent:RibbonGroupBox Header="Statement v2014">
+                    <Fluent:Button x:Name="buttonDailyStatement2014DiffList" Header="List" Click="buttonDailyStatement2014DiffList_Click">
                         <Fluent:Button.LargeIcon>
                             <Path Data="{DynamicResource IconListLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
-                    <Fluent:Button x:Name="buttonDailyUltimateDiffFile" Header="File" Click="buttonDailyUltimateDiffFile_Click">
+                    <Fluent:Button x:Name="buttonDailyStatement2014DiffFile" Header="File" Click="buttonDailyStatement2014DiffFile_Click">
                         <Fluent:Button.LargeIcon>
                             <Path Data="{DynamicResource IconDownloadLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
-                    <Fluent:Button x:Name="buttonOpenDailyUltimateDiffFile" Header="Open" Click="buttonOpenDailyUltimateDiffFile_Click">
+                    <Fluent:Button x:Name="buttonOpenDailyStatement2014DiffFile" Header="Open" Click="buttonOpenDailyStatement2014DiffFile_Click">
                         <Fluent:Button.LargeIcon>
                             <Path Data="{DynamicResource IconBookOpenLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button x:Name="buttonOpenDailyStatement2014DiffLegend" Header="Legend" Click="buttonOpenDailyStatement2014DiffLegend_Click"   >
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconDictionaryLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
                 </Fluent:RibbonGroupBox>
@@ -292,6 +314,12 @@
             </Fluent:RibbonTabItem>
         </Fluent:Ribbon>
         <DataGrid x:Name="datagridResponse" HorizontalAlignment="Stretch" Height="Auto" Margin="{DynamicResource Margin5}" ItemsSource="{Binding ResponseItems}" Grid.Row="1" VerticalAlignment="Stretch" Width="Auto" SelectionMode="Single" AutoGenerateColumns="False" CanUserAddRows="False" SelectionChanged="datagridResponse_SelectionChanged">
+            <DataGrid.ContextMenu>
+                <ContextMenu >
+                    <MenuItem x:Name="dataGridRepeatRequest" Header="Repeat Request" Click="dataGridRepeatRequest_Click"  />
+                    <MenuItem x:Name="dataGridShowResponseOutputWindow" Header="Show Error Response " Click="dataGridShowResponseOutputWindow_Click" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Source" Width="20*">
                     <DataGridTemplateColumn.CellTemplate>
@@ -365,8 +393,6 @@
                             <MenuItem x:Name="treeViewShowTreeOutputWindow" Header="Show Tree In Output Window" Click="treeViewShowTreeInOutputWindow_Click" />
                             <MenuItem x:Name="treeViewShowXMLInOutputWindow" Header="Show XML In Output Window" Click="treeViewShowXMLInOutputWindow_Click"/>
                             <MenuItem x:Name="treeViewShowJSONInOutputWindow" Header="Show JSON In Output Window"  Click="treeViewShowJSONInOutputWindow_Click"/>
-                            <Separator/>
-                            <MenuItem x:Name="treeViewShowResponseOutputWindow" Header="Show Error Response " Click="treeViewShowResponseOutputWindow_Click" />
                         </ContextMenu>
                     </TreeView.Resources>
                 </TreeView>

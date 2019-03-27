@@ -4,14 +4,18 @@ using System.Text;
 
 namespace FinstatApi.ViewModel.Diff
 {
-    public class StatementValue
+    public class BaseStatementValue
     {
-        public string Key { get; set; }
         public double? Actual { get; set; }
         public double? Previous { get; set; }
     }
 
-    public class StatementResult
+    public class StatementValue : BaseStatementValue
+    {
+        public string Key { get; set; }
+    }
+
+    public abstract class BaseStatementResult
     {
         public string ICO { get; set; }
         public string Name { get; set; }
@@ -22,10 +26,6 @@ namespace FinstatApi.ViewModel.Diff
         public string Format { get; set; }
         public string OriginalFormat { get; set; }
         public string Source { get; set; }
-
-        public List<StatementValue> Assets { get; set; } = new List<StatementValue>();
-        public List<StatementValue> LiabilitiesAndEquity { get; set; } = new List<StatementValue>();
-        public List<StatementValue> Income { get; set; } = new List<StatementValue>();
 
         public override string ToString()
         {
@@ -40,6 +40,22 @@ namespace FinstatApi.ViewModel.Diff
                 .AppendLine(string.Format("Format: {0}", Format))
                 .AppendLine(string.Format("Original Format: {0}", OriginalFormat))
                 .AppendLine(string.Format("Source: {0}", Source))
+            ;
+            return result.ToString();
+        }
+    }
+
+    public class StatementResult : BaseStatementResult
+    {
+        public List<StatementValue> Assets { get; set; } = new List<StatementValue>();
+        public List<StatementValue> LiabilitiesAndEquity { get; set; } = new List<StatementValue>();
+        public List<StatementValue> Income { get; set; } = new List<StatementValue>();
+
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            result
+                .AppendLine(base.ToString())
                 .AppendLine(string.Format("Assets Count: {0}", Assets.Count))
                 .AppendLine(string.Format("LiabilitiesAndEquity Count: {0}", LiabilitiesAndEquity.Count))
                 .AppendLine(string.Format("Income Count: {0}", Income.Count))
