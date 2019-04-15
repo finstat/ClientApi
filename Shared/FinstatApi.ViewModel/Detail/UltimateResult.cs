@@ -73,6 +73,18 @@ namespace FinstatApi
             }
         }
 
+        public class Officer : AbstractPerson
+        {
+            public Source Source { get; set; }
+            public override string ToString()
+            {
+                StringBuilder dataString = new StringBuilder();
+                dataString.AppendLine(base.ToString());
+                dataString.AppendLine(string.Format("Source {0}", Source));
+                return dataString.ToString();
+            }
+        }
+
         public class RpvsPerson : AbstractPerson
         {
             public DateTime? BirthDate { get; set; }
@@ -152,7 +164,7 @@ namespace FinstatApi
             public DateTime? EnterDate { get; set; }
             public string EnterReason { get; set; }
             public DateTime? ExitDate { get; set; }
-            public Person Officer { get; set; }
+            public Officer[] Officers { get; set; }
             public Source Source { get; set; }
             public Deadline[] Deadlines { get; set; }
 
@@ -162,7 +174,7 @@ namespace FinstatApi
                 dataString.Append(string.Format("EnterDate: {0}", EnterDate));
                 dataString.Append(string.Format("EnterReason: {0}", EnterReason));
                 dataString.Append(string.Format("ExitDate: {0}", ExitDate));
-                dataString.Append(string.Format("Officer: {0}", Officer));
+                dataString.Append(string.Format("Officers: {0}", Officers?.Length));
                 dataString.AppendLine(string.Format("Source: {0}", Source));
                 var f = new StringBuilder();
                 int i = 0;
