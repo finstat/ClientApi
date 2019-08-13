@@ -62,6 +62,7 @@ namespace FinstatApi
         {
             public decimal? DepositAmount { get; set; }
             public decimal? PaybackRange { get; set; }
+            public decimal? PartnersSharePercentage { get; set; }
 
             public override string ToString()
             {
@@ -69,6 +70,7 @@ namespace FinstatApi
                 dataString.AppendLine(base.ToString());
                 dataString.AppendLine(string.Format("DepositAmount: {0}", DepositAmount));
                 dataString.AppendLine(string.Format("PaybackRange: {0}", PaybackRange));
+                dataString.AppendLine(string.Format("PartnersSharePercentage: {0}%", PartnersSharePercentage));
                 return dataString.ToString();
             }
         }
