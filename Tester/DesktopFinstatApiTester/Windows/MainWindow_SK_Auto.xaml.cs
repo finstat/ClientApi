@@ -27,7 +27,7 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("AutoLogIn", "SK", (parameters) =>
             {
                 var client = CreateSKApiClient();
-                var result = client.RequestAutoLogin((string)parameters[0]);
+                var result = client.RequestAutoLogin((string)parameters[0], parameters.Length > 1 ? (string)parameters[1] : null);
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
             }, new[] {

@@ -29,7 +29,7 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("AutoLogIn", "CZ", (parameters) =>
             {
                 var client = CreateCZApiClient();
-                return client.RequestAutoLogin((string)parameters[0]);
+                return client.RequestAutoLogin((string)parameters[0], parameters.Length > 1 ? (string)parameters[1] : null);
             }, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "FinStat URL"),
                 new ApiCallParameter(ParameterTypeEnum.String, "Email", (parameter) => true)

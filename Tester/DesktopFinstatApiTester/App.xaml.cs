@@ -4,6 +4,8 @@ using System.Configuration;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Net.Security;
 using System.Threading;
 using System.Windows;
 
@@ -23,6 +25,13 @@ namespace DesktopFinstatApiTester
                 {
                     Thread.CurrentThread.CurrentCulture = new CultureInfo("sk-SK");
                     Thread.CurrentThread.CurrentUICulture = new CultureInfo("sk-SK");
+
+                    ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(
+                        delegate
+                        {
+                            return true;
+                        }
+                    );
 
                     _instance = new ViewModel.ApiApplication();
                 }
