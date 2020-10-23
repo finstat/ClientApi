@@ -19,6 +19,18 @@ namespace FinstatApi
         }
     }
 
+    public class AdministratorAddress : PersonAddress
+    {
+        public string Id { get; set; }
+        public override string ToString()
+        {
+            StringBuilder dataString = new StringBuilder();
+            dataString.AppendLine(string.Format("Id: {0}", Id));
+            dataString.AppendLine(base.ToString());
+            return dataString.ToString();
+        }
+    }
+
     public class IssuedPerson
     {
         public string Name { get; set; }
@@ -36,7 +48,7 @@ namespace FinstatApi
     {
         public PersonAddress[] DebtorsAddress { get; set; }
         public PersonAddress[] ProposersAddress { get; set; }
-        public PersonAddress[] AdministratorsAddress { get; set; }
+        public AdministratorAddress[] AdministratorsAddress { get; set; }
         public FullAddress CourtsAddress { get; set; }
         public string ReferenceFileNumber { get; set; }
         public string Status { get; set; }
