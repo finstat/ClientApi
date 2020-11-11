@@ -58,7 +58,7 @@ namespace FinstatApi
         public string Url { get; set; }
         public string Type { get; set; }
         public DateTime PublishDate { get; set; }
-        public Deadline[] DatesOfProceeding { get; set; }
+        public Deadline[] DatesInProceeding { get; set; }
         public string[] FileIdentifierNumber { get; set; }
         public IssuedPerson IssuedBy { get; set; }
         public string PostedBy { get; set; }
@@ -78,7 +78,7 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("Url: {0}", Url));
             dataString.AppendLine(string.Format("Type: {0}", Type));
             dataString.AppendLine(string.Format("PublishDate: {0}", PublishDate));
-            dataString.AppendLine(string.Format("DatesOfProceeding: {0}", (DatesOfProceeding != null && DatesOfProceeding.Length > 0) ? DatesOfProceeding.Length : 0));
+            dataString.AppendLine(string.Format("DatesOfProceeding: {0}", (DatesInProceeding != null && DatesInProceeding.Length > 0) ? DatesInProceeding.Length : 0));
             dataString.AppendLine(string.Format("FileIdentifierNumber: {0}", (FileIdentifierNumber != null) ? string.Join(", ", FileIdentifierNumber) : null));
             dataString.AppendLine(string.Format("IssuedBy: {0}", IssuedBy));
             dataString.AppendLine(string.Format("PostedBy: {0}", PostedBy));
