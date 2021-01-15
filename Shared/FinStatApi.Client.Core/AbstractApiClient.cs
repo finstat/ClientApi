@@ -49,40 +49,34 @@ namespace FinstatApi
                     case HttpStatusCode.Forbidden:
                         if (e.Message.Contains("Insufficient access"))
                         {
-                            return new FinstatApiException(FinstatApiException.FailTypeEnum.InsufficientAccess,
-                               e.Message, e);
+                            return new FinstatApiException(FinstatApiException.FailTypeEnum.InsufficientAccess, e.Message, e);
                         }
                         else if (e.Message.Contains("Your API access and Finstat license expired"))
                         {
-                            return new FinstatApiException(FinstatApiException.FailTypeEnum.LicenseExpired,
-                               e.Message, e);
+                            return new FinstatApiException(FinstatApiException.FailTypeEnum.LicenseExpired, e.Message, e);
                         }
                         else if (e.Message.Contains("Your API access is disabled"))
                         {
-                            return new FinstatApiException(FinstatApiException.FailTypeEnum.AccessDisabled,
-                               e.Message, e);
+                            return new FinstatApiException(FinstatApiException.FailTypeEnum.AccessDisabled, e.Message, e);
                         }
                         else if (e.Message.Contains("Invalid verification hash"))
                         {
-                            return new FinstatApiException(FinstatApiException.FailTypeEnum.InvalidHash,
-                               e.Message, e);
+                            return new FinstatApiException(FinstatApiException.FailTypeEnum.InvalidHash, e.Message, e);
                         }
                         else
                         {
-                            return new FinstatApiException(FinstatApiException.FailTypeEnum.NotValidCustomerKey,
-                               e.Message, e);
+                            return new FinstatApiException(FinstatApiException.FailTypeEnum.NotValidCustomerKey, e.Message, e);
                         }
                     case HttpStatusCode.PaymentRequired:
-                        return new FinstatApiException(FinstatApiException.FailTypeEnum.LimitExceed,
-                            e.Message, e);
+                        return new FinstatApiException(FinstatApiException.FailTypeEnum.LimitExceed, e.Message, e);
                     case HttpStatusCode.NotFound:
                         if (!string.IsNullOrEmpty(parameter))
                         {
-                            return new FinstatApiException(FinstatApiException.FailTypeEnum.NotFound, string.Format("Specified ico {0} not found in database!", parameter), e);
+                            return new FinstatApiException(FinstatApiException.FailTypeEnum.NotFound, string.Format("Specified ico '{0}' not found in database. Server response: {1}", parameter, e.Message), e);
                         }
                         else
                         {
-                            return new FinstatApiException(FinstatApiException.FailTypeEnum.TooShort, "Specified query is too short!", e);
+                            return new FinstatApiException(FinstatApiException.FailTypeEnum.TooShort, string.Format("Specified query is too short. Server response: {0}", e.Message), e);
                         }
                     case HttpStatusCode.RequestTimeout:
                         return new FinstatApiException(FinstatApiException.FailTypeEnum.Timeout,
