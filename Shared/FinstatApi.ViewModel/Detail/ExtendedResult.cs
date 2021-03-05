@@ -39,17 +39,14 @@ namespace FinstatApi
         public Subject[] Subjects { get; set; }
         public NameParts StructuredName { get; set; }
         public ContactSource[] ContactSources { get; set; }
-        public string KaRUrl { get; set; }
-        public string DebtUrl { get; set; }
         public string DisposalUrl { get; set; }
-        public bool HasKaR { get; set; }
-        public bool HasDebt { get; set; }
         public bool HasDisposal { get; set; }
 
         public Ratio[] Ratios { get; set; }
         public JudgementCount[] JudgementCounts { get; set; }
         public DateTime? JudgementLastPublishedDate { get; set; }
         public ReceivableDebt[] StateReceivables { get; set; }
+        public ReceivableDebt[] CommercialReceivables { get; set; }
 
         public override string ToString()
         {
@@ -67,6 +64,7 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("ROA: {0}", ROA));
             dataString.AppendLine(string.Format("Debts: {0}", Debts == null ? "no debt" : Debt.AsString(Debts)));
             dataString.AppendLine(string.Format("StateReceivables: {0}", StateReceivables == null ? "no state receivables" : Debt.AsString(StateReceivables)));
+            dataString.AppendLine(string.Format("CommercialReceivables: {0}", CommercialReceivables == null ? "no commercial receivables" : Debt.AsString(CommercialReceivables)));
             dataString.AppendLine(string.Format("PaymentOrders: {0}", PaymentOrders == null ? "no payment orders" : PaymentOrder.AsString(PaymentOrders)));
             dataString.AppendLine(string.Format("CreditScore: {0}", CreditScoreValue != null ? CreditScoreValue.Value.ToString("0.00") + " " + CreditScoreState : null));
             dataString.AppendLine(string.Format("SelfEmployed: {0}", SelfEmployed));
@@ -99,8 +97,6 @@ namespace FinstatApi
             }
 
             dataString.AppendLine(string.Format("WarningKaR: {0}", WarningKaR));
-            dataString.AppendLine(string.Format("HasKaR: {0}", HasKaR + " " + KaRUrl));
-            dataString.AppendLine(string.Format("HasDebt: {0}", HasDebt + " " + DebtUrl));
             dataString.AppendLine(string.Format("HasDisposal: {0}", HasDisposal + " " + DisposalUrl));
             dataString.AppendLine(string.Format("WarningLiquidation: {0}", WarningLiquidation));
 

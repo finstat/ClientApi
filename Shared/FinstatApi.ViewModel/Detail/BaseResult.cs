@@ -31,6 +31,11 @@ namespace FinstatApi
         public JudgementIndicator[] JudgementIndicators { get; set; }
         public string JudgementFinstatLink { get; set; }
 
+        public bool HasKaR { get; set; }
+        public bool HasDebt { get; set; }
+        public string KaRUrl { get; set; }
+        public string DebtUrl { get; set; }
+
         public override string ToString()
         {
             StringBuilder dataString = new StringBuilder();
@@ -52,6 +57,8 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("Canceled: {0}", Cancelled));
             dataString.AppendLine(string.Format("URL: {0}", Url));
             dataString.AppendLine(string.Format("Warning: {0}", Warning + " " + WarningUrl));
+            dataString.AppendLine(string.Format("HasKaR: {0}", HasKaR + " " + KaRUrl));
+            dataString.AppendLine(string.Format("HasDebt: {0}", HasDebt + " " + DebtUrl));
             dataString.AppendLine(string.Format("Payment order warning: {0}", PaymentOrderWarning + " " + PaymentOrderUrl));
             dataString.AppendLine(string.Format("OrChange: {0}", OrChange + " " + OrChangeUrl));
             var vals = new List<string>();
