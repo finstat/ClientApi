@@ -80,6 +80,8 @@ namespace FinstatApi.Statement
         public string Source { get; set; }
         public AssetStatementValue[] Assets { get; set; }
         public StatementValue[] LiabilitiesAndEquity { get; set; }
+        public DateTime? PreviousAccountingPeriodFrom { get; set; }
+        public DateTime? PreviousAccountingPeriodTo { get; set; }
     }
 
     public class StatementResult : AbstractStatementResult
