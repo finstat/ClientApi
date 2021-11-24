@@ -4,6 +4,11 @@ using System.Text;
 
 namespace FinstatApi
 {
+    public class BaseInfo
+    {
+        public string Name { get; set; }
+        public string Ico { get; set; }
+    }
     public class Address
     {
         public string Street { get; set; }

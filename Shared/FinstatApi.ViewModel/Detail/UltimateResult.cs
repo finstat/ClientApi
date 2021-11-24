@@ -23,6 +23,81 @@ namespace FinstatApi
         public DateTime? ORCancelled { get; set; }
         public ProceedingResult OtherProceeding { get; set; }
         public RPOPerson[] RPOPersons { get; set; }
+        public DistraintsAuthorizationDetail[] DistraintsAuthorizations { get; set; }
+
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            result.AppendLine(base.ToString());
+            if (EmployeesNumber.HasValue)
+            {
+                result.AppendLine(string.Format("EmployeesNumber: {0}", EmployeesNumber.Value));
+            }
+            if (!string.IsNullOrEmpty(ORSection))
+            {
+                //sekicam vlozka
+                result.AppendLine(string.Format("ORSection: {0} ORInsertNo: {1}", ORSection, ORInsertNo));
+            }
+            if (ORCancelled != null && ORCancelled.HasValue)
+            {
+                //Zrušená podľa OR
+                result.AppendLine(string.Format("ORCancelled: {0}", ORCancelled));
+            }
+            if (RegistrationCourt != null)
+            {
+                //nZapisany na
+                result.AppendLine(string.Format("RegistrationCourt: {0}", RegistrationCourt.Name));
+            }
+            if (Persons != null && Persons.Length > 0)
+            {
+                result.AppendLine("\nPerson:");
+                foreach (var person in Persons)
+                {
+                    result.AppendLine(person.ToString());
+                }
+            }
+            if (RpvsPersons != null && RpvsPersons.Length > 0)
+            {
+                result.AppendLine("\nRPVS Person:");
+                foreach (var person in RpvsPersons)
+                {
+                    result.AppendLine(person.ToString());
+                }
+            }
+            if (!string.IsNullOrEmpty(StatutoryAction))
+            {
+                result.AppendLine(string.Format("StatutoryAction: {0}", StatutoryAction));
+            }
+            if (!string.IsNullOrEmpty(ProcurationAction))
+            {
+                result.AppendLine(string.Format("ProcurationAction: {0}", ProcurationAction));
+            }
+            if (WebPages != null && WebPages.Length > 0)
+            {
+                result.AppendLine(string.Format("WebPages: {0}", string.Join(", ", WebPages)));
+            }
+            if (AddressHistory != null && AddressHistory.Length > 0)
+            {
+                result.AppendLine(string.Format("AddressHistory (count): {0}", AddressHistory.Length));
+            }
+            if (Bankrupt != null)
+            {
+                result.AppendLine(string.Format("Bankrupt: {0}", Bankrupt));
+            }
+            if (Restructuring != null)
+            {
+                result.AppendLine(string.Format("Restructuring: {0}", Restructuring));
+            }
+            if (Liquidation != null)
+            {
+                result.AppendLine(string.Format("Liquidation: {0}", Liquidation));
+            }
+            if (DistraintsAuthorizations != null && DistraintsAuthorizations.Length > 0)
+            {
+                result.AppendLine(string.Format("DistraintsAuthorizations: {0}", DistraintsAuthorizations.Length));
+            }
+            return result.ToString();
+        }
 
         public class AbstractPerson : Address
         {
@@ -266,74 +341,31 @@ namespace FinstatApi
         {
         }
 
-        public override string ToString()
+        public class DistraintsAuthorizationDetail
         {
-            StringBuilder result = new StringBuilder();
-            result.AppendLine(base.ToString());
-            if (EmployeesNumber.HasValue)
+            public string ReferenceNumber { get; set; }
+            public BaseInfo[] Authorized { get; set; }
+            public string TypeOfClaim { get; set; }
+            public string Plaintiff { get; set; }
+            public DateTime PublishDate { get; set; }
+            public string Url { get; set; }
+            public string Court { get; set; }
+            public string IdentifierNumber { get; set; }
+
+            public override string ToString()
             {
-                result.AppendLine(string.Format("EmployeesNumber: {0}", EmployeesNumber.Value));
+                StringBuilder dataString = new StringBuilder();
+                dataString.Append(base.ToString());
+                dataString.Append(string.Format("ReferenceNumber: {0}", ReferenceNumber));
+                dataString.Append(string.Format("TypeOfClaim: {0}", TypeOfClaim));
+                dataString.Append(string.Format("Authorized: {0}", (Authorized != null && Authorized.Length > 0) ? Authorized.Length : 0));
+                dataString.Append(string.Format("Plaintiff: {0}", Plaintiff));
+                dataString.Append(string.Format("PublishDate: {0}", PublishDate));
+                dataString.Append(string.Format("Url: {0}", Url));
+                dataString.Append(string.Format("Court: {0}", Court));
+                dataString.Append(string.Format("IdentifierNumber: {0}", IdentifierNumber));
+                return dataString.ToString();
             }
-            if (!string.IsNullOrEmpty(ORSection))
-            {
-                //sekicam vlozka
-                result.AppendLine(string.Format("ORSection: {0} ORInsertNo: {1}", ORSection, ORInsertNo));
-            }
-            if (ORCancelled != null && ORCancelled.HasValue)
-            {
-                //Zrušená podľa OR
-                result.AppendLine(string.Format("ORCancelled: {0}", ORCancelled));
-            }
-            if (RegistrationCourt != null)
-            {
-                //nZapisany na
-                result.AppendLine(string.Format("RegistrationCourt: {0}", RegistrationCourt.Name));
-            }
-            if (Persons != null && Persons.Length > 0)
-            {
-                result.AppendLine("\nPerson:");
-                foreach (var person in Persons)
-                {
-                    result.AppendLine(person.ToString());
-                }
-            }
-            if (RpvsPersons != null && RpvsPersons.Length > 0)
-            {
-                result.AppendLine("\nRPVS Person:");
-                foreach (var person in RpvsPersons)
-                {
-                    result.AppendLine(person.ToString());
-                }
-            }
-            if (!string.IsNullOrEmpty(StatutoryAction))
-            {
-                result.AppendLine(string.Format("StatutoryAction: {0}", StatutoryAction));
-            }
-            if (!string.IsNullOrEmpty(ProcurationAction))
-            {
-                result.AppendLine(string.Format("ProcurationAction: {0}", ProcurationAction));
-            }
-            if (WebPages != null && WebPages.Length > 0)
-            {
-                result.AppendLine(string.Format("WebPages: {0}", string.Join(", ", WebPages)));
-            }
-            if (AddressHistory != null && AddressHistory.Length > 0)
-            {
-                result.AppendLine(string.Format("AddressHistory (count): {0}", AddressHistory.Length));
-            }
-            if (Bankrupt != null)
-            {
-                result.AppendLine(string.Format("Bankrupt: {0}", Bankrupt));
-            }
-            if (Restructuring != null)
-            {
-                result.AppendLine(string.Format("Restructuring: {0}", Restructuring));
-            }
-            if (Liquidation != null)
-            {
-                result.AppendLine(string.Format("Liquidation: {0}", Liquidation));
-            }
-            return result.ToString();
         }
     }
 }

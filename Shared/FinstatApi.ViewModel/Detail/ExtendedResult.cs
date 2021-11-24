@@ -48,6 +48,11 @@ namespace FinstatApi
         public ReceivableDebt[] StateReceivables { get; set; }
         public ReceivableDebt[] CommercialReceivables { get; set; }
 
+        public double? CreditScoreValueIndex05 { get; set; }
+        public CreditScoreStateEnum? CreditScoreStateIndex05 { get; set; }
+
+        public DistraintsAuthorizationInfo DistraintsAuthorization { get; set; }
+
         public override string ToString()
         {
             StringBuilder dataString = new StringBuilder();
@@ -67,7 +72,9 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("CommercialReceivables: {0}", CommercialReceivables == null ? "no commercial receivables" : Debt.AsString(CommercialReceivables)));
             dataString.AppendLine(string.Format("PaymentOrders: {0}", PaymentOrders == null ? "no payment orders" : PaymentOrder.AsString(PaymentOrders)));
             dataString.AppendLine(string.Format("CreditScore: {0}", CreditScoreValue != null ? CreditScoreValue.Value.ToString("0.00") + " " + CreditScoreState : null));
+            dataString.AppendLine(string.Format("CreditScoreIndex05: {0}", CreditScoreValueIndex05 != null ? CreditScoreValueIndex05.Value.ToString("0.00") + " " + CreditScoreStateIndex05 : null));
             dataString.AppendLine(string.Format("SelfEmployed: {0}", SelfEmployed));
+            dataString.AppendLine(string.Format("DistraintsAuthorizationInfo: {0}", DistraintsAuthorization));
 
             if (Offices != null)
             {
@@ -291,6 +298,20 @@ namespace FinstatApi
                 StringBuilder dataString = new StringBuilder();
                 dataString.AppendFormat("Contact: {0}, ", Contact);
                 dataString.AppendFormat("Sources: {0} , ", Sources != null ? string.Join(", ", Sources) : null);
+                return dataString.ToString();
+            }
+        }
+
+        public class DistraintsAuthorizationInfo
+        {
+            public DateTime? LastPublishDate { get; set; }
+            public int Count { get; set; }
+
+            public override string ToString()
+            {
+                StringBuilder dataString = new StringBuilder();
+                dataString.AppendFormat("LastPublishDate: {0}, ", LastPublishDate);
+                dataString.AppendFormat("Count: {0} , ", Count);
                 return dataString.ToString();
             }
         }
