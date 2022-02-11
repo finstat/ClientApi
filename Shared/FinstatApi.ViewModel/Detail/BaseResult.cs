@@ -35,6 +35,7 @@ namespace FinstatApi
         public bool HasDebt { get; set; }
         public string KaRUrl { get; set; }
         public string DebtUrl { get; set; }
+        public BankAccount[] BankAccounts { get; set; }
 
         public override string ToString()
         {
@@ -61,6 +62,7 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("HasDebt: {0}", HasDebt + " " + DebtUrl));
             dataString.AppendLine(string.Format("Payment order warning: {0}", PaymentOrderWarning + " " + PaymentOrderUrl));
             dataString.AppendLine(string.Format("OrChange: {0}", OrChange + " " + OrChangeUrl));
+
             var vals = new List<string>();
             if (JudgementIndicators != null && JudgementIndicators.Length > 0)
             {
@@ -72,7 +74,28 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("JudgementFinstatLink: {0}", JudgementFinstatLink));
             dataString.AppendLine(string.Format("JudgementIndicators: [{0}]", string.Join(",", vals.ToArray())));
 
+            vals = new List<string>();
+            if (BankAccounts != null && BankAccounts.Length > 0)
+            {
+                foreach (var v in BankAccounts)
+                {
+                    vals.Add(v.ToString());
+                }
+            }
+            dataString.AppendLine(string.Format("BankAccounts: [{0}]", string.Join(",", vals.ToArray())));
+
             return dataString.ToString();
+        }
+
+        public class BankAccount
+        {
+            public string AccountNumber { get; set; }
+            public DateTime PublishedAt { get; set; }
+
+            public override string ToString()
+            {
+                return string.Format("{0}:{1}", AccountNumber, PublishedAt);
+            }
         }
 
         public class IcDphAdditonalData
