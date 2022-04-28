@@ -44,5 +44,28 @@ namespace FinstatApi
             };
             return DoApiCall<DetailResult>("/detail", reqparm, json);
         }
+
+        /// <summary>
+        /// Requests the basic detail  for specified ico.
+        /// </summary>
+        /// <param name="ico">The ico.</param>
+        /// <returns>Details</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Specified ico {0} not found in database!
+        /// or Url {0} not found!
+        /// or TimeOut exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public BasicResult RequestBasic(string ico, bool json = false)
+        {
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
+            {
+                { "ico", ico },
+                { "Hash", ComputeVerificationHash(_apiKey, _privateKey, ico) },
+            };
+            return DoApiCall<BasicResult>("/basic", reqparm, json);
+        }
     }
 }

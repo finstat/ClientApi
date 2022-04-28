@@ -4,7 +4,7 @@ using System.Web;
 
 namespace FinstatApi
 {
-    public class DetailResult : AbstractBaseResult
+    public class DetailResult : CommonResult
     {
         public string CzNaceCode { get; set; }
         public string CzNaceText { get; set; }

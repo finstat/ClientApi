@@ -4,10 +4,9 @@ using System.Text;
 
 namespace FinstatApi
 {
-    public class BaseResult : AbstractBaseResult
+    public class BaseResult : CommonResult
     {
         public string RegisterNumberText { get; set; }
-        public string Dic { get; set; }
         public bool SuspendedAsPerson { get; set; }
 
         public bool PaymentOrderWarning { get; set; }
@@ -35,6 +34,7 @@ namespace FinstatApi
         public bool HasDebt { get; set; }
         public string KaRUrl { get; set; }
         public string DebtUrl { get; set; }
+        //public bool Gdpr { get; set; }
         public BankAccount[] BankAccounts { get; set; }
 
         public override string ToString()
@@ -44,7 +44,6 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("Name: {0}{1} in {2}", Name, SuspendedAsPerson ? "[pozastavená]" : null, Activity));
             dataString.AppendLine(string.Format("LegalForm: {0} {1}", LegalFormCode, LegalFormText));
             dataString.AppendLine(string.Format("Register Number: {0}", RegisterNumberText));
-            dataString.AppendLine(string.Format("DIC: {0}", Dic));
             dataString.AppendLine(string.Format("IC DPH: {0}", IcDPH));
             dataString.AppendLine(string.Format("IcDphAdditional: {0}", IcDphAdditional != null ? IcDphAdditional.ToString() : null));
             dataString.AppendLine(string.Format("RpvsInsert: {0} {1}", RpvsInsert, RpvsUrl));
@@ -73,6 +72,8 @@ namespace FinstatApi
             }
             dataString.AppendLine(string.Format("JudgementFinstatLink: {0}", JudgementFinstatLink));
             dataString.AppendLine(string.Format("JudgementIndicators: [{0}]", string.Join(",", vals.ToArray())));
+
+            //dataString.AppendLine(string.Format("GDPR: {0}", Gdpr));
 
             vals = new List<string>();
             if (BankAccounts != null && BankAccounts.Length > 0)

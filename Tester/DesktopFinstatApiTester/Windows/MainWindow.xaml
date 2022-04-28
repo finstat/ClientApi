@@ -56,7 +56,12 @@
             <!--Tabs-->
             <Fluent:RibbonTabItem Header="Detail API">
                 <Fluent:RibbonGroupBox Header="SK Detail">
-                    <Fluent:Button x:Name="buttonDetail" Header="Basic" Click="buttonDetail_Click">
+                    <Fluent:Button x:Name="buttonFree" Header="Basic" Click="buttonFree_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconDetailLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button x:Name="buttonDetail" Header="Detail" Click="buttonDetail_Click">
                         <Fluent:Button.LargeIcon>
                             <Path Data="{DynamicResource IconDetailLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Fluent:Button.LargeIcon>
@@ -85,6 +90,11 @@
                     </Fluent:Button>
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="CZ Detail">
+                    <Fluent:Button x:Name="buttonCZFree" Header="Basic" Click="buttonCZFree_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconDetailLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
                     <Fluent:Button x:Name="buttonCZDetail" Header="Detail" Click="buttonCZDetail_Click">
                         <Fluent:Button.LargeIcon>
                             <Path Data="{DynamicResource IconDetailLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />

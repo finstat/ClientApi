@@ -14,7 +14,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Address.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ApiAutocomplete.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Deadline.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Detail\AbstractBaseResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Detail\AbstractResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Detail\CommonResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Limits.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Monitoring\Monitoring.cs" />
   </ItemGroup>
