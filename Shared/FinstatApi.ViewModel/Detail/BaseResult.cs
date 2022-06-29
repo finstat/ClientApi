@@ -34,7 +34,7 @@ namespace FinstatApi
         public bool HasDebt { get; set; }
         public string KaRUrl { get; set; }
         public string DebtUrl { get; set; }
-        //public bool Gdpr { get; set; }
+        public bool Anonymized { get; set; }
         public BankAccount[] BankAccounts { get; set; }
 
         public override string ToString()
@@ -73,7 +73,7 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("JudgementFinstatLink: {0}", JudgementFinstatLink));
             dataString.AppendLine(string.Format("JudgementIndicators: [{0}]", string.Join(",", vals.ToArray())));
 
-            //dataString.AppendLine(string.Format("GDPR: {0}", Gdpr));
+            dataString.AppendLine(string.Format("Anonymized: {0}", Anonymized));
 
             vals = new List<string>();
             if (BankAccounts != null && BankAccounts.Length > 0)
