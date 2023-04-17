@@ -53,6 +53,9 @@ namespace FinstatApi
 
         public DistraintsAuthorizationInfo DistraintsAuthorization { get; set; }
 
+        public double? CreditScoreValueFinStatScore { get; set; }
+        public CreditScoreStateEnum? CreditScoreStateFinStatScore { get; set; }
+
         public override string ToString()
         {
             StringBuilder dataString = new StringBuilder();
@@ -73,6 +76,7 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("PaymentOrders: {0}", PaymentOrders == null ? "no payment orders" : PaymentOrder.AsString(PaymentOrders)));
             dataString.AppendLine(string.Format("CreditScore: {0}", CreditScoreValue != null ? CreditScoreValue.Value.ToString("0.00") + " " + CreditScoreState : null));
             dataString.AppendLine(string.Format("CreditScoreIndex05: {0}", CreditScoreValueIndex05 != null ? CreditScoreValueIndex05.Value.ToString("0.00") + " " + CreditScoreStateIndex05 : null));
+            dataString.AppendLine(string.Format("CreditScoreFinStatScore: {0}", CreditScoreValueFinStatScore != null ? CreditScoreValueFinStatScore.Value.ToString("0.00") + " " + CreditScoreStateFinStatScore : null));
             dataString.AppendLine(string.Format("SelfEmployed: {0}", SelfEmployed));
             dataString.AppendLine(string.Format("DistraintsAuthorizationInfo: {0}", DistraintsAuthorization));
 
