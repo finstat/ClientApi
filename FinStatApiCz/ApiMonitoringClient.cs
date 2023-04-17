@@ -33,7 +33,7 @@ namespace FinstatApi
         /// or TimeOut exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public bool Add(string ico, bool json = false)
+        public bool Add(string ico, string category = null, bool json = false)
         {
             System.Collections.Specialized.NameValueCollection reqparm =
             new System.Collections.Specialized.NameValueCollection
@@ -41,6 +41,10 @@ namespace FinstatApi
                 { "ico", ico },
                 { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, ico) },
             };
+            if (!string.IsNullOrEmpty(category))
+            {
+                reqparm.Add("category", category);
+            }
             return DoApiCall<bool>("/AddToMonitoring", reqparm, json);
         }
 
@@ -56,7 +60,7 @@ namespace FinstatApi
         /// or TimeOut exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public bool Remove(string ico, bool json = false)
+        public bool Remove(string ico, string category = null, bool json = false)
         {
             System.Collections.Specialized.NameValueCollection reqparm =
             new System.Collections.Specialized.NameValueCollection
@@ -64,6 +68,10 @@ namespace FinstatApi
                 { "ico", ico },
                 { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, ico) },
             };
+            if (!string.IsNullOrEmpty(category))
+            {
+                reqparm.Add("category", category);
+            }
             return DoApiCall<bool>("/RemoveFromMonitoring", reqparm, json);
         }
 
@@ -77,13 +85,17 @@ namespace FinstatApi
         /// or Unknown exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public string[] GetMonitorings(bool json = false)
+        public string[] GetMonitorings(string category = null, bool json = false)
         {
             System.Collections.Specialized.NameValueCollection reqparm =
             new System.Collections.Specialized.NameValueCollection
             {
                 { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "list") },
             };
+            if (!string.IsNullOrEmpty(category))
+            {
+                reqparm.Add("category", category);
+            }
             return DoApiCall<string[]>("/MonitoringList", reqparm, json);
         }
 
@@ -97,14 +109,39 @@ namespace FinstatApi
         /// or TimeOut exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public Monitoring[] GetReport(bool json = false)
+        public Monitoring[] GetReport(string category = null, bool json = false)
         {
             System.Collections.Specialized.NameValueCollection reqparm =
             new System.Collections.Specialized.NameValueCollection
             {
                 { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "report") },
             };
+            if (!string.IsNullOrEmpty(category))
+            {
+                reqparm.Add("category", category);
+            }
             return DoApiCall<Monitoring[]>("/MonitoringReport", reqparm, json);
+        }
+
+        /// <summary>
+        /// Retrieves list of user monitoring categories
+        /// </summary>
+        /// <returns>lLst of user monitoring categories.</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Url {0} not found!
+        /// or TimeOut exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        /// 
+        public object GetCategories(bool json)
+        {
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
+            {
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "monitoringcategories") },
+            };
+            return DoApiCall<MonitoringCategory[]>("/MonitoringCategories", reqparm, json);
         }
     }
 }

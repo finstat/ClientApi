@@ -115,6 +115,13 @@
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Header="Monitoring API">
+                <Fluent:RibbonGroupBox Header="SK Categories">
+                    <Fluent:Button x:Name="buttonMonitoringCategories" Header="Categories" Click="buttonMonitoringCategories_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconListLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="SK ICO">
                     <Fluent:Button x:Name="buttonMonitoringIcoAdd" Header="Add" Click="buttonMonitoringIcoAdd_Click">
                         <Fluent:Button.LargeIcon>
@@ -166,6 +173,13 @@
                     <Fluent:Button x:Name="buttonMonitoringDateProceedings" Header="Proceedings" Click="buttonMonitoringDateProceedings_Click">
                         <Fluent:Button.LargeIcon>
                             <Path Data="{DynamicResource IconLibraryLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="CZ Categories">
+                    <Fluent:Button x:Name="buttonCZMonitoringCategories" Header="Categories" Click="buttonCZMonitoringCategories_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconListLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
                 </Fluent:RibbonGroupBox>

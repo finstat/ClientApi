@@ -17,8 +17,8 @@ namespace DesktopFinstatApiTester.Windows
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
             }, new[] {
-                new ApiCallParameter(ParameterTypeEnum.String, "IČO") }
-            );
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO")
+            });
         }
 
         private void buttonDetail_Click(object sender, RoutedEventArgs e)
@@ -30,8 +30,8 @@ namespace DesktopFinstatApiTester.Windows
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
             }, new[] {
-                new ApiCallParameter(ParameterTypeEnum.String, "IČO") }
-            );
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO")
+            });
         }
 
         private void buttonExtended_Click(object sender, RoutedEventArgs e)

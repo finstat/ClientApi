@@ -13,11 +13,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICOAdd", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                var result = client.Add((string)parameters[0], IsJSON());
+                var result = client.Add((string)parameters[0], (string)parameters[1], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
             }, new[] {
-                new ApiCallParameter(ParameterTypeEnum.String, "IČO")
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO"),
+                new ApiCallParameter(ParameterTypeEnum.String, "Category", (data) => true)
             });
         }
 
@@ -26,11 +27,12 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICORemove", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                var result = client.Remove((string)parameters[0], IsJSON());
+                var result = client.Remove((string)parameters[0], (string)parameters[1], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
             }, new[] {
-                new ApiCallParameter(ParameterTypeEnum.String, "IČO")
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO"),
+                new ApiCallParameter(ParameterTypeEnum.String, "Category", (data) => true)
             });
         }
 
@@ -39,9 +41,11 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICOList", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                var result = client.GetMonitorings(IsJSON());
+                var result = client.GetMonitorings((string)parameters[0], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "Category", (data) => true)
             });
         }
 
@@ -50,9 +54,11 @@ namespace DesktopFinstatApiTester.Windows
             doApiRequest("MonitoringICOReport", "SK", (parameters) =>
             {
                 var client = CreateSKApiMonitoringClient();
-                var result = client.GetReport(IsJSON());
+                var result = client.GetReport((string)parameters[0], IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "Category", (data) => true)
             });
         }
 
@@ -62,6 +68,17 @@ namespace DesktopFinstatApiTester.Windows
             {
                 var client = CreateSKApiMonitoringClient();
                 var result = client.GetProceedings(IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
+            });
+        }
+
+        private void buttonMonitoringCategories_Click(object sender, RoutedEventArgs e)
+        {
+            doApiRequest("MonitoringCategories", "SK", (parameters) =>
+            {
+                var client = CreateSKApiMonitoringClient();
+                var result = client.GetCategories(IsJSON());
                 AppInstance.Limits.FromModel(client.Limits);
                 return result;
             });
