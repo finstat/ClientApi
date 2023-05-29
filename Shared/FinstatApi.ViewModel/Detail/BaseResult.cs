@@ -36,6 +36,7 @@ namespace FinstatApi
         public string DebtUrl { get; set; }
         public bool Anonymized { get; set; }
         public BankAccount[] BankAccounts { get; set; }
+        public string TaxReliabilityIndex { get; set; }
 
         public override string ToString()
         {
@@ -84,6 +85,7 @@ namespace FinstatApi
                 }
             }
             dataString.AppendLine(string.Format("BankAccounts: [{0}]", string.Join(",", vals.ToArray())));
+            dataString.AppendLine(string.Format("TaxReliabilityIndex: [{0}]", TaxReliabilityIndex));
 
             return dataString.ToString();
         }

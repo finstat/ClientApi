@@ -12,7 +12,7 @@ namespace FinstatApi
         public string EnforcementDetails { get; set; }    // PopisNaroku
         public decimal SumOutstanding { get; set; }             // VyskaPlnenia
         public string Currency { get; set; }            // Mena
-        public Bailiff Bailiff;                       // Exekutor
+        public Bailiff Bailiff { get; set; }                      // Exekutor
 
         public override string ToString()
         {
