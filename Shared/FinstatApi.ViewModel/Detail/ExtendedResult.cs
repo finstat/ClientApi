@@ -264,6 +264,7 @@ namespace FinstatApi
             public string Title { get; set; }
             public DateTime ValidFrom { get; set; }
             public DateTime? SuspendedFrom { get; set; }
+            public DateTime? SuspendedTo { get; set; }
 
             public override string ToString()
             {
@@ -271,6 +272,7 @@ namespace FinstatApi
                 dataString.AppendFormat("Title: {0}, ", Title);
                 dataString.AppendFormat("ValidFrom: {0} , ", ValidFrom);
                 dataString.AppendFormat("SuspendedFrom: {0}", SuspendedFrom);
+                dataString.AppendFormat("SuspendedTo: {0}", SuspendedTo);
                 return dataString.ToString();
             }
         }

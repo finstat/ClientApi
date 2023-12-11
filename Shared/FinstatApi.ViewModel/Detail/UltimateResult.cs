@@ -134,7 +134,20 @@ namespace FinstatApi
             }
         }
 
-        public class Person : AbstractPerson
+        public class AbstractPersonBirthDate : AbstractPerson
+        {
+            public DateTime? BirthDate { get; set; }
+
+            public override string ToString()
+            {
+                StringBuilder dataString = new StringBuilder();
+                dataString.AppendLine(base.ToString());
+                dataString.AppendLine(string.Format("BirthDate: {0}", BirthDate));
+                return dataString.ToString();
+            }
+        }
+
+        public class Person : AbstractPersonBirthDate
         {
             public decimal? DepositAmount { get; set; }
             public decimal? PaybackRange { get; set; }
@@ -163,9 +176,8 @@ namespace FinstatApi
             }
         }
 
-        public class RpvsPerson : AbstractPerson
+        public class RpvsPerson : AbstractPersonBirthDate
         {
-            public DateTime? BirthDate { get; set; }
             public string Ico { get; set; }
 
             public override string ToString()

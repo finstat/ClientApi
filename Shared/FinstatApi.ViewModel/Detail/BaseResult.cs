@@ -37,12 +37,13 @@ namespace FinstatApi
         public bool Anonymized { get; set; }
         public BankAccount[] BankAccounts { get; set; }
         public string TaxReliabilityIndex { get; set; }
+        public DateTime? SuspendedAsPersonUntil { get; set; }
 
         public override string ToString()
         {
             StringBuilder dataString = new StringBuilder();
             dataString.AppendLine(string.Format("ICO: {0}", Ico));
-            dataString.AppendLine(string.Format("Name: {0}{1} in {2}", Name, SuspendedAsPerson ? "[pozastavená]" : null, Activity));
+            dataString.AppendLine(string.Format("Name: {0}{1} in {2}", Name, SuspendedAsPerson ? "[pozastavená]" + ((SuspendedAsPersonUntil != null) ? SuspendedAsPersonUntil.Value.ToString("dd.MM.yyyy") : null) : null, Activity));
             dataString.AppendLine(string.Format("LegalForm: {0} {1}", LegalFormCode, LegalFormText));
             dataString.AppendLine(string.Format("Register Number: {0}", RegisterNumberText));
             dataString.AppendLine(string.Format("IC DPH: {0}", IcDPH));
