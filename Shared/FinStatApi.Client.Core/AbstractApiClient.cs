@@ -67,6 +67,8 @@ namespace FinstatApi
                         {
                             return new FinstatApiException(FinstatApiException.FailTypeEnum.NotValidCustomerKey, e.Message, e);
                         }
+                    case HttpStatusCode.BadRequest:
+                        return new FinstatApiException(FinstatApiException.FailTypeEnum.BadRequest, e.Message, e);
                     case HttpStatusCode.PaymentRequired:
                         return new FinstatApiException(FinstatApiException.FailTypeEnum.LimitExceed, e.Message, e);
                     case HttpStatusCode.NotFound:
@@ -89,7 +91,7 @@ namespace FinstatApi
             {
                 if (e.InnerException != null && e.InnerException.Message.Contains("The server name or address could not be resolved"))
                 {
-                    return new FinstatApiException(FinstatApiException.FailTypeEnum.UrlNotFound,   string.Format("Url {0} not found!", _url), e.InnerException);
+                    return new FinstatApiException(FinstatApiException.FailTypeEnum.UrlNotFound, string.Format("Url {0} not found!", _url), e.InnerException);
                 }
 
                 return new FinstatApiException(FinstatApiException.FailTypeEnum.OtherCommunicationFail, "Unknown exception while communication with Finstat api!", e);

@@ -83,6 +83,8 @@ namespace FinstatApi
                     {
                         throw new FinstatApiException(FinstatApiException.FailTypeEnum.NotValidCustomerKey, response.StatusDescription, e);
                     }
+                case HttpStatusCode.BadRequest:
+                    throw new FinstatApiException(FinstatApiException.FailTypeEnum.BadRequest, response.StatusDescription, e);
                 case HttpStatusCode.PaymentRequired:
                     throw new FinstatApiException(FinstatApiException.FailTypeEnum.LimitExceed, response.StatusDescription, e);
                 case HttpStatusCode.NotFound:

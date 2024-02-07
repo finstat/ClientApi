@@ -21,7 +21,8 @@ namespace FinstatApi
             LicenseExpired,
             InsufficientAccess,
             AccessDisabled,
-            InvalidHash
+            InvalidHash,
+            BadRequest
         }
 
         public FailTypeEnum FailType { get; set; }
