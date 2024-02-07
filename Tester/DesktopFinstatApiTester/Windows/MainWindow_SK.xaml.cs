@@ -62,6 +62,15 @@ namespace DesktopFinstatApiTester.Windows
             return client;
         }
 
+        private FinstatApi.ApiReportingClient CreateSKApiReportingClient()
+        {
+            var client = new FinstatApi.ApiReportingClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);
+            client.OnRequest += Client_OnRequest;
+            client.OnResponse += Client_OnResponse;
+            client.OnErrorResponseContent += Client_OnResponseContent;
+            return client;
+        }
+
         private FinstatApi.ApiDailyUltimateDiffClient CreateSKApiDailyUltimateDiffClient()
         {
             var client = new FinstatApi.ApiDailyUltimateDiffClient(AppInstance.Settings.FinStatApiUrl, AppInstance.Settings.ApiKeys.PublicKey, AppInstance.Settings.ApiKeys.PrivateKey, AppInstance.Settings.StationID, AppInstance.Settings.StationName, AppInstance.Settings.TimeOut);

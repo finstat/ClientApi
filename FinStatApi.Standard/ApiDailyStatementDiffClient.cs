@@ -42,9 +42,9 @@ namespace FinstatApi
         }
 
         /// <summary>
-        /// Downloads .
+        /// Downloads StatementDiff file.
         /// </summary>
-        /// <returns>List of Statement DailyDiff files.</returns>
+        /// <returns>Path to downloaded file.</returns>
         /// <exception cref="FinstatApi.FinstatApiException">
         /// Not valid API key!
         /// or Url {0} not found!

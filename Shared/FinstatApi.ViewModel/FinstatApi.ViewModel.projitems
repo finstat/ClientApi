@@ -28,6 +28,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Distraint\DistraintResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Monitoring\ProceedingResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reporting\ReportingOutput.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reporting\ReportingTopic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Statement\StatementResult.cs" />
   </ItemGroup>
   <ItemGroup>

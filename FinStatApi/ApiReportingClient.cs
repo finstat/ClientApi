@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FinstatApi.ViewModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,62 +9,83 @@ using System.Xml.Serialization;
 
 namespace FinstatApi
 {
-    public class ApiDailyUltimateDiffClient : AbstractApiClient
+    public class ApiReportingClient : AbstractApiClient
     {
-        public ApiDailyUltimateDiffClient(string url, string apiKey, string privateKey, string stationId, string stationName, int timeout)
+        public ApiReportingClient(string url, string apiKey, string privateKey, string stationId, string stationName, int timeout)
             : base(url, apiKey, privateKey, stationId, stationName, timeout)
         {
         }
 
-        public ApiDailyUltimateDiffClient(string apiKey, string privateKey, string stationId, string stationName, int timeout)
+        public ApiReportingClient(string apiKey, string privateKey, string stationId, string stationName, int timeout)
             : base(apiKey, privateKey, stationId, stationName, timeout)
         {
         }
 
         /// <summary>
-        /// Requests the list of Ultimate DailyDiff files.
+        /// Requests list of topics of reporting
         /// </summary>
-        /// <returns>List of Ultimate DailyDiff files.</returns>
+        /// <returns>List of ReportingTopic items.</returns>
         /// <exception cref="FinstatApi.FinstatApiException">
         /// Not valid API key!
         /// or Url {0} not found!
         /// or Timeout exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public DailyDiffList RequestListOfDailyUltimateDiffs(bool json = false)
+        public Reporting.ReportingTopic[] RequestTopics(bool json = false)
         {
             System.Collections.Specialized.NameValueCollection reqparm =
             new System.Collections.Specialized.NameValueCollection
             {
-                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, null) },
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "reporting-topics") },
             };
-            return DoApiCall<DailyDiffList>("/GetListOfUltimateDiffs", reqparm, json);
+            return DoApiCall<Reporting.ReportingTopic[]>("/GetReportingTopics", reqparm, json);
+        }
+
+        // <summary>
+        /// Requests list of Generated user reporting outputs for given topic
+        /// </summary>
+        /// <returns>List of ReportOutput</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Url {0} not found!
+        /// or Timeout exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exceptio
+        public Reporting.ReportOutput[] RequestList(string topic, bool json = false)
+        {
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
+            {
+                { "topic", topic },
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, "reporting-list|" + topic) },
+            };
+            return DoApiCall<Reporting.ReportOutput[]>("/GetReportingList", reqparm, json);
         }
 
         /// <summary>
-        /// Downloads UltimateDiff file.
+        /// Downloads reporting excel File .
         /// </summary>
-        /// <returns>Path to downloaded file.</returns>
+        /// <returns>Reporting output file.</returns>
         /// <exception cref="FinstatApi.FinstatApiException">
         /// Not valid API key!
         /// or Url {0} not found!
         /// or Timeout exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        public string DownloadDailyUltimateDiffFile(string fileName, string exportPath)
+        public string DownloadReportFile(string fileName, string exportPath)
         {
             try
             {
                 System.Collections.Specialized.NameValueCollection reqparm =
                 new System.Collections.Specialized.NameValueCollection
                 {
-                    { "fileName", fileName },
+                    { "FileName", fileName },
                     { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, fileName) },
                 };
-                byte[] responsebytes = DoApiCall("/GetUltimateFile", reqparm);
+                byte[] responsebytes = DoApiCall("/GetReportingOutput", reqparm);
                 if (responsebytes != null)
                 {
-                    string fullExportPath = Path.Combine(exportPath, fileName);
+                    string fullExportPath = Path.Combine(exportPath, fileName + ".xlsx");
                     if (File.Exists(fullExportPath))
                     {
                         File.Delete(fullExportPath);

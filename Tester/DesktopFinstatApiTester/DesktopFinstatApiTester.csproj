@@ -132,6 +132,9 @@
     <Compile Include="Windows\MainWindow_SK_Monitoring_Date.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\MainWindow_SK_Reporting.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\MainWindow_SK_Statement.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>

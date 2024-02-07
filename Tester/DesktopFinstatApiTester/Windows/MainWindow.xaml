@@ -206,6 +206,25 @@
                     </Fluent:Button>
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
+            <Fluent:RibbonTabItem Header="Reporting">
+                <Fluent:RibbonGroupBox Header="Reporting">
+                    <Fluent:Button x:Name="buttonReportingTopics" Header="Topics" Click="buttonReportingTopics_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconDictionaryLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button x:Name="buttonReportingList" Header="List" Click="buttonReportingList_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconListLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button x:Name="buttonDownloadReportingFile" Header="Download" Click="buttonDownloadReportingFile_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconDownloadLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Header="Statement">
                 <Fluent:RibbonGroupBox Header="Statement">
                     <Fluent:Button x:Name="buttonStatements" Header="List" Click="buttonStatements_Click">
