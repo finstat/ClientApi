@@ -6,7 +6,7 @@ namespace FinstatApi
 {
     public class Bailiff
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Name { get; set; }
         public string Street { get; set; }
         public string ZIP { get; set; }
