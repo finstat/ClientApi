@@ -133,19 +133,11 @@ namespace FinstatApi
                     {
                         foreach (var param in list)
                         {
-                            requestHeaders.Add(param.Key, result.Headers.GetValues(param.Key).ToArray());
+                            requestHeaders.Add(param.Key, new[] { param.Value });
                         }
                         RaiseOnRequest(requestHeaders);
                     }
                     var content = new FormUrlEncodedContent(list);
-                    if (content.Headers != null)
-                    {
-                        foreach (var header in content.Headers)
-                        {
-                            requestHeaders.Add(header.Key, result.Headers.GetValues(header.Key).ToArray());
-                        }
-                        RaiseOnRequest(requestHeaders);
-                    }
                     result = (method == "POST") ? await client.PostAsync(_url + methodUrl + (json ? ".json" : null), content) : await client.GetAsync(_url + methodUrl);
                     resultContent = await result.Content.ReadAsByteArrayAsync();
                     if (result.Headers != null)

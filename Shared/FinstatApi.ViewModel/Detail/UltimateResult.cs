@@ -200,7 +200,7 @@ namespace FinstatApi
             public DateTime? DetectedTo { get; set; }
             public FunctionAssigment[] Functions { get; set; }
             public NameParts StructuredName { get; set; }
-           
+
             public override string ToString()
             {
                 StringBuilder dataString = new StringBuilder();

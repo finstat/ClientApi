@@ -129,17 +129,6 @@ namespace FinstatApi
                         RaiseOnRequest(requestHeaders);
                     }
 
-                    client.UploadValuesCompleted += (object sender, UploadValuesCompletedEventArgs e) => {
-                        if (client.Headers != null)
-                        {
-                            foreach (var headerKey in client.Headers.AllKeys)
-                            {
-                                requestHeaders.Add(headerKey, client.ResponseHeaders.GetValues(headerKey));
-                            }
-                            RaiseOnRequest(requestHeaders);
-                        }
-                    };
-
                     var result = client.UploadValues(_url + methodUrl + (json ? ".json" : null), method, reqparm);
                     if (client.ResponseHeaders != null)
                     {
