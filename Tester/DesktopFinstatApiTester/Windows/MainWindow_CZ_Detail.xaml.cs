@@ -35,5 +35,18 @@ namespace DesktopFinstatApiTester.Windows
                 new ApiCallParameter(ParameterTypeEnum.String, "IČO")
             });
         }
+
+        private void buttonCZPremium_Click(object sender, RoutedEventArgs e)
+        {
+            doApiRequest("PremiumCZ", "CZ", (parameters) =>
+            {
+                var client = CreateCZApiClient();
+                var result = client.RequestPremium((string)parameters[0], IsJSON());
+                AppInstance.Limits.FromModel(client.Limits);
+                return result;
+            }, new[] {
+                new ApiCallParameter(ParameterTypeEnum.String, "IČO")
+            });
+        }
     }
 }

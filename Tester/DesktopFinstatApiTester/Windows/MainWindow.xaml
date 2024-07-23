@@ -100,6 +100,11 @@
                             <Path Data="{DynamicResource IconDetailLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
+                    <Fluent:Button x:Name="buttonCZPremium" Header="Premium" Click="buttonCZPremium_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Path Data="{DynamicResource IconDetailLarge}" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="CZ Other">
                     <Fluent:Button x:Name="buttonCZAutoComplete" Header="Auto Complete" Click="buttonCZAutoComplete_Click">
@@ -395,7 +400,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <Label Content="{Binding Send, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" VerticalAlignment="Stretch" />
+                                <Label Content="{Binding Send, StringFormat='{}{0:dd.MM.yy HH:mm:ss}'}" VerticalAlignment="Stretch" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -404,7 +409,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <Label Content="{Binding Received, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" VerticalAlignment="Stretch" />
+                                <Label Content="{Binding Received, StringFormat='{}{0:dd.MM.yy HH:mm:ss}'}" VerticalAlignment="Stretch" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

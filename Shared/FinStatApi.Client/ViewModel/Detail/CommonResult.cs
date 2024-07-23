@@ -6,8 +6,6 @@ namespace FinstatApi
 {
     public class CommonResult : AbstractResult
     {
-        public string Dic { get; set; }
-        public string IcDPH { get; set; }
         public string Activity { get; set; }
         public DateTime? Created { get; set; }
         public DateTime? Cancelled { get; set; }
@@ -18,8 +16,6 @@ namespace FinstatApi
         {
             StringBuilder dataString = new StringBuilder();
             dataString.AppendLine(base.ToString());
-            dataString.AppendLine(string.Format("Dic: {0}", Dic));
-            dataString.AppendLine(string.Format("IC DPH: {0}", IcDPH));
             dataString.AppendLine(string.Format("Activity: {0}", Activity));
             dataString.AppendLine(string.Format("Created: {0}", Created));
             dataString.AppendLine(string.Format("Canceled: {0}", Cancelled));

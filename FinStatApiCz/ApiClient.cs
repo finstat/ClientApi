@@ -67,5 +67,28 @@ namespace FinstatApi
             };
             return DoApiCall<BasicResult>("/basic", reqparm, json);
         }
+
+        /// <summary>
+        /// Requests the premium detail  for specified ico.
+        /// </summary>
+        /// <param name="ico">The ico.</param>
+        /// <returns>PremiumResult</returns>
+        /// <exception cref="FinstatApi.FinstatApiException">
+        /// Not valid API key!
+        /// or Specified ico {0} not found in database!
+        /// or Url {0} not found!
+        /// or TimeOut exception while communication with Finstat api!
+        /// or Unknown exception while communication with Finstat api!
+        /// </exception>
+        public PremiumCZResult RequestPremium(string ico, bool json = false)
+        {
+            System.Collections.Specialized.NameValueCollection reqparm =
+            new System.Collections.Specialized.NameValueCollection
+            {
+                { "ico", ico },
+                { "Hash", ComputeVerificationHash(_apiKey, _privateKey, ico) },
+            };
+            return DoApiCall<PremiumCZResult>("/premiumcz", reqparm, json);
+        }
     }
 }

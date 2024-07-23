@@ -11,5 +11,6 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Detail\BasicResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Detail\DetailResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Detail\PremiumCZResult.cs" />
   </ItemGroup>
 </Project>

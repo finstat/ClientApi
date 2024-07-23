@@ -7,6 +7,8 @@ namespace FinstatApi
     public class BaseResult : CommonResult
     {
         public string RegisterNumberText { get; set; }
+        public string Dic { get; set; }
+        public string IcDPH { get; set; }
         public bool SuspendedAsPerson { get; set; }
 
         public bool PaymentOrderWarning { get; set; }
@@ -46,6 +48,7 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("Name: {0}{1} in {2}", Name, SuspendedAsPerson ? "[pozastavená]" + ((SuspendedAsPersonUntil != null) ? SuspendedAsPersonUntil.Value.ToString("dd.MM.yyyy") : null) : null, Activity));
             dataString.AppendLine(string.Format("LegalForm: {0} {1}", LegalFormCode, LegalFormText));
             dataString.AppendLine(string.Format("Register Number: {0}", RegisterNumberText));
+            dataString.AppendLine(string.Format("DIC: {0}", Dic));
             dataString.AppendLine(string.Format("IC DPH: {0}", IcDPH));
             dataString.AppendLine(string.Format("IcDphAdditional: {0}", IcDphAdditional != null ? IcDphAdditional.ToString() : null));
             dataString.AppendLine(string.Format("RpvsInsert: {0} {1}", RpvsInsert, RpvsUrl));
@@ -89,17 +92,6 @@ namespace FinstatApi
             dataString.AppendLine(string.Format("TaxReliabilityIndex: [{0}]", TaxReliabilityIndex));
 
             return dataString.ToString();
-        }
-
-        public class BankAccount
-        {
-            public string AccountNumber { get; set; }
-            public DateTime PublishedAt { get; set; }
-
-            public override string ToString()
-            {
-                return string.Format("{0}:{1}", AccountNumber, PublishedAt);
-            }
         }
 
         public class IcDphAdditonalData
