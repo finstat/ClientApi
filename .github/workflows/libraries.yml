@@ -26,8 +26,8 @@ jobs:
         uses: Nuget/setup-nuget@v1.0.5
 
       - name: Restore nuget packages
-        run: nuget restore SAPtoAPLv3Check/SAPtoAPLv3Check.csproj
-        
+        run: nuget restore FinStatCSharpApi.sln
+
       - name: Build
         shell: bash
         run: |
