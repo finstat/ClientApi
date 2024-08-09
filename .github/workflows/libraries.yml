@@ -25,9 +25,6 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          tag=$(git describe --tags --abbrev=0)
-          release_name="App-$tag-${{ matrix.target }}"
-
           # Build everything
           dotnet build .\Tester\SK\ApiDistraintTester\ApiDistraintTester.csproj  -c Release -o "FinStatAPINETClient"
           dotnet build .\Tester\SK\ApiDailyDiffTester\ApiDailyDiffTester.csproj  -c Release -o "FinStatAPINETClient"
