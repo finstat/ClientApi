@@ -26,21 +26,21 @@ jobs:
         shell: bash
         run: |
           # Build everything
-          dotnet build .\Tester\SK\ApiDistraintTester\ApiDistraintTester.csproj  -c Release -o "FinStatAPINETClient"
-          dotnet build .\Tester\SK\ApiDailyDiffTester\ApiDailyDiffTester.csproj  -c Release -o "FinStatAPINETClient"
-          dotnet build .\Tester\SK\ApiMonitoringTester\ApiMonitoringTester.csproj  -c Release -o "FinStatAPINETClient"
-          dotnet build .\Tester\SK\ApiTester\ApiTester.csproj  -c Release -o "FinStatAPINETClient"
+          dotnet build ./Tester/SK/ApiDistraintTester/ApiDistraintTester.csproj  -c Release -o "FinStatAPINETClient"
+          dotnet build ./Tester/SK/ApiDailyDiffTester/ApiDailyDiffTester.csproj  -c Release -o "FinStatAPINETClient"
+          dotnet build ./Tester/SK/ApiMonitoringTester/ApiMonitoringTester.csproj  -c Release -o "FinStatAPINETClient"
+          dotnet build ./Tester/SK/ApiTester/ApiTester.csproj  -c Release -o "FinStatAPINETClient"
 
-          dotnet build .\Tester\CZ\ApiMonitoringTester\ApiMonitoringTester.csproj  -c Release -o "FinStatCZAPINETClient"
-          dotnet build .\Tester\CZ\ApiTester\ApiTester.csproj  -c Release -o "FinStatCZAPINETClient"
+          dotnet build ./Tester/CZ/ApiMonitoringTester/ApiMonitoringTester.csproj  -c Release -o "FinStatCZAPINETClient"
+          dotnet build ./Tester/CZ/ApiTester/ApiTester.csproj  -c Release -o "FinStatCZAPINETClient"
 
-          dotnet build .\Tester\SK.Core\ApiDistraintTester\ApiDistraintTester.csproj  -c Release -o "FinStatAPINETCoreClient"
-          dotnet build .\Tester\SK.Core\ApiDailyDiffTester\ApiDailyDiffTester.csproj  -c Release -o "FinStatAPINETCoreClient"
-          dotnet build .\Tester\SK.Core\ApiMonitoringTester\ApiMonitoringTester.csproj  -c Release -o "FinStatAPINETCoreClient"
-          dotnet build .\Tester\SK.Core\ApiTesterCore\ApiTesterCore.csproj  -c Release -o "FinStatAPINETCoreClient"
+          dotnet build ./Tester/SK.Core/ApiDistraintTester/ApiDistraintTester.csproj  -c Release -o "FinStatAPINETCoreClient"
+          dotnet build ./Tester/SK.Core/ApiDailyDiffTester/ApiDailyDiffTester.csproj  -c Release -o "FinStatAPINETCoreClient"
+          dotnet build ./Tester/SK.Core/ApiMonitoringTester/ApiMonitoringTester.csproj  -c Release -o "FinStatAPINETCoreClient"
+          dotnet build ./Tester/SK.Core/ApiTesterCore/ApiTesterCore.csproj  -c Release -o "FinStatAPINETCoreClient"
 
-          dotnet build .\Tester\CZ.Core\ApiCzTesterCore\ApiCzTesterCore.csproj  -c Release -o "FinStatCZAPINETCoreClient"
-          dotnet build .\Tester\CZ.Core\ApiMonitoringTester\ApiMonitoringTester.csproj  -c Release -o "FinStatCZAPINETCoreClient"
+          dotnet build ./Tester/CZ.Core/ApiCzTesterCore/ApiCzTesterCore.csproj  -c Release -o "FinStatCZAPINETCoreClient"
+          dotnet build ./Tester/CZ.Core/ApiMonitoringTester/ApiMonitoringTester.csproj  -c Release -o "FinStatCZAPINETCoreClient"
 
           # Pack files
           if [ "${{ matrix.target }}" == "win-x64" ]; then
