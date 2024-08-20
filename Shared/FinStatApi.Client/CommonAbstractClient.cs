@@ -92,8 +92,8 @@ namespace FinstatApi
         public static string ComputeVerificationHash(string apiKey, string privateKey, string parameter)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(string.Format("SomeSalt+{0}+{1}++{2}+ended", apiKey, privateKey, parameter));
-            SHA256Managed hashstring = new SHA256Managed();
-            byte[] hash = hashstring.ComputeHash(bytes);
+            SHA256Managed hashFunction = new SHA256Managed();
+            byte[] hash = hashFunction.ComputeHash(bytes);
             StringBuilder hashString = new StringBuilder();
             foreach (byte x in hash)
             {

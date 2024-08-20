@@ -10,6 +10,7 @@ namespace FinstatApi
         public string OwnershipCode { get; set; }
         public bool? UnReliability { get; set; }
         public string RegisterNumberText { get; set; }
+        public string TradeLicensingOffice { get; set; }
         public int? ActualYear { get; set; }
         public double? SalesActual { get; set; }
         public double? ProfitActual { get; set; }
