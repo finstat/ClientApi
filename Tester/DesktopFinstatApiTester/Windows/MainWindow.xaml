@@ -364,6 +364,7 @@
         <DataGrid x:Name="datagridResponse" HorizontalAlignment="Stretch" Height="Auto" Margin="{DynamicResource Margin5}" ItemsSource="{Binding ResponseItems}" Grid.Row="1" VerticalAlignment="Stretch" Width="Auto" SelectionMode="Single" AutoGenerateColumns="False" CanUserAddRows="False" SelectionChanged="datagridResponse_SelectionChanged">
             <DataGrid.ContextMenu>
                 <ContextMenu >
+                    <MenuItem x:Name="dataGridCurlCommand" Header="cUrl Command" Click="dataGridCurlCommand_Click"  />
                     <MenuItem x:Name="dataGridRepeatRequest" Header="Repeat Request" Click="dataGridRepeatRequest_Click"  />
                     <MenuItem x:Name="dataGridShowResponseOutputWindow" Header="Show Error Response " Click="dataGridShowResponseOutputWindow_Click" />
                 </ContextMenu>

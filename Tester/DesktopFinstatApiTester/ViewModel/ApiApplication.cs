@@ -57,21 +57,6 @@ namespace DesktopFinstatApiTester.ViewModel
             }
         }
 
-        internal ResponseItem Add()
-        {
-            return Add(string.Empty);
-        }
-
-        internal ResponseItem Add(string request)
-        {
-            return Add(request, string.Empty);
-        }
-
-        internal ResponseItem Add(string request, string parameter)
-        {
-            return Add(request, "SK", parameter);
-        }
-
         internal ResponseItem Add(string request, string apisource, string parameter)
         {
             return Add(new ResponseItem(request, apisource, parameter));

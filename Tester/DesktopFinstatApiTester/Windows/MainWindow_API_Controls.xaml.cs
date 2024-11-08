@@ -1,4 +1,5 @@
 ﻿using DesktopFinstatApiTester.ViewModel;
+using FinstatApi;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -52,13 +53,53 @@ namespace DesktopFinstatApiTester.Windows
                     OutputWindow window = new OutputWindow(Encoding.UTF8.GetString(item.Content))
                     {
                         Owner = this,
-                        Title = "Error response body"
+                        Title = "Response body"
                     };
                     var result = window.ShowDialog();
                 }
                 else
                 {
-                    MessageBox.Show("No error response for this request", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                    MessageBox.Show("No Response for this request", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                }
+            }
+        }
+
+        private void dataGridCurlCommand_Click(object sender, RoutedEventArgs e)
+        {
+            if (datagridResponse.SelectedItems != null && datagridResponse.SelectedItems.Count > 0)
+            {
+                var item = (ViewModel.ResponseItem)datagridResponse.SelectedItem;
+                if (item != null && item.Request == "Basic")
+                {
+                    var parameters = item.Parameter?.Split(';').Select(x => x.Trim());
+                    var hashParam = !string.IsNullOrEmpty(item.Parameter.Trim())
+                        ? string.Join((item.Request != "DistraintDetail") ? "!" : "", parameters.Take(2))
+                        : null;
+                    var userApiKey = AppInstance.Settings.ApiKeys.PublicKey;
+                    var privateKey = AppInstance.Settings.ApiKeys.PrivateKey;
+                    var calculatedHash = CommonAbstractApiClient.ComputeVerificationHash(userApiKey, privateKey, hashParam);
+
+                    var url = (item.ApiSource == "CZ")
+                        ? AppInstance.Settings.FinStatApiUrlCZ
+                        : AppInstance.Settings.FinStatApiUrl;
+                    url = url.TrimEnd('/');
+
+                    StringBuilder str = new StringBuilder();
+                    str.AppendLine($"curl '{url}/detail.json?ico={parameters.FirstOrDefault()}&apiKey={userApiKey}&hash={calculatedHash}&StationId=curl-test&StationName='curl-test' -v'");
+                    str.AppendLine();
+                    str.AppendLine($"curl -X POST '{url}/detail.json' -d 'ico={parameters.FirstOrDefault()}&apiKey={userApiKey}&hash={calculatedHash}&StationId=curl-test&StationName='curl-test' -v ");
+                    //str.AppendLine();
+                    // str.AppendLine($"curl -H \"Content-Type: application/json\" '{url}/api/autocomplete.json' -d '{{Query:\\\"{parameters.FirstOrDefault()}\\\", ApiKey:\\\"{userApiKey}\\\", Hash:\\\"{calculatedHash}\\\", StationId:\\\"curl-test\\\", StationName:\\\"curl-test\\\"}}' -v");
+                    OutputWindow window = new OutputWindow(str.ToString())
+                    {
+                        Owner = this,
+                        Title = "Curl"
+                    };
+                    var result = window.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("Nothing selected", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                 }
             }
         }
@@ -70,7 +111,12 @@ namespace DesktopFinstatApiTester.Windows
                 var item = (ViewModel.ResponseItem)datagridResponse.SelectedItem;
                 if (item != null)
                 {
+                    // TODO helper for api call according item.Request
                     //doApiRequest(item.Request, item.ApiSource)
+                }
+                else
+                {
+                    MessageBox.Show("Nothing selected", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                 }
             }
         }

@@ -60,7 +60,7 @@ namespace FinstatApi
                 { "ico", ico },
                 { "year", year.ToString() },
                 { "template", template.ToString() },
-                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, ico+ "|" + year) },
+                { "Hash", ApiClient.ComputeVerificationHash(_apiKey, _privateKey, ico + "|" + year) },
             };
             return (template == Statement.TemplateTypeEnum.TemplateNujPU || template == Statement.TemplateTypeEnum.TemplateROPO)
                  ? (DoApiCall<Statement.NonProfitStatementResult>("/GetStatementDetail", reqparm, json) as Statement.AbstractStatementResult)
