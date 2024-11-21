@@ -11,29 +11,33 @@ namespace DesktopFinstatApiTester.Windows
         #region SK-Auto
         private void buttonAutoComplete_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("Autocomplete", "SK", (parameters) =>
-            {
-                var client = CreateSKApiClient();
-                var result = client.RequestAutocomplete((string)parameters[0], IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("Autocomplete", "SK", SKAutoComplete, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "Text")
             });
         }
 
+        private object SKAutoComplete(object[] parameters)
+        {
+            var client = CreateSKApiClient();
+            var result = client.RequestAutocomplete((string)parameters[0], IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
+        }
+
         private void buttonAutoLogin_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("AutoLogIn", "SK", (parameters) =>
-            {
-                var client = CreateSKApiClient();
-                var result = client.RequestAutoLogin((string)parameters[0], parameters.Length > 1 ? (string)parameters[1] : null);
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("AutoLogIn", "SK", SKAutoLogin, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "FinStat URL"),
                 new ApiCallParameter(ParameterTypeEnum.String, "Email", (parameter) => true)
             });
+        }
+
+        private object SKAutoLogin(object[] parameters)
+        {
+            var client = CreateSKApiClient();
+            var result = client.RequestAutoLogin((string)parameters[0], parameters.Length > 1 ? (string)parameters[1] : null);
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
         #endregion
     }

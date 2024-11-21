@@ -12,32 +12,36 @@ namespace DesktopFinstatApiTester.Windows
     {
         private void buttonDailyUltimateDiffList_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("DailyUltimateDiffList", "SK", (parameter) =>
-            {
-                var client = CreateSKApiDailyUltimateDiffClient();
-                var result = client.RequestListOfDailyUltimateDiffs(IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            });
+            DoApiRequest("DailyUltimateDiffList", "SK", SKDailyUltimateDiffList);
+        }
+
+        private object SKDailyUltimateDiffList(object[] parameters)
+        {
+            var client = CreateSKApiDailyUltimateDiffClient();
+            var result = client.RequestListOfDailyUltimateDiffs(IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
 
         private void buttonDailyUltimateDiffFile_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("DailyUltimateDiffFile", "SK", (parameters) =>
-            {
-                var client = CreateSKApiDailyUltimateDiffClient();
-                var result = client.DownloadDailyUltimateDiffFile((string)parameters[0], (string)parameters[1]);
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("DailyUltimateDiffFile", "SK", SKDailyUltimateDiffFile, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "File"),
                 new ApiCallParameter(ParameterTypeEnum.Folder, "Select Save Folder")
             });
         }
 
+        private object SKDailyUltimateDiffFile(object[] parameters)
+        {
+            var client = CreateSKApiDailyUltimateDiffClient();
+            var result = client.DownloadDailyUltimateDiffFile((string)parameters[0], (string)parameters[1]);
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
+        }
+
         private void buttonOpenDailyUltimateDiffFile_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("Open DailyUltimateDiffFile", "SK", (parameters) =>
+            DoApiRequest("Open DailyUltimateDiffFile", "SK", (parameters) =>
             {
                 using (ZipFile zip = new ZipFile((string)parameters[0]))
                 {

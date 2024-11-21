@@ -12,32 +12,36 @@ namespace DesktopFinstatApiTester.Windows
     {
         private void buttonDailyDiffList_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("DailyDiffList", "SK", (parameters) =>
-            {
-                var client = CreateSKApiDailyDiffClient();
-                var result = client.RequestListOfDailyDiffs(IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            });
+            DoApiRequest("DailyDiffList", "SK", SKDailyDiffList);
+        }
+
+        private object SKDailyDiffList(object[] parameters)
+        {
+            var client = CreateSKApiDailyDiffClient();
+            var result = client.RequestListOfDailyDiffs(IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
 
         private void buttonDailyDiffFile_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("DailyDiffFile", "SK", (parameters) =>
-            {
-                var client = CreateSKApiDailyDiffClient();
-                var result = client.DownloadDailyDiffFile((string)parameters[0], (string)parameters[1]);
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("DailyDiffFile", "SK", SKDailyDiffFile, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "File"),
                 new ApiCallParameter(ParameterTypeEnum.Folder, "Select Save Folder")
             });
         }
 
+        private object SKDailyDiffFile(object[] parameters)
+        {
+            var client = CreateSKApiDailyDiffClient();
+            var result = client.DownloadDailyDiffFile((string)parameters[0], (string)parameters[1]);
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
+        }
+
         private void buttonOpenDailyDiffFile_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("Open DailyDiffFile", "SK", (parameters) =>
+            DoApiRequest("Open DailyDiffFile", "SK", (parameters) =>
             {
                 using (ZipFile zip = new ZipFile((string)parameters[0]))
                 {

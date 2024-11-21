@@ -12,32 +12,36 @@ namespace DesktopFinstatApiTester.Windows
     {
         private void buttonDailyStatementDiffList_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("DailyStatementDiffList", "SK", (parameter) =>
-            {
-                var client = CreateSKApiDailyStatementDiffClient();
-                var result = client.RequestListOfDailyStatementDiffs(IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            });
+            DoApiRequest("DailyStatementDiffList", "SK", SKDailyStatementDiffList);
+        }
+
+        private object SKDailyStatementDiffList(object[] parameters)
+        {
+            var client = CreateSKApiDailyStatementDiffClient();
+            var result = client.RequestListOfDailyStatementDiffs(IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
 
         private void buttonDailyStatementDiffFile_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("DailyStatementDiffFile", "SK", (parameters) =>
-            {
-                var client = CreateSKApiDailyStatementDiffClient();
-                var result = client.DownloadDailyStatementDiffFile((string)parameters[0], (string)parameters[1]);
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("DailyStatementDiffFile", "SK", SKDailyStatementDiffFile, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "File"),
                 new ApiCallParameter(ParameterTypeEnum.Folder, "Select Save Folder")
             });
         }
 
+        private object SKDailyStatementDiffFile(object[] parameters)
+        {
+            var client = CreateSKApiDailyStatementDiffClient();
+            var result = client.DownloadDailyStatementDiffFile((string)parameters[0], (string)parameters[1]);
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
+        }
+
         private void buttonOpenDailyStatementDiffFile_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("Open DailyStatementDiffFile", "SK", (parameters) =>
+            DoApiRequest("Open DailyStatementDiffFile", "SK", (parameters) =>
             {
                 using (ZipFile zip = new ZipFile((string)parameters[0]))
                 {
@@ -54,13 +58,15 @@ namespace DesktopFinstatApiTester.Windows
 
         private void buttonOpenDailyStatementDiffLegend_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("DailyStatementDiffLegend", "SK", (parameters) =>
-            {
-                var client = CreateSKApiDailyStatementDiffClient();
-                var result = client.RequestStatementLegend();
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            });
+            DoApiRequest("DailyStatementDiffLegend", "SK", SKDailyStatementDiffLegend);
+        }
+
+        private object SKDailyStatementDiffLegend(object[] parameters)
+        {
+            var client = CreateSKApiDailyStatementDiffClient();
+            var result = client.RequestStatementLegend();
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
     }
 }

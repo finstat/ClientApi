@@ -31,7 +31,6 @@ namespace FinstatApi
         /// or Specified query {0} too short!
         /// or Url {0} not found!
         /// or Unknown exception while communication with Finstat api!
-        /// or Unknown exception while communication with Finstat api!
         /// </exception>
         public ApiAutocomplete RequestAutocomplete(string query, bool json = false)
         {

@@ -10,78 +10,90 @@ namespace DesktopFinstatApiTester.Windows
     {
         private void buttonMonitoringIcoAdd_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("MonitoringICOAdd", "SK", (parameters) =>
-            {
-                var client = CreateSKApiMonitoringClient();
-                var result = client.Add((string)parameters[0], (string)parameters[1], IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("MonitoringICOAdd", "SK", SKMonitoringICOAdd, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "IČO"),
                 new ApiCallParameter(ParameterTypeEnum.String, "Category", (data) => true)
             });
+        }
+
+        private object SKMonitoringICOAdd(object[] parameters)
+        {
+            var client = CreateSKApiMonitoringClient();
+            var result = client.Add((string)parameters[0], (string)parameters[1], IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
 
         private void buttonMonitoringIcoRemove_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("MonitoringICORemove", "SK", (parameters) =>
-            {
-                var client = CreateSKApiMonitoringClient();
-                var result = client.Remove((string)parameters[0], (string)parameters[1], IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("MonitoringICORemove", "SK", SKMonitoringICORemove, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "IČO"),
                 new ApiCallParameter(ParameterTypeEnum.String, "Category", (data) => true)
             });
         }
 
+        private object SKMonitoringICORemove(object[] parameters)
+        {
+            var client = CreateSKApiMonitoringClient();
+            var result = client.Remove((string)parameters[0], (string)parameters[1], IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
+        }
+
         private void buttonMonitoringIcoList_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("MonitoringICOList", "SK", (parameters) =>
-            {
-                var client = CreateSKApiMonitoringClient();
-                var result = client.GetMonitorings((string)parameters[0], IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("MonitoringICOList", "SK", SKMonitoringICOList, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "Category", (data) => true)
             });
+        }
+
+        private object SKMonitoringICOList(object[] parameters)
+        {
+            var client = CreateSKApiMonitoringClient();
+            var result = client.GetMonitorings((string)parameters[0], IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
 
         private void buttonMonitoringIcoReport_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("MonitoringICOReport", "SK", (parameters) =>
-            {
-                var client = CreateSKApiMonitoringClient();
-                var result = client.GetReport((string)parameters[0], IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("MonitoringICOReport", "SK", SKMonitoringICOReport, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "Category", (data) => true)
             });
         }
 
+        private object SKMonitoringICOReport(object[] parameters)
+        {
+            var client = CreateSKApiMonitoringClient();
+            var result = client.GetReport((string)parameters[0], IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
+        }
+
         private void buttonMonitoringIcoProceedings_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("MonitoringICOProceedings", "SK", (parameters) =>
-            {
-                var client = CreateSKApiMonitoringClient();
-                var result = client.GetProceedings(IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            });
+            DoApiRequest("MonitoringICOProceedings", "SK", SKMonitoringICOProceedings);
+        }
+
+        private object SKMonitoringICOProceedings(object[] parameters)
+        {
+            var client = CreateSKApiMonitoringClient();
+            var result = client.GetProceedings(IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
 
         private void buttonMonitoringCategories_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("MonitoringCategories", "SK", (parameters) =>
-            {
-                var client = CreateSKApiMonitoringClient();
-                var result = client.GetCategories(IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            });
+            DoApiRequest("MonitoringCategories", "SK", SKMonitoringCategories);
+        }
+
+        private object SKMonitoringCategories(object[] parameters)
+        {
+            var client = CreateSKApiMonitoringClient();
+            var result = client.GetCategories(IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
     }
 }

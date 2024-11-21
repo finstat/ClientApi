@@ -57,12 +57,10 @@ namespace DesktopFinstatApiTester.ViewModel
             }
         }
 
-        internal ResponseItem Add(string request, string apisource, string parameter)
+        internal ResponseItem Add(string request, string apisource, IEnumerable<object> parameters)
         {
-            return Add(new ResponseItem(request, apisource, parameter));
+            return Add(new ResponseItem(request, apisource, parameters));
         }
-
-
 
         internal ResponseItem Add(ResponseItem item)
         {

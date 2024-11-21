@@ -10,61 +10,69 @@ namespace DesktopFinstatApiTester.Windows
     {
         private void buttonMonitoringDateAdd_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("MonitoringDateAdd", "SK", (parameters) =>
-            {
-                var client = CreateSKApiMonitoringClient();
-                var result = client.AddDate((string)parameters[0], IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
-                new ApiCallParameter(ParameterTypeEnum.String, "Date")
-            });
+            DoApiRequest("MonitoringDateAdd", "SK", SKMonitoringDateAdd);
+        }
+
+        private object SKMonitoringDateAdd(object[] parameters)
+        {
+            var client = CreateSKApiMonitoringClient();
+            var result = client.AddDate((string)parameters[0], IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
 
         private void buttonMonitoringDateRemove_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("MonitoringDateRemove", "SK", (parameters) =>
-            {
-                var client = CreateSKApiMonitoringClient();
-                var result = client.RemoveDate((string)parameters[0], IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("MonitoringDateRemove", "SK", SKMonitoringDateRemove, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "Date")
             });
         }
 
+        private object SKMonitoringDateRemove(object[] parameters)
+        {
+            var client = CreateSKApiMonitoringClient();
+            var result = client.RemoveDate((string)parameters[0], IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
+        }
+
         private void buttonMonitoringDateList_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("MonitoringDateList", "SK", (parameters) =>
-            {
-                var client = CreateSKApiMonitoringClient();
-                var result = client.GetDateMonitorings(IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            });
+            DoApiRequest("MonitoringDateList", "SK", SKMonitoringDateList);
+        }
+
+        private object SKMonitoringDateList(object[] parameters)
+        {
+            var client = CreateSKApiMonitoringClient();
+            var result = client.GetDateMonitorings(IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
 
         private void buttonMonitoringDateReport_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("MonitoringDateReport", "SK", (parameters) =>
-            {
-                var client = CreateSKApiMonitoringClient();
-                var result = client.GetDateReport(IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            });
+            DoApiRequest("MonitoringDateReport", "SK", SKMonitoringDateReport);
+        }
+
+        private object SKMonitoringDateReport(object[] parameters)
+        {
+            var client = CreateSKApiMonitoringClient();
+            var result = client.GetDateReport(IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
 
         private void buttonMonitoringDateProceedings_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("MonitoringDateProceedings", "SK", (parameters) =>
-            {
-                var client = CreateSKApiMonitoringClient();
-                var result = client.GetDateProceedings(IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            });
+            DoApiRequest("MonitoringDateProceedings", "SK", SKMonitoringDateProceedings);
+        }
+
+        private object SKMonitoringDateProceedings(object[] parameters)
+        {
+            var client = CreateSKApiMonitoringClient();
+            var result = client.GetDateProceedings(IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
     }
 }

@@ -10,26 +10,22 @@ namespace DesktopFinstatApiTester.Windows
     {
         private void buttonStatements_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("StatementList", "SK", (parameters) =>
-            {
-                var client = CreateSKApiStatementClient();
-                var result = client.RequestStatements((string)parameters[0]);
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("StatementList", "SK", SKStatementList, new[] {
                  new ApiCallParameter(ParameterTypeEnum.String, "ICO")
             });
         }
 
+        private object SKStatementList(object[] parameters)
+        {
+            var client = CreateSKApiStatementClient();
+            var result = client.RequestStatements((string)parameters[0]);
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
+        }
+
         private void buttonStatementDetail_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("StatementDetail", "SK", (parameters) =>
-            {
-                var client = CreateSKApiStatementClient();
-                var result = client.RequestStatementDetail((string)parameters[0], (int)parameters[1], (FinstatApi.Statement.TemplateTypeEnum)parameters[2]);
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("StatementDetail", "SK", SKStatementDetail, new[] {
                  new ApiCallParameter(ParameterTypeEnum.String, "ICO"),
                  new ApiCallParameter(ParameterTypeEnum.Int, "Year"),
                  new ApiCallParameter(ParameterTypeEnum.Pick, "Template") {
@@ -46,15 +42,17 @@ namespace DesktopFinstatApiTester.Windows
             });
         }
 
+        private object SKStatementDetail(object[] parameters)
+        {
+            var client = CreateSKApiStatementClient();
+            var result = client.RequestStatementDetail((string)parameters[0], (int)parameters[1], (FinstatApi.Statement.TemplateTypeEnum)parameters[2]);
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
+        }
+
         private void buttonStatementLegend_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("StatementTemplateLegend", "SK", (parameters) =>
-            {
-                var client = CreateSKApiStatementClient();
-                var result = client.RequestStatementLegend((FinstatApi.Statement.TemplateTypeEnum)parameters[0], (string)parameters[1]);
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("StatementTemplateLegend", "SK", SKStatementTemplateLegend, new[] {
                 new ApiCallParameter(ParameterTypeEnum.Pick, "Template") {
                      Values =  new object[]
                      {
@@ -74,6 +72,14 @@ namespace DesktopFinstatApiTester.Windows
                      }
                  }
             });
+        }
+
+        private object SKStatementTemplateLegend(object[] parameters)
+        {
+            var client = CreateSKApiStatementClient();
+            var result = client.RequestStatementLegend((FinstatApi.Statement.TemplateTypeEnum)parameters[0], (string)parameters[1]);
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
     }
 }

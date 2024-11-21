@@ -12,28 +12,33 @@ namespace DesktopFinstatApiTester.Windows
     {
         private void buttonCZAutoComplete_Click(object sender, RoutedEventArgs e)
         {
-
-            doApiRequest("Autocomplete", "CZ", (parameters) =>
-            {
-                var client = CreateCZApiClient();
-                var result = client.RequestAutocomplete((string)parameters[0], IsJSON());
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("Autocomplete", "CZ", CZAutoComplete, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "Text")
             });
         }
 
+        private object CZAutoComplete(object[] parameters)
+        {
+            var client = CreateCZApiClient();
+            var result = client.RequestAutocomplete((string)parameters[0], IsJSON());
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
+        }
+
         private void buttonCZAutoLogin_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("AutoLogIn", "CZ", (parameters) =>
-            {
-                var client = CreateCZApiClient();
-                return client.RequestAutoLogin((string)parameters[0], parameters.Length > 1 ? (string)parameters[1] : null);
-            }, new[] {
+            DoApiRequest("AutoLogIn", "CZ", CZAutoLogin, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "FinStat URL"),
                 new ApiCallParameter(ParameterTypeEnum.String, "Email", (parameter) => true)
             });
+        }
+
+        private object CZAutoLogin(object[] parameters)
+        {
+            var client = CreateCZApiClient();
+            var result = client.RequestAutoLogin((string)parameters[0], parameters.Length > 1 ? (string)parameters[1] : null);
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
     }
 }

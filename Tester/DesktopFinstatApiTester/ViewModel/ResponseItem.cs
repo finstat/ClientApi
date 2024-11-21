@@ -43,6 +43,7 @@ namespace DesktopFinstatApiTester.ViewModel
     {
         public const string RequestProperty = "Request";
         public const string ParameterProperty = "Parameter";
+        public const string ParametersProperty = "Parameters";
         public const string ApiSourceProperty = "ApiSource";
         public const string SendProperty = "Send";
         public const string ReceivedProperty = "Received";
@@ -59,10 +60,10 @@ namespace DesktopFinstatApiTester.ViewModel
             Data = new object[0];
         }
 
-        public ResponseItem(string request, string apisource, string parameter) : this()
+        public ResponseItem(string request, string apisource, IEnumerable<object> parameters) : this()
         {
             Request = request;
-            Parameter = parameter;
+            Parameters = parameters;
             ApiSource = apisource;
         }
 
@@ -108,17 +109,26 @@ namespace DesktopFinstatApiTester.ViewModel
             }
         }
 
-        private string _parameter = null;
-        public string Parameter
+        private IEnumerable<object> _parameters = null;
+        public IEnumerable<object> Parameters
         {
-            get { return _parameter; }
+            get { return _parameters; }
             set
             {
-                if (_parameter != value)
+                if (_parameters != value)
                 {
-                    _parameter = value;
+                    _parameters = value;
+                    RaisePropertyChanged(ParametersProperty);
                     RaisePropertyChanged(ParameterProperty);
                 }
+            }
+        }
+
+        public string Parameter
+        {
+            get
+            {
+                return string.Join("; ", Parameters?.Select(x => $"{x}") ?? Array.Empty<string>());
             }
         }
 

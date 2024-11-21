@@ -10,40 +10,46 @@ namespace DesktopFinstatApiTester.Windows
     {
         private void buttonReportingTopics_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("ReportingTopics", "SK", (parameters) =>
-            {
-                var client = CreateSKApiReportingClient();
-                var result = client.RequestTopics();
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            });
+            DoApiRequest("ReportingTopics", "SK", SKReportingTopics);
+        }
+
+        private object SKReportingTopics(object[] parameters)
+        {
+            var client = CreateSKApiReportingClient();
+            var result = client.RequestTopics();
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
 
         private void buttonReportingList_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("ReportingList", "SK", (parameters) =>
-            {
-                var client = CreateSKApiReportingClient();
-                var result = client.RequestList((string)parameters[0]);
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("ReportingList", "SK", SKReportingList, new[] {
                  new ApiCallParameter(ParameterTypeEnum.String, "Topic"),
             });
         }
 
+        private object SKReportingList(object[] parameters)
+        {
+            var client = CreateSKApiReportingClient();
+            var result = client.RequestList((string)parameters[0]);
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
+        }
+
         private void buttonDownloadReportingFile_Click(object sender, RoutedEventArgs e)
         {
-            doApiRequest("DownloadReportingOutput", "SK", (parameters) =>
-            {
-                var client = CreateSKApiReportingClient();
-                var result = client.DownloadReportFile((string)parameters[0], (string)parameters[1]);
-                AppInstance.Limits.FromModel(client.Limits);
-                return result;
-            }, new[] {
+            DoApiRequest("DownloadReportingOutput", "SK", SKDownloadReportingOutput, new[] {
                 new ApiCallParameter(ParameterTypeEnum.String, "File Name"),
                 new ApiCallParameter(ParameterTypeEnum.Folder, "Select Save Folder")
             });
+        }
+
+        private object SKDownloadReportingOutput(object[] parameters)
+        {
+            var client = CreateSKApiReportingClient();
+            var result = client.DownloadReportFile((string)parameters[0], (string)parameters[1]);
+            AppInstance.Limits.FromModel(client.Limits);
+            return result;
         }
     }
 }

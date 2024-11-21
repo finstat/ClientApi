@@ -258,7 +258,7 @@ namespace FinstatApi
         /// or TimeOut exception while communication with Finstat api!
         /// or Unknown exception while communication with Finstat api!
         /// </exception>
-        /// 
+        ///
         public object GetCategories(bool json)
         {
             System.Collections.Specialized.NameValueCollection reqparm =
