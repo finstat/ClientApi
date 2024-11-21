@@ -292,7 +292,7 @@ namespace DesktopFinstatApiTester.Windows
             str.AppendLine();
             str.AppendLine($"curl -X POST '{url}/{endPoint}{urlSuffix}' -d '{string.Join("&", urlParameters.Select(x => $"{x.Key}={x.Value}"))}' -v ");
             str.AppendLine();
-            var dataString = string.Join(",", urlParameters.Select(x => $"\\\"{x.Key}\\\":\\\"{x.Value}\\\""));
+            var dataString = string.Join(",", urlParameters.Select(x => $"\"{x.Key}\":\"{x.Value}\""));
             str.AppendLine($"curl -H \"Content-Type: application/json\" '{url}/api/{endPoint}{urlSuffix}' -d '{{{dataString}}}' -v");
             OutputWindow window = new OutputWindow(str.ToString())
             {
